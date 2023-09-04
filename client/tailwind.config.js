@@ -77,7 +77,13 @@ export default {
       },
       backgroundImage: {
         linear:
-          "radial-gradient(144.07% 604.28%  at 0% 3.13% , #742138 23.43%, #A878BF 100%)",
+          "radial-gradient(144.07% 604.28%  at 0% 3.13% , #820025 10.64%, #A95BCD 90%, #DF89C6 120.00%)",
+        hero: "url('./src/assets/image/heroFilter.png')",
+        cta: "url('./src/assets/image/ctaFilter.png')",
+      },
+      boxShadow: {
+        nav: "2px 2px 12px 0px rgba(64, 50, 133, 0.12)",
+        login: "2px 2px 12px 0px rgba(64, 50, 133, 0.16)",
       },
     },
   },
