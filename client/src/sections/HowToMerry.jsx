@@ -24,14 +24,17 @@ function HowToMerry () {
     })
 
     return (
-        <main name="howToMerry" className="w-full flex justify-center pt-[80px] pb-[88px] px-[160px] bg">
-            <div className="flex flex-col w-[1120px] font-nunito"> 
-                <h1 className="text-purple-300 text-[46px] font-extrabold mb-[40px]">How to Merry</h1>
-                <section className="grid grid-cols-4 gap-[24px] text-[16px]">
-                    {renderedCards}
-                </section>
-            </div>
-        </main>
+        <section className="w-full bg flex justify-center">
+            <main name="howToMerry" className="w-[1440px] flex justify-center pt-[80px] pb-[88px] px-[160px] bg">
+                <div className="flex flex-col w-[1120px] font-nunito"> 
+                    <h1 className="text-purple-300 text-[46px] font-extrabold mb-[40px]">How to Merry</h1>
+                    <section className="grid grid-cols-4 gap-[24px] text-[16px]">
+                        {renderedCards}
+                    </section>
+                </div>
+            </main>
+        </section>
+        
     )
 }
 

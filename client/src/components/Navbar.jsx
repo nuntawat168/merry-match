@@ -16,15 +16,17 @@ function Navbar() {
     }) 
 
     return (
-        <header className="w-full h-[88px] bg-white shadow-nav px-[160px] flex justify-between items-center">
-            <div>
-                <img src={logo} alt="Merry Match Logo" className="h-[56px]"/>
+        <header className="w-full bg-white h-[88px] shadow-nav flex justify-center">
+            <div className="w-[1440px] h-[88px] bg-white px-[160px] flex justify-between items-center">
+                <section>
+                    <img src={logo} alt="Merry Match Logo" className="h-[56px]"/>
+                </section>
+                <section className="flex items-center font-nunito font-bold">
+                    <ul className="flex">{renderAnchor}</ul>
+                    <button className="bg-red-500 text-white py-[12px] px-[24px] rounded-[99px] ml-[32px] shadow-login h-[48px]">Login</button>
+                </section>
             </div>
-            <div className="flex items-center font-nunito font-bold">
-                <ul className="flex">{renderAnchor}</ul>
-                <button className="bg-red-500 text-white py-[12px] px-[24px] rounded-[99px] ml-[32px] shadow-login h-[48px]">Login</button>
-            </div>
-        </header>
+        </header>  
     )
 }
 

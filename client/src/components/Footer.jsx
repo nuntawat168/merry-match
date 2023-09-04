@@ -18,17 +18,19 @@ function Footer() {
     })
 
     return (
-        <footer className="w-full h-[371px] font-nunito py-[48px] px-[160px] bg-gray-100">
-            <div className="flex flex-col justify-between h-[275px]">
-                <section className="flex flex-col justify-center">
-                    <img src={logo} alt="Merry Match Logo" className="h-[80px]"/>
-                    <p className="text-[20px] text-gray-700 font-semibold">New generation of online dating website for everyone</p>
-                </section>
-                <section className="border-solid border-t-[1px] border-gray-300">
-                    <p className="text-[14px] text-gray-600 py-[24px]">copyright ©2022 merrymatch.com  All rights reserved</p>
-                    <div className="flex justify-center">{renderedLinks}</div>
-                </section>
-            </div>
+        <footer className="flex justify-center bg-gray-100">
+            <main className="w-[1440px] h-[371px] font-nunito py-[48px] px-[160px] bg-gray-100">
+                <div className="flex flex-col justify-between h-[275px]">
+                    <section className="flex flex-col justify-center">
+                        <img src={logo} alt="Merry Match Logo" className="h-[80px]"/>
+                        <p className="text-[20px] text-gray-700 font-semibold">New generation of online dating website for everyone</p>
+                    </section>
+                    <section className="border-solid border-t-[1px] border-gray-300">
+                        <p className="text-[14px] text-gray-600 py-[24px]">copyright ©2022 merrymatch.com  All rights reserved</p>
+                        <div className="flex justify-center">{renderedLinks}</div>
+                    </section>
+                </div>
+            </main>
         </footer>
     )
 }
