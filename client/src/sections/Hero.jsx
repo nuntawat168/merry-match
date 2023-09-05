@@ -12,7 +12,7 @@ function Hero() {
                     Hi! Nice to meet you
                 </p>            
 
-                <div className="z-10 text-white font-semibold w-[358px] h-[360px] mt-[175px] mb-[223px] px-3">
+                <div className="z-10 text-white font-semibold w-[358px] h-[360px] mt-[175px] mb-[223px] flex flex-col items-center text-center">
                     <h1 className="text-[60px] font-extrabold pb-[24px]">Make the first ‘Merry’</h1>
                     <p className="text-[20px]">If you feel lonely, let’s start meeting new people in your area!</p>
                     <p className="text-[20px]">Dont’t forget to get Merry with us</p>

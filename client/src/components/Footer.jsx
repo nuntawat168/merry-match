@@ -18,9 +18,9 @@ function Footer() {
     })
 
     return (
-        <footer className="flex justify-center bg-gray-100">
+        <footer className="w-full flex justify-center bg-gray-100">
             <main className="w-[1440px] h-[371px] font-nunito py-[48px] px-[160px] bg-gray-100">
-                <div className="flex flex-col justify-between h-[275px]">
+                <div className="flex flex-col justify-between h-[275px] text-center">
                     <section className="flex flex-col justify-center">
                         <img src={logo} alt="Merry Match Logo" className="h-[80px]"/>
                         <p className="text-[20px] text-gray-700 font-semibold">New generation of online dating website for everyone</p>

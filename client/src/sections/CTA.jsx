@@ -1,7 +1,7 @@
 function CTA() {
     return (
         <section className="w-full bg flex justify-center">
-            <div className="w-[1440px] bg pt-[80px] pb-[121px] px-[160px]">
+            <div className="w-[1440px] bg pt-[80px] pb-[121px] flex justify-center">
                 <main className="w-[1120px] h-[369px] rounded-[32px] flex flex-col justify-center items-center font-nunito relative bg-linear" >
                     <div
                         className="z-0 w-[1120px] h-[369px] absolute top-10 left-0 bg-no-repeat bg-cta">
