@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { pool } from "./utils/db.js";
+import userRouter from "./app/user.js";
 
 async function init() {
   dotenv.config();
@@ -12,23 +13,11 @@ async function init() {
 
   app.use(cors());
   app.use(bodyParser.json());
+  app.use('/user', userRouter);
 
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
-
-  app.get("/user", async (req, res) => {
-    try {
-      const result = await pool.query("SELECT users.user_id, users.username, users.email, users.package_id, users.name, profile_images.image FROM users INNER JOIN profile_images ON users.user_id = profile_images.user_id;");
-      res.json({
-        data: result.rows,
-      });
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
-      res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
-    }
-  });
-
 
   app.get("*", (req, res) => {
     res.status(404).send("Not found");

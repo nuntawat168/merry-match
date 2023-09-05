@@ -4,12 +4,11 @@ import MatchCard from '../components/MatchCard'
 
 const MatchPages = () => {
     return (
-        <article className='w-full m-0'>
+        <article className='w-[1440px] m-0'>
             {/* navbar */}
             <div className='flex flex-row h-full w-[100vw] bg-[#ffff]'>
                 <DiscoverSideBar />
                 <MatchCard />
-                {/* FilterBar */}
 
             </div>
         </article>
