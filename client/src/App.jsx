@@ -8,6 +8,7 @@ import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
 import Content from "./components/Content";
+import Admindetail from "./components/admindetail";
 
 function App() {
   return (

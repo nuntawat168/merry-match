@@ -4,6 +4,7 @@ import platinumicon from "../assets/icon/platinum.svg";
 import premiumicon from "../assets/icon/premium.svg";
 import correcticon from "../assets/icon/success.svg";
 import { useState } from "react";
+import axios from "axios";
 
 const Content = () => {
   return (
