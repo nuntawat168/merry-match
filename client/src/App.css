@@ -1,5 +1,12 @@
 * {
   box-sizing: border-box;
   padding: 0;
+<<<<<<< HEAD
   margin: 0;
 }
+=======
+  box-sizing: border-box;
+  font-family: nunito;
+  /* outline: red solid 1px; */
+}
+>>>>>>> a94db27 (feat:create upload icon feature)
