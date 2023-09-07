@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterForm from "../components/register/RegisterForm";
 import RegisterFooter from "../components/register/RegisterFooter";
+import Navbar from "../components/Navbar";
 
 export const FormContext = createContext();
 
@@ -91,6 +92,7 @@ function RegisterPage() {
         onSubmit={handleOnSubmit}
       >
         <div className="w-full h-screen flex flex-col justify-between items-center bg-main font-nunito">
+          <Navbar />
           <div className="w-[930px] mt-20  mb-8 flex flex-col justify-start space-y-16">
             <RegisterHeader />
             <RegisterForm />

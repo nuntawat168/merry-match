@@ -90,7 +90,7 @@ function LoginPage() {
             <a
               href=""
               className="text-red-500 font-nunito text-base font-bold leading-[24px] ml-2"
-              onClick={() => navigate("")}
+              onClick={() => navigate("/register")}
             >
               Register
             </a>
