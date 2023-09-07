@@ -1,6 +1,5 @@
 import { useFormik, FormikProvider, FieldArray } from "formik";
 import * as Yup from "yup";
-// import plus from "../assets/icon/+.svg";
 import drag from "../assets/icon/drag.svg";
 import PreviewImage from "./PreviewImage";
 import axios from "axios";
@@ -24,7 +23,7 @@ const AdminAddPackageForm = () => {
       package_price: 0,
       package_limit: 0,
       package_icon: "",
-      package_details: [],
+      package_details: [""],
       created_by: null,
     },
     validationSchema: Yup.object({
@@ -41,12 +40,23 @@ const AdminAddPackageForm = () => {
       console.log(values);
       alert(JSON.stringify(values, null, 2));
 
+      // const { data, error } = await supabase.storage
+      //   .from("Files")
+      //   .upload(`public/${files.name}`, files, {
+      //     cacheControl: "3600",
+      //     upsert: false,
+      //   });
+
       const { data, error } = await supabase.storage
         .from("Files")
-        .upload(`public/${files.name}`, files, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+        .upload(
+          `public/${files.name.split(".").join("-" + Date.now() + ".")}`,
+          files,
+          {
+            cacheControl: "3600",
+            upsert: false,
+          }
+        );
 
       values = { ...values, package_icon: data.path };
       console.log(values);
@@ -165,12 +175,15 @@ const AdminAddPackageForm = () => {
               </div>
 
               {/* Upload icon */}
-              <label
-                htmlFor="upload"
-                className="border rounded-full bg-gray-400 cursor-pointer text-[20px] p-2 w-4"
-              >
-                Upload
-              </label>
+
+              <div className="w-[100px]">
+                <label htmlFor="upload">
+                  <div className="border w-[100px] m-0 h-[100px] flex flex-col justify-center items-center text-[30px] text-purple-600 bg-gray-100 rounded-xl cursor-pointer">
+                    + <div className="text-[15px]">Upload icon</div>
+                  </div>
+                </label>
+              </div>
+
               <input
                 id="upload"
                 type="file"
@@ -231,7 +244,11 @@ const AdminAddPackageForm = () => {
                         <button
                           type="button"
                           className="mt-3 text-gray-500 text-sm ml-3"
-                          onClick={() => arrayHelpers.remove(index)}
+                          onClick={() =>
+                            formik.values.package_details.length > 1
+                              ? arrayHelpers.remove(index)
+                              : item
+                          }
                         >
                           Delete
                         </button>

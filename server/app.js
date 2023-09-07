@@ -8,15 +8,9 @@ import authRouter from "./apps/auth.js";
 import { createClient } from "@supabase/supabase-js";
 import packageRouter from "./apps/package.js";
 import fs from "fs";
-import { createClient } from "@supabase/supabase-js";
 
 async function init() {
   dotenv.config();
-
-  // const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  // const supabaseAnonKey = import.meta.env.VITE_SUPABASE_URL_ANON_KEY;
-
-  // export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   const app = express();
   const port = 4000;

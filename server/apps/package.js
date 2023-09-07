@@ -1,15 +1,7 @@
 import { Router } from "express";
 import { pool } from "../utils/db.js";
-import multer from "multer";
-import { cloudinaryUpload } from "../utils/upload.js";
 
 const packageRouter = Router();
-
-// const multerUpload = multer;
-// ({ dest: "uploads/" });
-
-// const avatarUpload = multerUpload.fields;
-// [{ name: "package_icon", maxCount: 2 }];
 
 packageRouter.post("/", async (req, res) => {
   const {
@@ -17,14 +9,16 @@ packageRouter.post("/", async (req, res) => {
     package_price,
     package_limit,
     package_icon,
+    package_details,
     created_by,
   } = req.body;
 
-  // const packageIcon = await cloudinaryUpload(package_icon);
   try {
     await pool.query(
       `insert into packages (package_name,package_price,package_limit,package_icon,created_by,created_at,updated_at) 
-      values ($1,$2,$3,$4,$5,$6,$7)`,
+      values ($1,$2,$3,$4,$5,$6,$7)
+    
+      `,
       [
         package_name,
         package_price,
@@ -35,6 +29,14 @@ packageRouter.post("/", async (req, res) => {
         new Date(),
       ]
     );
+    console.log(package_details);
+
+    for (let i = 0; i < package_details.length; i++) {
+      await pool.query(
+        `insert into package_details (package_id, detail) values ((select max(package_id) from packages),$1)`,
+        [package_details[i]]
+      );
+    }
   } catch (error) {
     return res.status(400).json({
       message: error,
