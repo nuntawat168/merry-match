@@ -91,9 +91,9 @@ function RegisterPage() {
         validationSchema={formSchema}
         onSubmit={handleOnSubmit}
       >
-        <div className="w-full h-screen flex flex-col justify-between items-center bg-main font-nunito">
+        <div className="w-full h-screen flex flex-col justify-start items-center bg-main font-nunito static">
           <Navbar />
-          <div className="w-[930px] mt-20  mb-8 flex flex-col justify-start space-y-16">
+          <div className="w-[930px] h-screen mt-20  mb-[224px] pb-[224px] flex flex-col justify-start space-y-16">
             <RegisterHeader />
             <RegisterForm />
           </div>

@@ -35,7 +35,7 @@ function ProfilePicturesForm() {
         <label
           key={index}
           htmlFor={inputId}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2"
+          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

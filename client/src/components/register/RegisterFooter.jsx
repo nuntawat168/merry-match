@@ -120,7 +120,7 @@ function RegisterFooter() {
   }
 
   return (
-    <div className="w-full mt-8 flex justify-center border-t border-gray-300">
+    <div className="w-full bg-white mt-8 flex justify-center border-t border-gray-300 fixed bottom-0 z-10">
       <div className="w-[1120px] h-[112px]  px-8 flex flex-row justify-between items-center">
         <p className="text-base font-normal">
           <span className="text-gray-700">{currentStepIndex}</span>
