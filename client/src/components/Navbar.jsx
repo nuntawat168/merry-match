@@ -38,7 +38,7 @@ function Navbar() {
                         </div>
                         <div className="ml-[12px] w-[48px] h-[48px] rounded-full bg"></div>
                     </div>) :
-                    (<RouterLink to="/auth/login">
+                    (<RouterLink to="/login">
                         <button className="bg-red-500 text-white py-[12px] px-[24px] rounded-[99px] ml-[32px] shadow-login h-[48px]">Login</button>
                     </RouterLink>) }
                 </section>
