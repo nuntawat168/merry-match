@@ -5,10 +5,13 @@ import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterForm from "../components/register/RegisterForm";
 import RegisterFooter from "../components/register/RegisterFooter";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../contexts/authentication";
+import { register } from "react-scroll/modules/mixins/scroller";
 
 export const FormContext = createContext();
 
 function RegisterPage() {
+  const { register } = useAuth();
   const [currentStepIndex, setCurrentStepIndex] = useState(1);
   const [picturesProfile, setPicturesProfile] = useState([
     null,
@@ -37,7 +40,7 @@ function RegisterPage() {
     racialPreferences: "",
     meetingInterests: "",
     hobbiesInterests: [],
-    profilePictures: [],
+    profilePictures: {},
   };
 
   const formSchema = Yup.object().shape({
@@ -71,7 +74,16 @@ function RegisterPage() {
   });
 
   function handleOnSubmit(data) {
-    console.log(data);
+    const formData = new FormData();
+    for (let key in data) {
+      if (key !== "profilePictures") {
+        formData.append(key, data[key]);
+      }
+    }
+    for (let key in data.profilePictures) {
+      formData.append("pictureProfile", data.profilePictures[key]);
+    }
+    register(formData);
   }
 
   return (

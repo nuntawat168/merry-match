@@ -9,6 +9,13 @@ function ProfilePicturesForm() {
     const uniqueId = Date.now();
     const tmpPicturesProfile = [...picturesProfile];
     tmpPicturesProfile.splice(index, 1, { [uniqueId]: event.target.files[0] });
+
+    setPicturesProfile([...tmpPicturesProfile]);
+  };
+
+  const handleDeletePictureProfile = (index) => {
+    const tmpPicturesProfile = [...picturesProfile];
+    tmpPicturesProfile.splice(index, 1, null);
     setPicturesProfile([...tmpPicturesProfile]);
   };
 
@@ -16,7 +23,10 @@ function ProfilePicturesForm() {
     const tmpPicturesProfile = [...picturesProfile].filter(
       (picture) => picture !== null
     );
-    formik.setFieldValue("profilePictures", tmpPicturesProfile);
+    const objProfilePictures = tmpPicturesProfile.reduce((acc, curr) => {
+      return { ...acc, ...curr };
+    }, {});
+    formik.setFieldValue("profilePictures", objProfilePictures);
   }, [picturesProfile]);
 
   function renderPicture(isPicture, index, url) {
@@ -24,9 +34,28 @@ function ProfilePicturesForm() {
       return (
         <div
           key={index}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 overflow-hidden"
+          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative"
         >
-          <img src={url} className="w-[167px] h-[167px] object-cover" />
+          <img src={url} className="w-full h-full object-cover rounded-2xl" />
+          <button
+            className="w-6 h-6 flex justify-center items-center bg-red rounded-full z-30 absolute left-[147px] bottom-[147px]"
+            onClick={() => handleDeletePictureProfile(index)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M4.11768 11.8824L11.8824 4.11768M4.11768 4.11768L11.8824 11.8824"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
         </div>
       );
     } else {
