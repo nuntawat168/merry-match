@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { pool } from "./utils/db.js";
-import userRouter from "./app/user.js";
+import userRouter from "./apps/user.js";
 
 async function init() {
   dotenv.config();
