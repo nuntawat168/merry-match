@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { pool } from "./utils/db.js";
+import userRouter from "./apps/user.js";
 
 async function init() {
   dotenv.config();
@@ -12,6 +13,7 @@ async function init() {
 
   app.use(cors());
   app.use(bodyParser.json());
+  app.use('/user', userRouter);
 
   app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -20,6 +22,8 @@ async function init() {
   app.get("*", (req, res) => {
     res.status(404).send("Not found");
   });
+
+
 
   app.listen(port, () => {
     console.log(`server listening on port ${port}`);
