@@ -8,10 +8,6 @@ import { useState } from "react";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-// const supabaseUrl = "https://gacngpsoekbrifxahpkg.supabase.co";
-// const supabaseAnonKey =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhY25ncHNvZWticmlmeGFocGtnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MzUzOTgxNCwiZXhwIjoyMDA5MTE1ODE0fQ.M_0nTcY0xZBzt1LKqDnYiwRccUceDAMbRnXChrJIfSQ";
-
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const AdminAddPackageForm = () => {
@@ -39,13 +35,6 @@ const AdminAddPackageForm = () => {
     onSubmit: async (values) => {
       console.log(values);
       alert(JSON.stringify(values, null, 2));
-
-      // const { data, error } = await supabase.storage
-      //   .from("Files")
-      //   .upload(`public/${files.name}`, files, {
-      //     cacheControl: "3600",
-      //     upsert: false,
-      //   });
 
       const { data, error } = await supabase.storage
         .from("Files")
@@ -94,6 +83,7 @@ const AdminAddPackageForm = () => {
             </button>
           </div>
         </section>
+
         <section className="border border-gray-100 h-[90%] bg-gray-100 ">
           <div className="border border-gray-300 mx-[60px] mt-[40px] mb-[242px w-[90%] h-auto flex bg-white">
             <div className="w-[100%] h-[20% mx-[100px] mt-[40px] mb-[60px]">
@@ -174,7 +164,7 @@ const AdminAddPackageForm = () => {
                 Icon <span className="text-red-500">*</span>
               </div>
 
-              {/* Upload icon */}
+              {/* Upload Icon */}
 
               <div className="w-[100px]">
                 <label htmlFor="upload">
@@ -183,7 +173,6 @@ const AdminAddPackageForm = () => {
                   </div>
                 </label>
               </div>
-
               <input
                 id="upload"
                 type="file"
@@ -203,7 +192,6 @@ const AdminAddPackageForm = () => {
               )}
 
               <hr className=" mt-[30px] border-gray-300 " />
-
               <h1 className="mt-[20px] mb-[20px] text-gray-700">
                 Package detail
               </h1>
