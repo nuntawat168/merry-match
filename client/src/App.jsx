@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
@@ -7,6 +8,7 @@ import RegisterPage from "./pages/RegisterPage";
 import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
+import PackagePage from "./pages/packagepage";
 import Content from "./components/Content";
 import Admindetail from "./components/admindetail";
 
@@ -21,10 +23,12 @@ function App() {
           <Route path="/match" element={<MatchPages />} />
           <Route path="/merry-list" element={<MerryListPage />} />
           <Route path="/addPackage" element={<AdminAddPackage />} />
+          <Route path="/packages" element={<PackagePage />} />
+          <Route path="/admin" element={<Adminpackage />} />
+          <Route path="/payment" element={<PaymentPage1 />} />
         </Routes>
       </BrowserRouter>
     </>
   );
 }
-
 export default App;
