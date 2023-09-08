@@ -18,9 +18,9 @@ async function init() {
   app.use(express());
   app.use(cors());
   app.use(bodyParser.json());
+
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
-  app.use("/admin", packageRouter);
 
   app.use("/packages", packageRouter);
   app.get("/", (req, res) => {

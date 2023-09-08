@@ -8,8 +8,7 @@ import { UseGlobalContext } from "../contexts/usecontexts";
 import hearticon from "../assets/icon/merry red.svg";
 
 const Content = () => {
-  const { dataAgain, setDataAgain, dataPackage, setDataPackage } =
-    UseGlobalContext();
+  const { dataPackage, setDataPackage } = UseGlobalContext();
   useEffect(() => {
     fetchData();
   }, []);

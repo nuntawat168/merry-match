@@ -3,31 +3,27 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
 import PackagePage from "./pages/packagepage";
-import Content from "./components/Content";
-import Admindetail from "./components/admindetail";
+import Adminpackage from "../src/pages/Adminpackage";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/match" element={<MatchPages />} />
-          <Route path="/merry-list" element={<MerryListPage />} />
-          <Route path="/addPackage" element={<AdminAddPackage />} />
-          <Route path="/packages" element={<PackagePage />} />
-          <Route path="/admin" element={<Adminpackage />} />
-          <Route path="/payment" element={<PaymentPage1 />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/match" element={<MatchPages />} />
+        <Route path="/merry-list" element={<MerryListPage />} />
+        <Route path="/addPackage" element={<AdminAddPackage />} />
+        <Route path="/packages" element={<PackagePage />} />
+        <Route path="/admin" element={<Adminpackage />} />
+        {/* <Route path="/payment" element={<PaymentPage1 />} /> */}
+      </Routes>
     </>
   );
 }
