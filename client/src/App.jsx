@@ -1,11 +1,14 @@
+import { useState } from "react";
 import "./App.css";
-import LoginPage from "./pages/LoginPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import { Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
+import PackagePage from "./pages/packagepage";
+import Adminpackage from "../src/pages/Adminpackage";
 
 function App() {
   return (
@@ -17,9 +20,11 @@ function App() {
         <Route path="/match" element={<MatchPages />} />
         <Route path="/merry-list" element={<MerryListPage />} />
         <Route path="/addPackage" element={<AdminAddPackage />} />
+        <Route path="/packages" element={<PackagePage />} />
+        <Route path="/admin" element={<Adminpackage />} />
+        {/* <Route path="/payment" element={<PaymentPage1 />} /> */}
       </Routes>
     </>
   );
 }
-
 export default App;

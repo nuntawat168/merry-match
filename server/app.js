@@ -15,8 +15,10 @@ async function init() {
   const app = express();
   const port = 4000;
 
+  app.use(express());
   app.use(cors());
   app.use(bodyParser.json());
+
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
 
