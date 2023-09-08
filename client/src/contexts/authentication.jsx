@@ -29,7 +29,7 @@ function AuthProvider(props) {
       await axios.post("http://localhost:4000/auth/register", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/login");
+      // navigate("/login");
     } catch (error) {
       console.log(`Register Error: ${error}`);
     }

@@ -74,6 +74,7 @@ function RegisterPage() {
   });
 
   function handleOnSubmit(data) {
+    console.log(data);
     const formData = new FormData();
     for (let key in data) {
       if (key !== "profilePictures") {
@@ -81,7 +82,7 @@ function RegisterPage() {
       }
     }
     for (let key in data.profilePictures) {
-      formData.append("pictureProfile", data.profilePictures[key]);
+      formData.append("picturesProfile", data.profilePictures[key]);
     }
     register(formData);
   }
