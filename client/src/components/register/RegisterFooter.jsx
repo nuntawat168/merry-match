@@ -9,6 +9,7 @@ function RegisterFooter() {
   const formik = useFormikContext();
 
   const isLastStep = currentStepIndex === 3;
+  const isFirstStep = currentStepIndex === 1;
 
   const renderBackButton = () => (
     <button
@@ -16,15 +17,15 @@ function RegisterFooter() {
       type="button"
       onClick={handlerOnClickBack}
     >
-      {isLastStep ? (
-        <>
-          <img src={arrowBackRed500} alt="arrow back icon" />
-          <p className="text-red-500 text-base font-bold">Back</p>
-        </>
-      ) : (
+      {isFirstStep ? (
         <>
           <img src={arrowBackGray500} alt="arrow back icon" />
           <p className="text-gray-500 text-base font-bold">Back</p>
+        </>
+      ) : (
+        <>
+          <img src={arrowBackRed500} alt="arrow back icon" />
+          <p className="text-red-500 text-base font-bold">Back</p>
         </>
       )}
     </button>
@@ -74,9 +75,9 @@ function RegisterFooter() {
           "password",
           "passwordConfirmation",
         ];
-        isHasError = basicInfoFields.some(
-          (field) => allValue[field] === "" || allError[field]
-        );
+        isHasError = basicInfoFields.some((field) => {
+          return allValue[field] === "" || allError[field];
+        });
         break;
       case 2:
         const identityFields = [
