@@ -22,7 +22,6 @@ const picturesProfileUpload = multerUpload.fields([
 ]);
 
 authRouter.post("/register", picturesProfileUpload, async (req, res) => {
-  console.log("---------------------------------------");
   const user = {
     username: req.body.username,
     password: req.body.password,
@@ -39,27 +38,17 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
     updated_at: new Date(),
   };
 
-  const picturesProfileUrl = await cloudinaryUpload(req.files);
-  console.log(
-    `:Respoone form cloundinary: ${JSON.stringify(picturesProfileUrl)}`
-  );
-  user["picturesProfile"] = picturesProfileUrl;
-
   const salt = await bcrypt.genSalt(10);
-  // now we set user password to hashed password
   user.password = await bcrypt.hash(user.password, salt);
-  // const collection = db.collection("users");
-  // const responeDatabase = await collection.insertOne(user);
-  // console.log(responeDatabase);
-  console.log(`:user password: ${user.password}`);
   try {
-    const responeSupaBase = await pool.query(
-      ` SELECT *
-        FROM users
-        INNER JOIN profile_images
-        ON users.user_id = profile_images.user_id
-        insert into users (username, password, email, name, sex, city, location, date_of_birth, sexual_preferences, racial_preferences, meeting_interests, created_at, updated_at, image)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+    const picturesProfileUrl = await cloudinaryUpload(req.files);
+    user["picturesProfile"] = picturesProfileUrl;
+    const userInsertResult = await pool.query(
+      ` 
+      INSERT INTO users (username, password, email, name, sex, city, location, date_of_birth, sexual_preferences, racial_preferences, meeting_interests, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      RETURNING user_id
+      `,
       [
         user.username,
         user.password,
@@ -74,18 +63,60 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
         user.meeting_interests,
         user.created_at,
         user.updated_at,
-        user.picturesProfile,
       ]
     );
-    console.log(`:Respone from supabase: ${JSON.stringify(responeSupaBase)}`);
-    console.log("-> User has been created successfully");
-  } catch (error) {
-    console.log(`->Insert user record Error: ${error}`);
-  }
+    const userId = userInsertResult.rows[0].user_id;
+    const userPictureProfileInsertResult = await pool.query(
+      `
+        insert into profile_images (user_id, image)
+        values ($1, $2::json)
+      `,
+      [userId, JSON.stringify(user.picturesProfile)]
+    );
+    for (const hobbyInterestName of req.body.hobbiesInterests.split(",")) {
+      const existingHobbyInterestName = await pool.query(
+        `
+          SELECT hobby_interest_id
+          FROM hobbies_interests
+          WHERE hobby_interest_name = $1
+        `,
+        [hobbyInterestName]
+      );
 
-  return res.json({
-    message: "User has been created successfully",
-  });
+      let hobbyInterrestId;
+      if (existingHobbyInterestName.rows.length > 0) {
+        hobbyInterrestId = existingHobbyInterestName.rows[0].hobby_interest_id;
+      } else {
+        const newHobbyInterest = await pool.query(
+          `
+          INSERT INTO hobbies_interests (hobby_interest_name)
+          VALUES ($1)
+          RETURNING hobby_interest_id
+        `,
+          [hobbyInterestName]
+        );
+        hobbyInterrestId = newHobbyInterest.rows[0].hobby_interest_id;
+      }
+
+      await pool.query(
+        `
+          INSERT INTO users_hobbies_interests (user_id, hobby_interest_id)
+          VALUES ($1, $2)
+        `,
+        [userId, hobbyInterrestId]
+      );
+    }
+
+    console.log("=> User has been created successfully");
+    return res.json({
+      message: "User has been created successfully",
+    });
+  } catch (error) {
+    console.log(`=>Insert user record Error: ${error}`);
+    return res.status(500).json({
+      message: "An error occurred while processing your request",
+    });
+  }
 });
 
 authRouter.post("/login", async (req, res) => {

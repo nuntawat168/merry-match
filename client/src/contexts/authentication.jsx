@@ -26,12 +26,18 @@ function AuthProvider(props) {
   // register the user
   const register = async (data) => {
     try {
-      await axios.post("http://localhost:4000/auth/register", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      // navigate("/login");
+      const respone = await axios.post(
+        "http://localhost:4000/auth/register",
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      alert("Register Successfully");
+      navigate("/login");
     } catch (error) {
       console.log(`Register Error: ${error}`);
+      alert(`Register Error: ${error}`);
     }
   };
 

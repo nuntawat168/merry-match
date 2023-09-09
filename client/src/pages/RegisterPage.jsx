@@ -44,13 +44,13 @@ function RegisterPage() {
   };
 
   const formSchema = Yup.object().shape({
-    name: Yup.string().required("Name is a required field"),
+    name: Yup.string().required("Name is a required field").max(25),
     dateOfBirth: Yup.string().required("Date of birth is a required field"),
     location: Yup.string().required("Location is a required field"),
     city: Yup.string().required("City is a required field"),
-    username: Yup.string().required().min(6),
+    username: Yup.string().required().min(6).max(25),
     email: Yup.string().required().email(),
-    password: Yup.string().required().min(8),
+    password: Yup.string().required().min(8).max(50),
     passwordConfirmation: Yup.string().oneOf(
       [Yup.ref("password"), null],
       "Passwords must match"
