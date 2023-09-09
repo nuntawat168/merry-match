@@ -6,6 +6,11 @@ import dotenv from "dotenv";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import { cloudinaryUpload } from "../utils/uploadImg.js";
+import {
+  createUser,
+  createHobbyInterest,
+  createUserHobbyInterests,
+} from "../utils/userRegistration.js";
 
 dotenv.config();
 cloudinary.config({
@@ -22,7 +27,7 @@ const picturesProfileUpload = multerUpload.fields([
 ]);
 
 authRouter.post("/register", picturesProfileUpload, async (req, res) => {
-  const user = {
+  const userData = {
     username: req.body.username,
     password: req.body.password,
     email: req.body.email,
@@ -38,81 +43,28 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
     updated_at: new Date(),
   };
 
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
   try {
+    const userId = await createUser(userData);
+
     const picturesProfileUrl = await cloudinaryUpload(req.files);
-    user["picturesProfile"] = picturesProfileUrl;
-    const userInsertResult = await pool.query(
-      ` 
-      INSERT INTO users (username, password, email, name, sex, city, location, date_of_birth, sexual_preferences, racial_preferences, meeting_interests, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-      RETURNING user_id
-      `,
-      [
-        user.username,
-        user.password,
-        user.email,
-        user.name,
-        user.sex,
-        user.city,
-        user.location,
-        user.date_of_birth,
-        user.sexual_preferences,
-        user.racial_preferences,
-        user.meeting_interests,
-        user.created_at,
-        user.updated_at,
-      ]
-    );
-    const userId = userInsertResult.rows[0].user_id;
-    const userPictureProfileInsertResult = await pool.query(
-      `
-        insert into profile_images (user_id, image)
-        values ($1, $2::json)
-      `,
-      [userId, JSON.stringify(user.picturesProfile)]
-    );
-    for (const hobbyInterestName of req.body.hobbiesInterests.split(",")) {
-      const existingHobbyInterestName = await pool.query(
-        `
-          SELECT hobby_interest_id
-          FROM hobbies_interests
-          WHERE hobby_interest_name = $1
-        `,
-        [hobbyInterestName]
-      );
+    userData["picturesProfile"] = picturesProfileUrl;
 
-      let hobbyInterrestId;
-      if (existingHobbyInterestName.rows.length > 0) {
-        hobbyInterrestId = existingHobbyInterestName.rows[0].hobby_interest_id;
-      } else {
-        const newHobbyInterest = await pool.query(
-          `
-          INSERT INTO hobbies_interests (hobby_interest_name)
-          VALUES ($1)
-          RETURNING hobby_interest_id
-        `,
-          [hobbyInterestName]
-        );
-        hobbyInterrestId = newHobbyInterest.rows[0].hobby_interest_id;
-      }
+    const hobbyInterestNames = req.body.hobbiesInterests.split(",");
+    const hobbyInterestIds = [];
 
-      await pool.query(
-        `
-          INSERT INTO users_hobbies_interests (user_id, hobby_interest_id)
-          VALUES ($1, $2)
-        `,
-        [userId, hobbyInterrestId]
-      );
+    for (const hobbyInterestName of hobbyInterestNames) {
+      const hobbyInterestId = await createHobbyInterest(hobbyInterestName);
+      hobbyInterestIds.push(hobbyInterestId);
     }
 
-    console.log("=> User has been created successfully");
+    await createUserHobbyInterests(userId, hobbyInterestIds);
+
+    console.log("User registration successful.");
     return res.json({
-      message: "User has been created successfully",
+      message: "User has been registered successfully.",
     });
   } catch (error) {
-    console.log(`=>Insert user record Error: ${error}`);
+    console.error(`User registration failed: ${error.message}`);
     return res.status(500).json({
       message: "An error occurred while processing your request",
     });
