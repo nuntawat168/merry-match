@@ -5,119 +5,104 @@ import arrowBackGray500 from "../../assets/icon/arrow_back_gray_500.svg";
 import arrowBackRed500 from "../../assets/icon/arrow_back_red_500.svg";
 
 function RegisterFooter() {
-  const { currentStepIndex, setCurrentStepIndex, titleForm } =
-    useContext(FormContext);
+  const { currentStepIndex, setCurrentStepIndex } = useContext(FormContext);
   const formik = useFormikContext();
 
-  function renderBackButton(isRed) {
-    if (isRed) {
-      return (
+  const isLastStep = currentStepIndex === 3;
+
+  const renderBackButton = () => (
+    <button
+      className="flex flex-row items-center space-x-2 px-2 py-1"
+      type="button"
+      onClick={handlerOnClickBack}
+    >
+      {isLastStep ? (
         <>
           <img src={arrowBackRed500} alt="arrow back icon" />
           <p className="text-red-500 text-base font-bold">Back</p>
         </>
-      );
-    } else {
-      return (
+      ) : (
         <>
           <img src={arrowBackGray500} alt="arrow back icon" />
           <p className="text-gray-500 text-base font-bold">Back</p>
         </>
-      );
-    }
-  }
+      )}
+    </button>
+  );
 
-  function renderNextAndConfirmButton(isLastStep) {
-    if (isLastStep) {
-      return (
-        <button
-          className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
-          onClick={handlerOnClickConfirm}
-          type="submit"
-        >
-          Confirm
-        </button>
-      );
-    } else {
-      return (
-        <button
-          className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
-          onClick={handlerOnClickNext}
-          type="button"
-        >
-          Next step
-        </button>
-      );
-    }
-  }
+  const renderNextButton = () => (
+    <button
+      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
+      onClick={handlerOnClickNext}
+      type="button"
+    >
+      Next step
+    </button>
+  );
 
-  function handlerOnClickNext() {
-    const allValue = formik.values;
-    const allError = formik.errors;
+  const renderConfirmButton = () => (
+    <button
+      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
+      onClick={handlerOnClickConfirm}
+      type="submit"
+    >
+      Confirm
+    </button>
+  );
 
-    const isHasEmptyFieldInBasicInFo =
-      allValue.name === "" ||
-      allValue.dateOfBirth === "" ||
-      allValue.location === "" ||
-      allValue.city === "" ||
-      allValue.username === "" ||
-      allValue.email === "" ||
-      allValue.password === "" ||
-      allValue.passwordConfirmation === "";
-    const isHasErrorInBasicInfo =
-      allError.hasOwnProperty(name) ||
-      allError.hasOwnProperty("dateOfBirth") ||
-      allError.hasOwnProperty("location") ||
-      allError.hasOwnProperty("city") ||
-      allError.hasOwnProperty("username") ||
-      allError.hasOwnProperty("email") ||
-      allError.hasOwnProperty("password") ||
-      allError.hasOwnProperty("passwordConfirmation");
-
-    const isHasEmptyFieldInIdentites =
-      allValue.sexualIdentites === "" ||
-      allValue.sexualPreferences === "" ||
-      allValue.racialPreferences === "" ||
-      allValue.meetingInterests === "";
-
-    const isHasErrorInIdentites =
-      allError.hasOwnProperty("sexualIdentites") ||
-      allError.hasOwnProperty("sexualPreferences") ||
-      allError.hasOwnProperty("racialPreferences") ||
-      allError.hasOwnProperty("meetingInterests") ||
-      allError.hasOwnProperty("hobbiesInterests");
-
-    switch (currentStepIndex) {
-      case 1:
-        if (isHasEmptyFieldInBasicInFo || isHasErrorInBasicInfo) {
-          alert(
-            "Please review and correct any invalid or missing information before proceeding."
-          );
-        } else {
-          setCurrentStepIndex(currentStepIndex + 1);
-        }
-        return;
-      case 2:
-        if (isHasEmptyFieldInIdentites || isHasErrorInIdentites) {
-          alert(
-            "Please review and correct any invalid or missing information before proceeding."
-          );
-        } else {
-          setCurrentStepIndex(currentStepIndex + 1);
-        }
-        return;
-    }
-  }
-
-  function handlerOnClickConfirm() {
-    formik.handleSubmit();
-  }
-
-  function handlerOnClickBack() {
+  const handlerOnClickBack = () => {
     if (currentStepIndex !== 1) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
-  }
+  };
+
+  const handlerOnClickNext = () => {
+    const allValue = formik.values;
+    const allError = formik.errors;
+
+    let isHasError = false;
+
+    switch (currentStepIndex) {
+      case 1:
+        const basicInfoFields = [
+          "name",
+          "dateOfBirth",
+          "location",
+          "city",
+          "username",
+          "email",
+          "password",
+          "passwordConfirmation",
+        ];
+        isHasError = basicInfoFields.some(
+          (field) => allValue[field] === "" || allError[field]
+        );
+        break;
+      case 2:
+        const identityFields = [
+          "sexualIdentites",
+          "sexualPreferences",
+          "racialPreferences",
+          "meetingInterests",
+        ];
+        isHasError = identityFields.some(
+          (field) => allValue[field] === "" || allError[field]
+        );
+        break;
+    }
+
+    if (isHasError) {
+      alert(
+        "Please review and correct any invalid or missing information before proceeding."
+      );
+    } else {
+      setCurrentStepIndex(currentStepIndex + 1);
+    }
+  };
+
+  const handlerOnClickConfirm = () => {
+    formik.handleSubmit();
+  };
 
   return (
     <div className="w-full bg-white mt-8 flex justify-center border-t border-gray-300 fixed bottom-0 z-10">
@@ -127,14 +112,8 @@ function RegisterFooter() {
           <span className="text-gray-600">/3</span>
         </p>
         <div className="flex flex-row space-x-6 items-center">
-          <button
-            className="flex flex-row items-center space-x-2 px-2 py-1"
-            type="button"
-            onClick={handlerOnClickBack}
-          >
-            {renderBackButton(currentStepIndex !== 1)}
-          </button>
-          {renderNextAndConfirmButton(currentStepIndex === 3 ? true : false)}
+          {renderBackButton()}
+          {isLastStep ? renderConfirmButton() : renderNextButton()}
         </div>
       </div>
     </div>
