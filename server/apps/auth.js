@@ -71,6 +71,28 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
   }
 });
 
+authRouter.get("/check-available", async (req, res) => {
+  const checkColumn = req.query.checkColumn;
+  const checkValue = req.query.checkValue;
+  try {
+    const query = `
+      SELECT COUNT(*) AS count
+      FROM users
+      WHERE ${checkColumn} = $1
+    `;
+    const respone = await pool.query(query, [checkValue]);
+    const count = parseInt(respone.rows[0].count);
+    return res.json({
+      data: !(count > 0),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
+
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   console.log("Email from req.body:", email);

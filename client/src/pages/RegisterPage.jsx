@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterForm from "../components/register/RegisterForm";
 import RegisterFooter from "../components/register/RegisterFooter";
@@ -32,8 +33,43 @@ const formSchema = Yup.object().shape({
   dateOfBirth: Yup.string().required("Date of birth is a required field"),
   location: Yup.string().required("Location is a required field"),
   city: Yup.string().required("City is a required field"),
-  username: Yup.string().required().min(6).max(25),
-  email: Yup.string().required().email(),
+  username: Yup.string()
+    .required()
+    .min(6)
+    .max(25)
+    .test(
+      "check-username-availability",
+      "Username is already taken",
+      async function (value) {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/auth/check-available?checkColumn=username&checkValue=${value}`
+          );
+          return response.data.data;
+        } catch (error) {
+          console.error(`Error checking username availability: ${error}`);
+          return false;
+        }
+      }
+    ),
+  email: Yup.string()
+    .required()
+    .email()
+    .test(
+      "check-username-availability",
+      "Username is already taken",
+      async function (value) {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/auth/check-available?checkColumn=email&checkValue=${value}`
+          );
+          return response.data.data;
+        } catch (error) {
+          console.error(`Error checking username availability: ${error}`);
+          return false;
+        }
+      }
+    ),
   password: Yup.string().required().min(8).max(50),
   passwordConfirmation: Yup.string().oneOf(
     [Yup.ref("password"), null],
