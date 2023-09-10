@@ -37,6 +37,8 @@ function RegisterFooter() {
     (field) => formik.values[field] === "" || formik.errors[field]
   );
 
+  const isHasErrorProfilePictures = formik.errors.profilePictures;
+
   const renderBackButton = () => (
     <button
       className="flex flex-row items-center space-x-2 px-2 py-1"
@@ -124,7 +126,7 @@ function RegisterFooter() {
         "Identities and Interests are Invalid or Incomplete\nPlease review and correct any errors or missing information in the Identities and Interests section before proceeding."
       );
       return setCurrentStepIndex(2);
-    } else if (formik.errors.profilePictures) {
+    } else if (isHasErrorProfilePictures) {
       return alert(
         `Profile Pictures Error\nProfile Pictures must have at least 2 photos. Please upload additional photos to meet this requirement.`
       );
