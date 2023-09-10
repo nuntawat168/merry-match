@@ -96,10 +96,22 @@ function ProfilePicturesForm() {
   return (
     <div className="w-[930px] flex flex-col justify-start items-start font-nunito">
       <p className="text-purple-500 text-2xl font-bold">Profile Pictures</p>
-      <p className="text-gray-800  text-base font-normal mt-1">
+      <p
+        className={`${
+          formik.submitCount !== 0 && formik.errors.profilePictures
+            ? "text-red-300"
+            : "text-gray-800"
+        }    text-base font-normal mt-1`}
+      >
         Upload at least 2 photos
       </p>
-      <div className="w-full flex flex-row mt-6 justify-center space-x-6">
+      <div
+        className={`${
+          formik.submitCount !== 0 && formik.errors.profilePictures
+            ? "border-2 border-red-300 rounded-2xl"
+            : null
+        } w-full flex flex-row mt-6 justify-center space-x-6 `}
+      >
         {picturesProfile.map((element, index) => {
           if (element !== null) {
             return renderPicture(

@@ -102,7 +102,11 @@ function RegisterFooter() {
   };
 
   const handlerOnClickConfirm = () => {
+    if (formik.errors.profilePictures) {
+      alert(formik.errors.profilePictures);
+    }
     formik.handleSubmit();
+    console.log(formik);
   };
 
   return (

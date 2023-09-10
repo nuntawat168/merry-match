@@ -70,7 +70,13 @@ function RegisterPage() {
     hobbiesInterests: Yup.array()
       .of(Yup.string())
       .max(10, "Maximum of 10 Hobbies/Interests"),
-    // profilePictures: [],
+    profilePictures: Yup.object().test(
+      "has-minimum-keys",
+      "Profile Pictures must have at least 2 photos",
+      (value) => {
+        return Object.keys(value).length >= 2;
+      }
+    ),
   });
 
   function handleOnSubmit(data) {
