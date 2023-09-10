@@ -7,6 +7,10 @@ import arrowBackRed500 from "../../assets/icon/arrow_back_red_500.svg";
 function RegisterFooter() {
   const { currentStepIndex, setCurrentStepIndex } = useContext(FormContext);
   const formik = useFormikContext();
+
+  const isLastStep = currentStepIndex === 3;
+  const isFirstStep = currentStepIndex === 1;
+
   const basicInfoFields = [
     "name",
     "dateOfBirth",
@@ -17,6 +21,7 @@ function RegisterFooter() {
     "password",
     "passwordConfirmation",
   ];
+
   const identityFields = [
     "sexualIdentites",
     "sexualPreferences",
@@ -24,16 +29,13 @@ function RegisterFooter() {
     "meetingInterests",
   ];
 
-  const isLastStep = currentStepIndex === 3;
-  const isFirstStep = currentStepIndex === 1;
+  const isHasErrorBasicInfo = basicInfoFields.some(
+    (field) => formik.values[field] === "" || formik.errors[field]
+  );
 
-  let isHasErrorBasicInfo = basicInfoFields.some((field) => {
-    return formik.values[field] === "" || formik.errors[field];
-  });
-
-  let isHasErrorIdentity = identityFields.some((field) => {
-    return formik.values[field] === "" || formik.errors[field];
-  });
+  const isHasErrorIdentity = identityFields.some(
+    (field) => formik.values[field] === "" || formik.errors[field]
+  );
 
   const renderBackButton = () => (
     <button
@@ -41,17 +43,19 @@ function RegisterFooter() {
       type="button"
       onClick={handlerOnClickBack}
     >
-      {isFirstStep ? (
-        <>
-          <img src={arrowBackGray500} alt="arrow back icon" />
-          <p className="text-gray-500 text-base font-bold">Back</p>
-        </>
-      ) : (
-        <>
-          <img src={arrowBackRed500} alt="arrow back icon" />
-          <p className="text-red-500 text-base font-bold">Back</p>
-        </>
-      )}
+      <>
+        <img
+          src={isFirstStep ? arrowBackGray500 : arrowBackRed500}
+          alt="arrow back icon"
+        />
+        <p
+          className={`text-${
+            isFirstStep ? "gray" : "red"
+          }-500 text-base font-bold`}
+        >
+          Back
+        </p>
+      </>
     </button>
   );
 
@@ -76,56 +80,40 @@ function RegisterFooter() {
   );
 
   const handlerOnClickBack = () => {
-    if (currentStepIndex !== 1) {
+    if (!isFirstStep) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
 
   const handlerOnClickNext = () => {
-    const allValue = formik.values;
-    const allError = formik.errors;
-
-    let isHasError = false;
-
     switch (currentStepIndex) {
       case 1:
-        const basicInfoFields = [
-          "name",
-          "dateOfBirth",
-          "location",
-          "city",
-          "username",
-          "email",
-          "password",
-          "passwordConfirmation",
-        ];
-        isHasError = basicInfoFields.some((field) => {
-          return allValue[field] === "" || allError[field];
-        });
+        if (isHasErrorBasicInfo) {
+          basicInfoFields.map((field) => formik.setFieldTouched(field, true));
+          alert(
+            "Please review and correct any invalid or missing information before proceeding."
+          );
+        } else {
+          setCurrentStepIndex(currentStepIndex + 1);
+        }
         break;
       case 2:
-        const identityFields = [
-          "sexualIdentites",
-          "sexualPreferences",
-          "racialPreferences",
-          "meetingInterests",
-        ];
-        isHasError = identityFields.some(
-          (field) => allValue[field] === "" || allError[field]
-        );
-        break;
-    }
-
-    if (isHasError) {
-      alert(
-        "Please review and correct any invalid or missing information before proceeding."
-      );
-    } else {
-      setCurrentStepIndex(currentStepIndex + 1);
+        if (isHasErrorIdentity) {
+          identityFields.map((field) => formik.setFieldTouched(field, true));
+          alert(
+            "Please review and correct any invalid or missing information before proceeding."
+          );
+        } else {
+          setCurrentStepIndex(currentStepIndex + 1);
+        }
     }
   };
 
   const handlerOnClickConfirm = () => {
+    formik.handleSubmit();
+    Object.keys(formik.values).map((field) =>
+      formik.setFieldTouched(field, true)
+    );
     if (isHasErrorBasicInfo) {
       alert(
         "Basic Information is Invalid or Incomplete\nPlease review and correct any errors or missing information in the Basic Information section before proceeding."
@@ -141,8 +129,6 @@ function RegisterFooter() {
         `Profile Pictures Error\nProfile Pictures must have at least 2 photos. Please upload additional photos to meet this requirement.`
       );
     }
-    formik.handleSubmit();
-    console.log(formik);
   };
 
   return (

@@ -80,7 +80,6 @@ function RegisterPage() {
   });
 
   function handleOnSubmit(data) {
-    console.log(data);
     const formData = new FormData();
     for (let key in data) {
       if (key !== "profilePictures") {
