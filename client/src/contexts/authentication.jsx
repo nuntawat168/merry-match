@@ -33,7 +33,6 @@ function AuthProvider(props) {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      alert("Register Successfully");
       navigate("/login");
     } catch (error) {
       console.log(`Register Error: ${error}`);

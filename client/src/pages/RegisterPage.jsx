@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterForm from "../components/register/RegisterForm";
 import RegisterFooter from "../components/register/RegisterFooter";
+import RegisterLoading from "../components/register/RegisterLoading";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../contexts/authentication";
 import { register } from "react-scroll/modules/mixins/scroller";
@@ -92,6 +93,13 @@ function RegisterPage() {
     register(formData);
   }
 
+  function renderLoading(props) {
+    if (props.isSubmitting) {
+      return <div className="bg-red-600 w-2 h-2"></div>;
+    }
+    return null;
+  }
+
   return (
     <FormContext.Provider
       value={{
@@ -109,11 +117,12 @@ function RegisterPage() {
         validationSchema={formSchema}
         onSubmit={handleOnSubmit}
       >
-        <div className="w-full h-screen flex flex-col justify-start items-center bg-main font-nunito static">
+        <div className="w-full h-screen flex flex-col justify-start items-center bg-main font-nunito relative">
           <Navbar />
           <div className="w-[930px] h-screen mt-20  mb-[224px] pb-[224px] flex flex-col justify-start space-y-16">
             <RegisterHeader />
             <RegisterForm />
+            <RegisterLoading />
           </div>
           <RegisterFooter />
         </div>
