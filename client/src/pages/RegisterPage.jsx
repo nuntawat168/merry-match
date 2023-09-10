@@ -7,9 +7,61 @@ import RegisterFooter from "../components/register/RegisterFooter";
 import RegisterLoading from "../components/register/RegisterLoading";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../contexts/authentication";
-import { register } from "react-scroll/modules/mixins/scroller";
 
 export const FormContext = createContext();
+
+const initDataForm = {
+  name: "",
+  dateOfBirth: "",
+  location: "",
+  city: "",
+  username: "",
+  email: "",
+  password: "",
+  passwordConfirmation: "",
+  sexualIdentites: "",
+  sexualPreferences: "",
+  racialPreferences: "",
+  meetingInterests: "",
+  hobbiesInterests: [],
+  profilePictures: {},
+};
+
+const formSchema = Yup.object().shape({
+  name: Yup.string().required("Name is a required field").max(25),
+  dateOfBirth: Yup.string().required("Date of birth is a required field"),
+  location: Yup.string().required("Location is a required field"),
+  city: Yup.string().required("City is a required field"),
+  username: Yup.string().required().min(6).max(25),
+  email: Yup.string().required().email(),
+  password: Yup.string().required().min(8).max(50),
+  passwordConfirmation: Yup.string().oneOf(
+    [Yup.ref("password"), null],
+    "Passwords must match"
+  ),
+  sexualIdentites: Yup.string().required(
+    "Sexual Identites is a required field"
+  ),
+  sexualPreferences: Yup.string().required(
+    "Sexual Preferences is a required field"
+  ),
+  racialPreferences: Yup.string().required(
+    "Racial Preferences is a required field"
+  ),
+  meetingInterests: Yup.string().required(
+    "Meeting Interests is a required field"
+  ),
+  hobbiesInterests: Yup.array()
+    .of(Yup.string())
+    .max(10, "Maximum of 10 Hobbies/Interests"),
+  profilePictures: Yup.object().test(
+    "has-minimum-keys",
+    "Profile Pictures must have at least 2 photos",
+    (value) => {
+      return Object.keys(value).length >= 2;
+    }
+  ),
+});
 
 function RegisterPage() {
   const { register } = useAuth();
@@ -21,64 +73,11 @@ function RegisterPage() {
     null,
     null,
   ]);
-  const [formData, setFormData] = useState({});
   const titleForm = [
     "Basic Infomations",
     "Identities and Interests",
     "Upload Photos",
   ];
-  const initDataForm = {
-    name: "",
-    dateOfBirth: "",
-    location: "",
-    city: "",
-    username: "",
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-    sexualIdentites: "",
-    sexualPreferences: "",
-    racialPreferences: "",
-    meetingInterests: "",
-    hobbiesInterests: [],
-    profilePictures: {},
-  };
-
-  const formSchema = Yup.object().shape({
-    name: Yup.string().required("Name is a required field").max(25),
-    dateOfBirth: Yup.string().required("Date of birth is a required field"),
-    location: Yup.string().required("Location is a required field"),
-    city: Yup.string().required("City is a required field"),
-    username: Yup.string().required().min(6).max(25),
-    email: Yup.string().required().email(),
-    password: Yup.string().required().min(8).max(50),
-    passwordConfirmation: Yup.string().oneOf(
-      [Yup.ref("password"), null],
-      "Passwords must match"
-    ),
-    sexualIdentites: Yup.string().required(
-      "Sexual Identites is a required field"
-    ),
-    sexualPreferences: Yup.string().required(
-      "Sexual Preferences is a required field"
-    ),
-    racialPreferences: Yup.string().required(
-      "Racial Preferences is a required field"
-    ),
-    meetingInterests: Yup.string().required(
-      "Meeting Interests is a required field"
-    ),
-    hobbiesInterests: Yup.array()
-      .of(Yup.string())
-      .max(10, "Maximum of 10 Hobbies/Interests"),
-    profilePictures: Yup.object().test(
-      "has-minimum-keys",
-      "Profile Pictures must have at least 2 photos",
-      (value) => {
-        return Object.keys(value).length >= 2;
-      }
-    ),
-  });
 
   function handleOnSubmit(data) {
     const formData = new FormData();
@@ -93,21 +92,12 @@ function RegisterPage() {
     register(formData);
   }
 
-  function renderLoading(props) {
-    if (props.isSubmitting) {
-      return <div className="bg-red-600 w-2 h-2"></div>;
-    }
-    return null;
-  }
-
   return (
     <FormContext.Provider
       value={{
         currentStepIndex,
         setCurrentStepIndex,
         titleForm,
-        formData,
-        setFormData,
         picturesProfile,
         setPicturesProfile,
       }}
