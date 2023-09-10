@@ -7,9 +7,33 @@ import arrowBackRed500 from "../../assets/icon/arrow_back_red_500.svg";
 function RegisterFooter() {
   const { currentStepIndex, setCurrentStepIndex } = useContext(FormContext);
   const formik = useFormikContext();
+  const basicInfoFields = [
+    "name",
+    "dateOfBirth",
+    "location",
+    "city",
+    "username",
+    "email",
+    "password",
+    "passwordConfirmation",
+  ];
+  const identityFields = [
+    "sexualIdentites",
+    "sexualPreferences",
+    "racialPreferences",
+    "meetingInterests",
+  ];
 
   const isLastStep = currentStepIndex === 3;
   const isFirstStep = currentStepIndex === 1;
+
+  let isHasErrorBasicInfo = basicInfoFields.some((field) => {
+    return formik.values[field] === "" || formik.errors[field];
+  });
+
+  let isHasErrorIdentity = identityFields.some((field) => {
+    return formik.values[field] === "" || formik.errors[field];
+  });
 
   const renderBackButton = () => (
     <button
@@ -102,8 +126,20 @@ function RegisterFooter() {
   };
 
   const handlerOnClickConfirm = () => {
-    if (formik.errors.profilePictures) {
-      alert(formik.errors.profilePictures);
+    if (isHasErrorBasicInfo) {
+      alert(
+        "Basic Information is Invalid or Incomplete\nPlease review and correct any errors or missing information in the Basic Information section before proceeding."
+      );
+      return setCurrentStepIndex(1);
+    } else if (isHasErrorIdentity) {
+      alert(
+        "Identities and Interests are Invalid or Incomplete\nPlease review and correct any errors or missing information in the Identities and Interests section before proceeding."
+      );
+      return setCurrentStepIndex(2);
+    } else if (formik.errors.profilePictures) {
+      return alert(
+        `Profile Pictures Error\nProfile Pictures must have at least 2 photos. Please upload additional photos to meet this requirement.`
+      );
     }
     formik.handleSubmit();
     console.log(formik);
