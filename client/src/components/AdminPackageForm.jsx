@@ -12,58 +12,65 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const AdminAddPackageForm = () => {
   const [files, setFiles] = useState(null);
+  const initialValues = {
+    package_name: "",
+    package_price: 0,
+    package_limit: 0,
+    package_icon: "",
+    package_details: [""],
+    created_by: null,
+  };
+
+  const validationSchema = Yup.object({
+    package_name: Yup.string().required("Required"),
+    package_price: Yup.number().required("Required"),
+    package_limit: Yup.number().required("Required"),
+    package_icon: Yup.mixed().required("Required"),
+    package_details: Yup.array().of(Yup.string().required("Required")),
+  });
+
+  const onSubmit = async (values, { resetForm }) => {
+    alert(JSON.stringify(values, null, 2));
+
+    const { data, error } = await supabase.storage
+      .from("Files")
+      .upload(
+        `public/${files.name.split(".").join("-" + Date.now() + ".")}`,
+        files,
+        {
+          cacheControl: "3600",
+          upsert: false,
+        }
+      );
+
+    values = { ...values, package_icon: data.path };
+    console.log(values);
+    createPackage(values);
+    resetForm();
+  };
 
   const formik = useFormik({
-    initialValues: {
-      package_name: "",
-      package_price: 0,
-      package_limit: 0,
-      package_icon: "",
-      package_details: [""],
-      created_by: null,
-    },
-    validationSchema: Yup.object({
-      package_name: Yup.string().required("Package name is required"),
-      package_price: Yup.number().required("Package price is required"),
-      package_limit: Yup.number().required("Merry limit is required"),
-      package_icon: Yup.mixed().required("Package icon is required"),
-      package_details: Yup.array().of(
-        Yup.string().required("Package details is required")
-      ),
-    }),
-
-    onSubmit: async (values) => {
-      console.log(values);
-      alert(JSON.stringify(values, null, 2));
-
-      const { data, error } = await supabase.storage
-        .from("Files")
-        .upload(
-          `public/${files.name.split(".").join("-" + Date.now() + ".")}`,
-          files,
-          {
-            cacheControl: "3600",
-            upsert: false,
-          }
-        );
-
-      values = { ...values, package_icon: data.path };
-      console.log(values);
-      createPackage(values);
-    },
+    initialValues,
+    validationSchema,
+    onSubmit,
   });
 
   const createPackage = async (values) => {
-    console.log(values, "axios");
+    console.log("packageDetails", values);
     try {
       await axios.post("http://localhost:4000/packages", values);
     } catch (error) {
-      console.log("request error");
+      console.log("Request error:", error);
     }
   };
+
   return (
     <FormikProvider value={formik}>
-      <form onSubmit={formik.handleSubmit} className="w-screen h-screen">
+      <form
+        onSubmit={formik.handleSubmit}
+        onReset={formik.handleReset}
+        className="w-screen h-screen"
+      >
         <section className="w-full flex justify-between h-[10%] px-[60px] py-[16px] ">
           <div className="flex flex-col justify-center font-bold text-2xl ">
             Add Package
@@ -88,6 +95,7 @@ const AdminAddPackageForm = () => {
           <div className="border border-gray-300 mx-[60px] mt-[40px] mb-[242px w-[90%] h-auto flex bg-white">
             <div className="w-[100%] h-[20% mx-[100px] mt-[40px] mb-[60px]">
               <div className="flex flex-row justify-between">
+                {/* Package Name */}
                 <div className="flex flex-col w-[33%]">
                   <label htmlFor="package_name">
                     Package name <span className="text-red-500">*</span>
@@ -96,15 +104,15 @@ const AdminAddPackageForm = () => {
                     id="package_name"
                     name="package_name"
                     type="text"
-                    className={`border w-72 rounded-md h-9 focus:outline-none ${
-                      formik.errors.package_name
+                    className={`border w-72 rounded-md h-9 focus:outline-none pl-3 ${
+                      formik.touched.package_name && formik.errors.package_name
                         ? `border-red-500`
                         : `border-gray-400`
                     }`}
-                    value={formik.values.package_name}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps("package_name")}
                   />
-                  {formik.errors.package_name ? (
+
+                  {formik.touched.package_name && formik.errors.package_name ? (
                     <div className="text-red-500">
                       {formik.errors.package_name}
                     </div>
@@ -120,15 +128,16 @@ const AdminAddPackageForm = () => {
                     id="package_price"
                     name="package_price"
                     type="number"
-                    className={`border w-72 rounded-md border-gray-400 h-9 focus:outline-none ${
+                    className={`border w-72 rounded-md border-gray-400 h-9 focus:outline-none pl-3 ${
+                      formik.touched.package_price &&
                       formik.errors.package_price
                         ? `border-red-500`
                         : `border-gray-400`
                     }`}
-                    value={formik.values.package_price}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps("package_price")}
                   />
-                  {formik.errors.package_price ? (
+                  {formik.touched.package_price &&
+                  formik.errors.package_price ? (
                     <div className="text-red-500">
                       {formik.errors.package_price}
                     </div>
@@ -144,15 +153,16 @@ const AdminAddPackageForm = () => {
                     id="package_limit"
                     name="package_limit"
                     type="number"
-                    className={`border w-72 rounded-md border-gray-400 h-9 focus:outline-none ${
+                    className={`border w-72 rounded-md border-gray-400 h-9 focus:outline-none pl-3 ${
+                      formik.touched.package_limit &&
                       formik.errors.package_limit
                         ? `border-red-500`
                         : `border-gray-400`
                     }`}
-                    value={formik.values.package_limit}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps("package_limit")}
                   />
-                  {formik.errors.package_limit ? (
+                  {formik.touched.package_limit &&
+                  formik.errors.package_limit ? (
                     <div className="text-red-500">
                       {formik.errors.package_limit}
                     </div>
@@ -168,7 +178,7 @@ const AdminAddPackageForm = () => {
 
               <div className="w-[100px]">
                 <label htmlFor="upload">
-                  <div className="border w-[100px] m-0 h-[100px] flex flex-col justify-center items-center text-[30px] text-purple-600 bg-gray-100 rounded-xl cursor-pointer">
+                  <div className="border w-[100px] m-0 h-[100px] flex flex-col justify-center items-center text-[30px] text-purple-600 bg-gray-100 rounded-xl cursor-pointer hover:bg-gray-300">
                     + <div className="text-[15px]">Upload icon</div>
                   </div>
                 </label>
@@ -184,7 +194,7 @@ const AdminAddPackageForm = () => {
                 }}
                 hidden
               />
-              {formik.errors.package_icon && (
+              {formik.touched.package_icon && formik.errors.package_icon && (
                 <p className="text-red">{formik.errors.package_icon}</p>
               )}
               {formik.values.package_icon && (
@@ -192,6 +202,8 @@ const AdminAddPackageForm = () => {
               )}
 
               <hr className=" mt-[30px] border-gray-300 " />
+
+              {/* Package Details */}
               <h1 className="mt-[20px] mb-[20px] text-gray-700">
                 Package detail
               </h1>
@@ -214,7 +226,8 @@ const AdminAddPackageForm = () => {
                             id={`package_details_${index}`}
                             name={`package_details[${index}]`}
                             type="text"
-                            className={`border rounded-md border-gray-400 w-[800px] h-9 focus:outline-none ${
+                            className={`border rounded-md border-gray-400 w-[800px] h-9 focus:outline-none pl-3 ${
+                              formik.touched.package_details &&
                               formik.errors.package_details &&
                               formik.errors.package_details[index]
                                 ? `border-red-500`
@@ -222,8 +235,10 @@ const AdminAddPackageForm = () => {
                             }`}
                             value={formik.values.package_details[index]}
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                           />
-                          {formik.errors.package_details ? (
+                          {formik.touched.package_details &&
+                          formik.errors.package_details ? (
                             <div className="text-red-500">
                               {formik.errors.package_details[index]}
                             </div>
@@ -243,13 +258,19 @@ const AdminAddPackageForm = () => {
                       </div>
                     ))}
 
-                    <div className="w-[240px] h-[48px] mt-[20px]">
+                    <div className="w-[500px] h-[48px] mt-[20px] flex">
                       <button
                         type="button"
-                        className="mx-[40px] px-[24px] py-[12px] rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white"
+                        className="mx-[40px] px-[24px] py-[12px] rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white "
                         onClick={() => arrayHelpers.push("")}
                       >
                         + Add detail
+                      </button>
+                      <button
+                        type="reset"
+                        className="px-[24px] py-[12px] rounded-full  bg-red-500 text-white hover:bg-red-600 hover:text-white"
+                      >
+                        Reset
                       </button>
                     </div>
                   </>

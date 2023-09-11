@@ -13,6 +13,7 @@ import Chat from "./pages/Chat";
 import Test1 from "./pages/Test1";
 
 // function App() {
+
 //   return (
 //     <>
 //       <Routes>
@@ -21,8 +22,8 @@ import Test1 from "./pages/Test1";
 //         <Route path="/register" element={<RegisterPage />} />
 //         <Route path="/match" element={<MatchPages />} />
 //         <Route path="/merry-list" element={<MerryListPage />} />
-//         <Route path="/addPackage" element={<AdminAddPackage />} />
-//         <Route path="/packages" element={<PackagePage />} />
+//         <Route path="/package/add" element={<AdminAddPackage />} />
+//         <Route path="/package/edit/:id" element={<AdminEditPackage />} />
 //         <Route path="/admin" element={<Adminpackage />} />
 //         <Route path="/payment" element={<PaymentPage1 />} />
 //         <Route path="/chat" element={<Chat />} />
