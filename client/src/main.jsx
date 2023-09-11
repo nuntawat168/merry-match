@@ -6,6 +6,8 @@ import { AuthProvider } from "./contexts/authentication.jsx";
 import { BrowserRouter } from "react-router-dom";
 import jwtInterceptor from "./utils/jwtInterceptor";
 import { ContextProvider } from "./contexts/usecontexts.jsx";
+
+jwtInterceptor();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>

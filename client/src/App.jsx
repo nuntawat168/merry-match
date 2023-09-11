@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useAuth } from "./contexts/authentication";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -9,6 +9,7 @@ import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
 import PackagePage from "./pages/packagepage";
 import Adminpackage from "../src/pages/Adminpackage";
+
 import PaymentPage1 from "./pages/PaymentPage1";
 function App() {
   return (
@@ -27,4 +28,13 @@ function App() {
     </>
   );
 }
+
+// import AuthenticatedApp from "./pages/AuthenticatedApp";
+// import UnauthenticatedApp from "./pages/UnauthenticatedApp";
+
+// function App() {
+//   const auth = useAuth();
+//   return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+// }
+
 export default App;
