@@ -141,7 +141,7 @@ export default {
       boxShadow: {
         nav: "2px 2px 12px 0px rgba(64, 50, 133, 0.12)",
         login: "2px 2px 12px 0px rgba(64, 50, 133, 0.16)",
-        userDropdown: "2px 2px 14px 0px rgba(64, 50, 133, 0.5)"
+        userDropdown: "2px 2px 14px 0px rgba(64, 50, 133, 0.8)"
       },
       fontSize: {
         "4/5xl": ["46px", "57.5px"],

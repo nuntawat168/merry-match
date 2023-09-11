@@ -7,7 +7,7 @@ function Hero() {
     const navigate = useNavigate();
 
     return (
-        <section className="w-full bg-red-200 flex justify-center">
+        <section className="w-full bg flex justify-center">
             <main className="bg w-[1440px] flex justify-center relative font-nunito">            
                 <div className="z-2 w-[1381px] h-[489px] absolute top-[72px] left-0 bg-no-repeat bg-hero"></div>
                 <img src={heroImg1} alt="photo1" className="absolute right-[203px] bottom-[402px]"/>
