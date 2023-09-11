@@ -14,6 +14,33 @@ import Chat from "./pages/Chat";
 import Test1 from "./pages/Test1";
 import AdminComplaintListPage from "./pages/AdminComplaintListPage";
 
+function App() {
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/match" element={<MatchPages />} />
+        <Route path="/merry-list" element={<MerryListPage />} />
+        <Route path="/addPackage" element={<AdminAddPackage />} />
+        <Route path="/packages" element={<PackagePage />} />
+        <Route path="/admin" element={<Adminpackage />} />
+        <Route path="/payment" element={<PaymentPage1 />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/test" element={<Test1 />} />
+      </Routes>
+    </>
+  );
+}
+export default App;
+
+
+// import AuthenticatedApp from "./pages/AuthenticatedApp";
+// import UnauthenticatedApp from "./pages/UnauthenticatedApp";
+// import { useAuth } from "./contexts/authentication";
+
 // function App() {
 //   return (
 //     <>
@@ -38,13 +65,3 @@ import AdminComplaintListPage from "./pages/AdminComplaintListPage";
 //   );
 // }
 // export default App;
-
-import AuthenticatedApp from "./pages/AuthenticatedApp";
-import UnauthenticatedApp from "./pages/UnauthenticatedApp";
-import { useAuth } from "./contexts/authentication";
-
-function App() {
-  const auth = useAuth();
-  return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
-}
-export default App;

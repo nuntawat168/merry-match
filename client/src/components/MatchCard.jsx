@@ -4,6 +4,8 @@ import '@react-spring/web';
 import axios from 'axios';
 import { AiFillHeart } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
+import { Link } from 'react-router-dom';
+import ProfilePage from '../pages/ProfilePage';
 
 const MatchCard = () => {
     const [originalUsers, setOriginalUsers] = useState([]);
@@ -21,16 +23,22 @@ const MatchCard = () => {
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            const apiUrl = 'http://localhost:4000/user';
+            const user_id = '7';
+            const apiUrl = `http://localhost:4000/user/unmatchlist/${user_id}`;
             const queryParams = new URLSearchParams();
-            queryParams.append('minAge', minAge);
-            queryParams.append('maxAge', maxAge);
+
+            if (minAge) {
+                queryParams.append('minAge', minAge);
+            }
+            if (maxAge) {
+                queryParams.append('maxAge', maxAge);
+            }
 
             if (isMaleSelected) {
-                queryParams.append('sex', 'Male');
+                queryParams.append('sex', 'male');
             }
             if (isFemaleSelected) {
-                queryParams.append('sex', 'Female');
+                queryParams.append('sex', 'female');
             }
 
             const response = await axios.get(`${apiUrl}?${queryParams}`);
@@ -52,6 +60,7 @@ const MatchCard = () => {
             setIsSearching(false);
         }
     };
+
 
     const handleHeartClick = async (user_response, index) => {
         try {
@@ -112,8 +121,8 @@ const MatchCard = () => {
 
     const filterUsers = (user) => {
         if (
-            (isMaleSelected && user.sex === 'Male') ||
-            (isFemaleSelected && user.sex === 'Female') ||
+            (isMaleSelected && user.sex === 'male') ||
+            (isFemaleSelected && user.sex === 'female') ||
             (isDefaultSelected && !isMaleSelected && !isFemaleSelected)
         ) {
             return user.age >= minAge && user.age <= maxAge;
@@ -132,8 +141,11 @@ const MatchCard = () => {
                         preventSwipe={["up", "down"]}
                     >
                         <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
-                            <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
-                            <img src={user.image} alt={user.name} className='w-full h-full rounded-3xl' />
+                            <Link to={`/profile/${user.user_id}`}>
+                                <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
+                                <img src={user.image} alt={user.name} className='w-full h-full rounded-3xl' />
+                            </Link>
+
                             <div className='flex flex-row absolute top-[550px] left-[220px]'>
                                 <button
                                     className='mr-[20px] w-[80px] h-[80px] bg-white rounded-3xl'
