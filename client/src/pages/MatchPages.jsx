@@ -10,7 +10,6 @@ const MatchPages = () => {
             <div className='flex flex-row h-full w-[100vw] bg-[#ffff]'>
                 <DiscoverSideBar />
                 <MatchCard />
-
             </div>
         </article>
     )
