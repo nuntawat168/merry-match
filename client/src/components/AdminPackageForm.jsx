@@ -10,8 +10,9 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const AdminAddPackageForm = () => {
+const AdminAddPackageForm = ({ title, button }) => {
   const [files, setFiles] = useState(null);
+
   const initialValues = {
     package_name: "",
     package_price: 0,
@@ -73,7 +74,7 @@ const AdminAddPackageForm = () => {
       >
         <section className="w-full flex justify-between h-[10%] px-[60px] py-[16px] ">
           <div className="flex flex-col justify-center font-bold text-2xl ">
-            Add Package
+            {title}
           </div>
           <div className="flex">
             <button
@@ -86,7 +87,7 @@ const AdminAddPackageForm = () => {
               type="submit"
               className="flex flex-col justify-center px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
             >
-              Create
+              {button}
             </button>
           </div>
         </section>

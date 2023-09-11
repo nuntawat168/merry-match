@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useFormikContext } from "formik";
 
 const PreviewImage = ({ file }) => {
   const [preview, setPreview] = useState("");
+
+  const formik = useFormikContext();
 
   if (file) {
     const reader = new FileReader();
@@ -18,7 +21,10 @@ const PreviewImage = ({ file }) => {
         src={preview}
         alt="previewImage"
       />
-      <button className="border rounded-full w-[20px] h-[20px] flex justify-center items-center absolute top-0 left-10 bg-red-600 text-white">
+      <button
+        onClick={() => formik.setFieldValue("package_icon", null)}
+        className="border rounded-full w-[20px] h-[20px] flex justify-center items-center absolute top-0 left-10 bg-red-600 text-white"
+      >
         x
       </button>
     </div>
