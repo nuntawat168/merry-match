@@ -23,6 +23,31 @@ userRouter.get("/", async (req, res) => {
 });
 
 
+userRouter.get("/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+    try {
+        const result = await pool.query(
+            "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.package_id, users.name, profile_images.image, merry_lists.* " +
+            "FROM users " +
+            "INNER JOIN profile_images ON users.user_id = profile_images.user_id " +
+            "LEFT JOIN merry_lists ON users.user_id = merry_lists.user_interest OR users.user_id = merry_lists.user_response " +
+            "WHERE users.user_id = $1", [user_id]
+        );
+
+        if (result.rows.length > 0) {
+            res.json({
+                data: result.rows[0],
+            });
+        } else {
+            res.status(404).json({ error: "ไม่พบผู้ใช้ที่ระบุ" });
+        }
+    } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
+    }
+});
+
+
 userRouter.get("/matchlist/:user_id", async (req, res) => {
     try {
         const { user_id } = req.params;

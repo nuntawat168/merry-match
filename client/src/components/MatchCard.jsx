@@ -7,6 +7,7 @@ import { ImCross } from "react-icons/im";
 import { Link } from 'react-router-dom';
 import ProfilePage from '../pages/ProfilePage';
 
+
 const MatchCard = () => {
     const [originalUsers, setOriginalUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
@@ -19,6 +20,9 @@ const MatchCard = () => {
     const cardRefs = useRef([]);
     const originalUsersRef = useRef([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
 
     const fetchData = async () => {
         setIsSearching(true);
@@ -61,7 +65,6 @@ const MatchCard = () => {
         }
     };
 
-
     const handleHeartClick = async (user_response, index) => {
         try {
             const user_interest = displayedUser.user_id;
@@ -98,6 +101,16 @@ const MatchCard = () => {
 
     const handleSearchClick = async () => {
         fetchData();
+    };
+
+    const openPopup = (user) => {
+        setIsPopupOpen(true);
+        setSelectedUser(user);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+        setSelectedUser(null);
     };
 
     useEffect(() => {
@@ -141,10 +154,13 @@ const MatchCard = () => {
                         preventSwipe={["up", "down"]}
                     >
                         <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
-                            <Link to={`/profile/${user.user_id}`}>
+                            <button
+                                onClick={() => openPopup(user)}>
                                 <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
                                 <img src={user.image} alt={user.name} className='w-full h-full rounded-3xl' />
-                            </Link>
+                            </button>
+
+
 
                             <div className='flex flex-row absolute top-[550px] left-[220px]'>
                                 <button
@@ -168,6 +184,23 @@ const MatchCard = () => {
                     </TinderCard>
                 ))}
             </div>
+
+            {isPopupOpen && (
+                <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-70 flex justify-center items-center">
+                    <div className="bg-white p-8 rounded-xl">
+                        {selectedUser && (
+                            <>
+                                <h2 className="text-2xl font-semibold">{selectedUser.name}</h2>
+                                <p>Email: {selectedUser.email}</p>
+                                {/* เพิ่มข้อมูลอื่นๆที่คุณต้องการแสดง */}
+                            </>
+                        )}
+                        <button onClick={closePopup}>Close</button>
+                    </div>
+                </div>
+            )}
+
+
 
             <section className="bg-white p-4 shadow absolute top-[88px] right-[143.5px] h-[936px] w-[220px]">
                 <h2 className="text-xl font-semibold mb-2">Filter Profiles</h2>
@@ -253,6 +286,8 @@ const MatchCard = () => {
                 </div>
             </section>
         </div>
+
+
     );
 
 }
