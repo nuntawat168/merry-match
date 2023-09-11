@@ -25,14 +25,20 @@ function TagInputField(props) {
             >
               {meta.value.map((element, index) => {
                 return (
-                  <span
+                  <div
                     key={index}
-                    className="flex flex-row items-center bg-purple-100 rounded-md px-2 py-1 space-x-2 m-1"
+                    className=" bg-purple-100 rounded-md px-2 py-1 space-x-2 m-1 max-w-full break-words relative"
                   >
-                    <span className="text-purple-600 text-sm font-medium">
-                      {element}
-                    </span>
-                    <button onClick={() => remove(index)}>
+                    <div className="pr-5">
+                      <span className="text-purple-600 text-sm font-medium ">
+                        {element}
+                      </span>
+                    </div>
+
+                    <button
+                      className="absolute top-[52%] transform -translate-y-1/2 right-2"
+                      onClick={() => remove(index)}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -46,12 +52,12 @@ function TagInputField(props) {
                         />
                       </svg>
                     </button>
-                  </span>
+                  </div>
                 );
               })}
               <input
                 placeholder={props.placeholder}
-                className={"inline-block grow focus:outline-0"}
+                className={"inline-block grow focus:outline-0 m-2"}
                 onKeyDown={(even) => {
                   if (even.key !== "Enter") return;
                   const data = even.target.value;
