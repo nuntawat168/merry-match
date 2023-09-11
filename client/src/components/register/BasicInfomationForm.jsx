@@ -9,6 +9,7 @@ function BasicInfomationForm() {
         <TextInputField
           type="date"
           name={"dateOfBirth"}
+          max={new Date().toISOString().split("T")[0]}
           placeholder={"01/01/2022"}
           label={"Date of birth"}
         />

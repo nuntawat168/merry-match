@@ -3,27 +3,94 @@ import { pool } from "../utils/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import multer from "multer";
+import cloudinary from "cloudinary";
+import { cloudinaryUpload } from "../utils/uploadImg.js";
+import {
+  createUser,
+  createHobbyInterest,
+  createUserHobbyInterests,
+} from "../utils/userRegistration.js";
 
 dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 const authRouter = Router();
+const multerUpload = multer({ dest: "uploads/" });
+const picturesProfileUpload = multerUpload.fields([
+  { name: "picturesProfile", maxCount: 5 },
+]);
 
-authRouter.post("/register", async (req, res) => {
-  const user = {
+authRouter.post("/register", picturesProfileUpload, async (req, res) => {
+  const userData = {
     username: req.body.username,
     password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    email: req.body.email,
+    name: req.body.name,
+    city: req.body.city,
+    location: req.body.location,
+    date_of_birth: req.body.dateOfBirth,
+    sexual_preferences: req.body.sexualPreferences,
+    racial_preferences: req.body.racialPreferences,
+    sex: req.body.sexualIdentites,
+    meeting_interests: req.body.meetingInterests,
+    created_at: new Date(),
+    updated_at: new Date(),
   };
-  const salt = await bcrypt.genSalt(10);
-  // now we set user password to hashed password
-  user.password = await bcrypt.hash(user.password, salt);
-  const collection = db.collection("users");
-  await collection.insertOne(user);
 
-  return res.json({
-    message: "User has been created successfully",
-  });
+  try {
+    const userId = await createUser(userData);
+
+    const picturesProfileUrl = await cloudinaryUpload(req.files);
+    userData["picturesProfile"] = picturesProfileUrl;
+
+    const hobbyInterestNames = req.body.hobbiesInterests.split(",");
+    const hobbyInterestIds = [];
+
+    for (const hobbyInterestName of hobbyInterestNames) {
+      const hobbyInterestId = await createHobbyInterest(hobbyInterestName);
+      hobbyInterestIds.push(hobbyInterestId);
+    }
+
+    await createUserHobbyInterests(userId, hobbyInterestIds);
+
+    console.log("User registration successful.");
+    return res.json({
+      message: "User has been registered successfully.",
+    });
+  } catch (error) {
+    console.error(`User registration failed: ${error.message}`);
+    return res.status(500).json({
+      message: "An error occurred while processing your request",
+    });
+  }
+});
+
+authRouter.get("/check-available", async (req, res) => {
+  const checkColumn = req.query.checkColumn;
+  const checkValue = req.query.checkValue;
+  try {
+    const query = `
+      SELECT COUNT(*) AS count
+      FROM users
+      WHERE ${checkColumn} = $1
+    `;
+    const respone = await pool.query(query, [checkValue]);
+    const count = parseInt(respone.rows[0].count);
+    return res.json({
+      data: !(count > 0),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
 });
 
 authRouter.post("/login", async (req, res) => {
