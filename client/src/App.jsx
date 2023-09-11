@@ -9,7 +9,7 @@ import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
 import PackagePage from "./pages/packagepage";
 import Adminpackage from "../src/pages/Adminpackage";
-
+import PaymentPage1 from "./pages/PaymentPage1";
 function App() {
   return (
     <>
@@ -22,7 +22,7 @@ function App() {
         <Route path="/addPackage" element={<AdminAddPackage />} />
         <Route path="/packages" element={<PackagePage />} />
         <Route path="/admin" element={<Adminpackage />} />
-        {/* <Route path="/payment" element={<PaymentPage1 />} /> */}
+        <Route path="/payment" element={<PaymentPage1 />} />
       </Routes>
     </>
   );

@@ -6,21 +6,38 @@ import correcticon from "../assets/icon/success.svg";
 import axios from "axios";
 import { UseGlobalContext } from "../contexts/usecontexts";
 import hearticon from "../assets/icon/merry red.svg";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { fadeIn } from "../assets/variants";
 
 const Content = () => {
-  const { dataPackage, setDataPackage } = UseGlobalContext();
+  const {
+    dataPackage,
+    setDataPackage,
+    fetchData,
+    savePackage,
+    setSavePackage,
+  } = UseGlobalContext();
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/packages");
-      setDataPackage(response.data.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+  const displayNextBox = () => {
+    if (currentIndex < 3) {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      displayNextBox();
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
 
   return (
     <div className="w-full flex justify-center">
@@ -38,9 +55,14 @@ const Content = () => {
             {dataPackage.map((e, index) => {
               if (index < 3) {
                 return (
-                  <div
-                    key={e.package_id}
-                    className="w-[357px] h-[438px] grid grid-row-4 text-start border border-gray-400 rounded-3xl shadow-xl hover:border hover:border-purple-500 duration-500 mt-10"
+                  <motion.div
+                    variants={fadeIn("down")}
+                    initial="hidden"
+                    whileInView={"show"}
+                    viewport={{ once: false, amount: 0.7 }}
+                    className={`w-[357px] h-[438px] grid grid-row-4 text-start border group-hover:scale-125 border-gray-400 rounded-3xl shadow-xl hover:border hover:bg-red-400/5 hover:border-purple-500 duration-500 mt-10 ${
+                      index < currentIndex ? "" : "hidden"
+                    }`}
                   >
                     <div className="w-[60px] h-[60px] ml-12 mt-12 bg-gray100 border-gray-100 flex justify-center items-center border rounded-xl">
                       <img
@@ -86,20 +108,25 @@ const Content = () => {
                     </div>
 
                     <div className="flex justify-center">
-                      <button className="relative flex justify-center pt-3 overflow-hidden transition duration-300  ease-out group   w-[277px] h-[48px] border font-bold border-red-100 rounded-full p-2 font-nunito text-[16px] active:bg-red-300   bg-red-100 text-red-600 shadow-red-100 shadow-sm-sm-sm-sm hover:text-white hover:bg-white  focus:ring focus:ring-red-300 focus:duration-200">
-                        <span className="absolute bottom-1 flex items-center justify-center duration-500 -translate-x-full group-hover:translate-x-0 ease">
-                          <img
-                            className=" left-1   transition-all duration-500  -bottom-2 -translate-x-32 transform  group-hover:translate-x-0 ease  "
-                            src={hearticon}
-                            alt="Your Image"
-                          />
-                        </span>
-                        <span className="absolute flex items-center justify-center w-full  transition-all duration-500 transform  group-hover:translate-x-full ease">
-                          Choose Package
-                        </span>
-                      </button>
+                      <Link to="/payment">
+                        <button
+                          onClick={() => setSavePackage(index)}
+                          className="relative flex justify-center pt-3 overflow-hidden transition duration-300  ease-out group   w-[277px] h-[48px] border font-bold border-red-100 rounded-full p-2 font-nunito text-[16px] active:bg-red-300   bg-red-100 text-red-600 shadow-red-100 shadow-sm-sm-sm-sm hover:text-white hover:bg-white  focus:ring focus:ring-red-300 focus:duration-200"
+                        >
+                          <span className="absolute bottom-1 flex items-center   justify-center duration-500 -translate-x-full group-hover:translate-x-0 ease">
+                            <img
+                              className=" left-1   transition-all duration-500  -bottom-2 -translate-x-32 transform  group-hover:translate-x-0 ease  "
+                              src={hearticon}
+                              alt="Your Image"
+                            />
+                          </span>
+                          <span className="absolute flex items-center justify-center w-full  transition-all duration-500 transform  group-hover:translate-x-full ease">
+                            Choose Package
+                          </span>
+                        </button>
+                      </Link>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               }
             })}
