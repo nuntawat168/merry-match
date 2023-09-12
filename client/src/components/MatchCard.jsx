@@ -5,7 +5,7 @@ import axios from 'axios';
 import { AiFillHeart } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import { Link } from 'react-router-dom';
-import ProfilePage from '../pages/ProfilePage';
+
 
 
 const MatchCard = () => {
@@ -27,7 +27,7 @@ const MatchCard = () => {
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            const user_id = '3';
+            const user_id = '7';
             const apiUrl = `http://localhost:4000/user/unmatchlist/${user_id}`;
             const queryParams = new URLSearchParams();
 
@@ -152,7 +152,6 @@ const MatchCard = () => {
                         key={`${user.name}_${index}`}
                         ref={(ref) => (cardRefs.current[index] = ref)}
                         preventSwipe={["up", "down"]}
-                        style={{ zIndex: filteredUsers.length - index }}
                     >
                         <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
                             <button
