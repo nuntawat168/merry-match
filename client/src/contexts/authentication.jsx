@@ -28,22 +28,14 @@ function AuthProvider(props) {
       const userDataFromToken = jwtDecode(token);
       localStorage.setItem("state", JSON.stringify(userDataFromToken));
       setState(getState());
+      navigate("/match");
     } catch (error) {
       console.log("error", error);
       setState({ ...state, error, loading: false });
+      window.alert(`Login Error: ${error.response.data.message}`);
       // setState({ ...state, error: error.message, loading: false });
     }
-    navigate("/match");
   };
-
-  // const login = async (data) => {
-  //   const result = await axios.post("http://localhost:4000/auth/login", data);
-  //   const token = result.data.token;
-  //   localStorage.setItem("token", token);
-  //   const userDataFromToken = jwtDecode(token);
-  //   setState({ ...state, user: userDataFromToken });
-  //   navigate("/match");
-  // };
 
   // register the user
   const register = async (data) => {
