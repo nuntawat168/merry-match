@@ -22,6 +22,7 @@ function UserProfileProvider(props) {
     racialPreferences: "",
     meetingInterests: "",
     hobbiesInterests: [],
+    aboutMe: "",
     profilePictures: {},
   };
 
@@ -87,6 +88,7 @@ function UserProfileProvider(props) {
     hobbiesInterests: Yup.array()
       .of(Yup.string())
       .max(10, "Maximum of 10 Hobbies/Interests"),
+    aboutMe: Yup.string().max(150, "About me must be at most 150 characters"),
     profilePictures: Yup.object().test(
       "has-minimum-keys",
       "Profile Pictures must have at least 2 photos",

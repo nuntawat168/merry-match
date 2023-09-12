@@ -1,4 +1,11 @@
+import { useFormikContext } from "formik";
+
 function UserProfileHeader() {
+  const formik = useFormikContext();
+  const handleOnClickUpdate = () => {
+    console.log(formik.values);
+  };
+
   return (
     <div className="flex flex-row justify-between items-end ">
       <div className="w-[453px] flex flex-col justify-start space-y-2">
@@ -17,6 +24,7 @@ function UserProfileHeader() {
         <button
           className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
           type="button"
+          onClick={handleOnClickUpdate}
         >
           Update Profile
         </button>
