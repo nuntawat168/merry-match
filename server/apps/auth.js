@@ -93,49 +93,73 @@ authRouter.get("/check-available", async (req, res) => {
   }
 });
 
+
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("Email from req.body:", email);
 
   try {
-    const query = `
-        SELECT user_id, email, password, name
-        FROM users
-        WHERE email = $1;
-      `;
+    const userQuery = `
+          SELECT user_id, email, password, name
+          FROM users
+          WHERE email = $1;
+        `;
 
-    const { rows } = await pool.query(query, [email]);
+    const adminQuery = `
+          SELECT admin_id, email, password
+          FROM admins
+          WHERE email = $1;
+        `;
 
-    if (rows.length === 0) {
+    const { rows: userRows } = await pool.query(userQuery, [email]);
+    const { rows: adminRows } = await pool.query(adminQuery, [email]);
+
+    if (userRows.length === 0 && adminRows.length === 0) {
       return res.status(404).json({
         message: "User not found",
       });
     }
 
-    const user = rows[0];
-
-    if (user.password !== password) {
+    if (userRows.length > 0 && userRows[0].password === password) {
+      const user = userRows[0];
+      const token = jwt.sign(
+        {
+          id: user.user_id,
+          email: user.email,
+          name: user.name,
+          role: "user",
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "900000",
+        }
+      );
+      return res.json({
+        message: " User Login successfully",
+        token,
+      });
+    } else if (adminRows.length > 0 && adminRows[0].password === password) {
+      const admin = adminRows[0];
+      const token = jwt.sign(
+        {
+          id: admin.admin_id,
+          email: admin.email,
+          name: admin.name,
+          role: "admin",
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "900000",
+        }
+      );
+      return res.json({
+        message: "Admin Login successfully",
+        token,
+      });
+    } else {
       return res.status(401).json({
         message: "Password not valid",
       });
     }
-
-    const token = jwt.sign(
-      {
-        id: user.user_id,
-        email: user.email,
-        name: user.name,
-      },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: "900000",
-      }
-    );
-
-    return res.json({
-      message: "Login successfully",
-      token,
-    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
