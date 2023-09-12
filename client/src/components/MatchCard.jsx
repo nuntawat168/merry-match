@@ -27,7 +27,7 @@ const MatchCard = () => {
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            const user_id = '7';
+            const user_id = '3';
             const apiUrl = `http://localhost:4000/user/unmatchlist/${user_id}`;
             const queryParams = new URLSearchParams();
 
@@ -152,6 +152,7 @@ const MatchCard = () => {
                         key={`${user.name}_${index}`}
                         ref={(ref) => (cardRefs.current[index] = ref)}
                         preventSwipe={["up", "down"]}
+                        style={{ zIndex: filteredUsers.length - index }}
                     >
                         <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
                             <button
@@ -190,8 +191,12 @@ const MatchCard = () => {
                     <div className="bg-white p-8 rounded-xl">
                         {selectedUser && (
                             <>
+                                <div>
+                                    <img src={selectedUser.image} alt={selectedUser.name} />
+                                </div>
                                 <h2 className="text-2xl font-semibold">{selectedUser.name}</h2>
                                 <p>Email: {selectedUser.email}</p>
+
                                 {/* เพิ่มข้อมูลอื่นๆที่คุณต้องการแสดง */}
                             </>
                         )}
