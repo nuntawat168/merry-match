@@ -1,6 +1,6 @@
 import TextInputField from "./TextInputField.jsx";
 
-function BasicInfomationForm() {
+function BasicInfomationForm(props) {
   return (
     <div className="w-[930px] flex flex-col justify-start items-start space-y-6 font-nunito">
       <p className="text-purple-500 text-2xl font-bold">Basic Infomation</p>
@@ -30,18 +30,7 @@ function BasicInfomationForm() {
           placeholder={"name@website.com"}
           label={"Email"}
         />
-        <TextInputField
-          name={"password"}
-          type={"password"}
-          placeholder={"At least 8 charactor"}
-          label={"Password"}
-        />
-        <TextInputField
-          name={"passwordConfirmation"}
-          type={"password"}
-          placeholder={"At least 8 charactor"}
-          label={"Confirm password"}
-        />
+        {props.children}
       </div>
     </div>
   );

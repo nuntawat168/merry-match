@@ -112,6 +112,7 @@ function RegisterFooter() {
   };
 
   const handlerOnClickConfirm = () => {
+    console.log(formik);
     formik.handleSubmit();
     Object.keys(formik.values).map((field) =>
       formik.setFieldTouched(field, true)
