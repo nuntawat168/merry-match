@@ -9,6 +9,8 @@ import AdminAddPackage from "./pages/AdminAddPackage";
 import PackagePage from "./pages/packagepage";
 import Adminpackage from "../src/pages/Adminpackage";
 import PaymentPage1 from "./pages/PaymentPage1";
+import Test1 from "./pages/Test1";
+
 function App() {
 
   return (
@@ -23,6 +25,7 @@ function App() {
         <Route path="/packages" element={<PackagePage />} />
         <Route path="/admin" element={<Adminpackage />} />
         <Route path="/payment" element={<PaymentPage1 />} />
+        <Route path="/test" element={<Test1 />} />
       </Routes>
     </>
   );
