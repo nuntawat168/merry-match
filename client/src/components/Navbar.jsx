@@ -5,10 +5,10 @@ import { useState } from "react";
 import notiIcon from "../assets/icon/noti.svg";
 import UserDropdown from "./UserDropdown";
 import Notification from "./Notification";
+import { useAuth } from "../contexts/authentication"
 
 function Navbar() {
-    // แก้ เอา hard code ออก ดึงสถานะจริงมาเช็ค
-    const [loggedIn, setLoggedIn] = useState(true);
+    const { isAuthenticated } = useAuth(); // get authen value
     const [subscribed, setSubscribed] = useState(false);
     const [userDropdown, setUserDropdown] = useState(false);
     const [notificationDropdown, setNotificationDropdown] = useState(false);
@@ -25,15 +25,15 @@ function Navbar() {
 
     // create a rendering condition for each list
     const anchors = [
-        { id: 1, destination: loggedIn? "/match" : "whyMerryMatch", text: loggedIn ? "Start Matching!" : "Why Merry Match?" },
-        { id: 2, destination: loggedIn ? (subscribed ? "/merry-list" : "/packages") : "howToMerry", text: loggedIn ? "Merry Membership" : "How to Merry" },
+        { id: 1, destination: isAuthenticated ? "/match" : "whyMerryMatch", text: isAuthenticated ? "Start Matching!" : "Why Merry Match?" },
+        { id: 2, destination: isAuthenticated ? (subscribed ? "/merry-list" : "/packages") : "howToMerry", text: isAuthenticated ? "Merry Membership" : "How to Merry" },
     ];
 
     // render each list
     const renderAnchor = anchors.map((anchor) => {
         return (
             <li key={anchor.id} className="text-purple-800 px-[24px] py-[32px] hover:cursor-pointer">
-                { loggedIn ? (
+                { isAuthenticated ? (
                     <RouterLink to={anchor.destination}>{anchor.text}</RouterLink>
                 ) : (
                     <ScrollLink to={anchor.destination}>{anchor.text}</ScrollLink>
@@ -53,17 +53,17 @@ function Navbar() {
                     {/* render each list */}
                     <ul className="flex">{renderAnchor}</ul>
                     {/* if logged in show user noti and profile img, else show login btn*/}
-                    { loggedIn ? (
+                    { isAuthenticated ? (
                         <div className="flex justify-between ml-[24px]">
                             <div 
-                                className="w-[48px] h-[48px] bg-gray-100 rounded-full flex justify-center items-center relative"
+                                className="w-[48px] h-[48px] bg-gray-100 rounded-full flex justify-center items-center relative hover:cursor-pointer"
                                 onClick={toggleNotificationDropdown}
                             >
                                 <img src={notiIcon} alt="notification" className="w-[24px] h-[24px]"/>
                                 {notificationDropdown && <Notification />}
                             </div>
                             <div 
-                                className="ml-[12px] w-[48px] h-[48px] rounded-full bg relative"
+                                className="ml-[12px] w-[48px] h-[48px] rounded-full bg relative hover:cursor-pointer"
                                 onClick={toggleUserDropdown}
                             > 
                                 {userDropdown && <UserDropdown />}
