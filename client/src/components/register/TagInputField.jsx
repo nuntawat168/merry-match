@@ -18,7 +18,7 @@ function TagInputField(props) {
             )}
             <div
               className={`w-full flex flex-wrap flex-row p-3 pl-4 bg-white border rounded-lg border-gray-400 focus:outline-gray-400 ${
-                meta.error && meta.touched
+                meta.error && typeof meta.error === "string"
                   ? `border-red-300 `
                   : `border-gray-300 `
               }`}
@@ -57,7 +57,9 @@ function TagInputField(props) {
               })}
               <input
                 placeholder={props.placeholder}
-                className={"inline-block grow focus:outline-0 m-2"}
+                className={
+                  "inline-block grow focus:outline-0 m-2 text-gray-900"
+                }
                 onKeyDown={(even) => {
                   if (even.key !== "Enter") return;
                   const data = even.target.value;
