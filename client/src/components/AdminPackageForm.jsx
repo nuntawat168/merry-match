@@ -10,17 +10,9 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const AdminAddPackageForm = ({ title, button }) => {
+const AdminAddPackageForm = (props) => {
+  const { button, title, initialValues } = props;
   const [files, setFiles] = useState(null);
-
-  const initialValues = {
-    package_name: "",
-    package_price: 0,
-    package_limit: 0,
-    package_icon: "",
-    package_details: [""],
-    created_by: null,
-  };
 
   const validationSchema = Yup.object({
     package_name: Yup.string().required("Required"),
@@ -177,7 +169,7 @@ const AdminAddPackageForm = ({ title, button }) => {
 
               {/* Upload Icon */}
 
-              <div className="w-[100px]">
+              {/* <div className="w-[100px]">
                 <label htmlFor="upload">
                   <div className="border w-[100px] m-0 h-[100px] flex flex-col justify-center items-center text-[30px] text-purple-600 bg-gray-100 rounded-xl cursor-pointer hover:bg-gray-300">
                     + <div className="text-[15px]">Upload icon</div>
@@ -200,7 +192,7 @@ const AdminAddPackageForm = ({ title, button }) => {
               )}
               {formik.values.package_icon && (
                 <PreviewImage file={formik.values.package_icon} />
-              )}
+              )} */}
 
               <hr className=" mt-[30px] border-gray-300 " />
 
