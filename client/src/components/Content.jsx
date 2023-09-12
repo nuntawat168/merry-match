@@ -56,13 +56,14 @@ const Content = () => {
               if (index < 3) {
                 return (
                   <motion.div
+                    key={e.package_id}
                     variants={fadeIn("down")}
                     initial="hidden"
                     whileInView={"show"}
                     viewport={{ once: false, amount: 0.7 }}
-                    className={`w-[357px] h-[438px] grid grid-row-4 text-start border group-hover:scale-125 border-gray-400 rounded-3xl shadow-xl hover:border hover:bg-red-400/5 hover:border-purple-500 duration-500 mt-10 ${
-                      index < currentIndex ? "" : "hidden"
-                    }`}
+                    className={`w-[357px] h-[438px] grid grid-row-4 text-start border group-hover:scale-125 border-gray-400 
+                    rounded-3xl shadow-xl hover:border hover:bg-red-400/5 hover:border-purple-500 duration-500 mt-10 
+                    ${index < currentIndex ? "" : "hidden"}`}
                   >
                     <div className="w-[60px] h-[60px] ml-12 mt-12 bg-gray100 border-gray-100 flex justify-center items-center border rounded-xl">
                       <img

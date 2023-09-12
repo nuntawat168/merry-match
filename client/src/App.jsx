@@ -12,6 +12,7 @@ import Adminpackage from "../src/pages/Adminpackage";
 import PaymentPage1 from "./pages/PaymentPage1";
 import Chat from "./pages/Chat";
 import Test1 from "./pages/Test1";
+import AdminComplaintListPage from "./pages/AdminComplaintListPage";
 
 // function App() {
 
@@ -30,6 +31,7 @@ import Test1 from "./pages/Test1";
 //         <Route path="/payment" element={<PaymentPage1 />} />
 //         <Route path="/chat" element={<Chat />} />
 //         <Route path="/test" element={<Test1 />} />
+//  <Route path="/Complaint" element={<AdminComplaintListPage />} />
 //       </Routes>
 //     </>
 //   );

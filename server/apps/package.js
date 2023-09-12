@@ -16,7 +16,34 @@ packageRouter.get("/", async (req, res) => {
     res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
   }
 });
+packageRouter.delete("/:id", async (req, res) => {
+  const packageId = parseInt(req.params.id);
 
+  const getPackageById = await pool.query(
+    `
+    select * from packages where package_id=$1`,
+    [packageId]
+  );
+
+  if (getPackageById.rows.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "Package does not exist in the database" });
+  }
+
+  let result;
+  try {
+    result = pool.query(`delete from packages where package_id=$1`, [
+      packageId,
+    ]);
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+
+  return res
+    .status(200)
+    .json({ message: `Package id:${packageId} has been deleted successfully` });
+});
 packageRouter.post("/", async (req, res) => {
   const {
     package_name,

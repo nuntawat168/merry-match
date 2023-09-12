@@ -3,12 +3,26 @@ import { useState } from "react";
 import drag from "../assets/icon/drag.svg";
 import edit from "../assets/icon/edit.svg";
 import deleteicon from "../assets/icon/delete.svg";
-
 import axios from "axios";
 import { Link } from "react-router-dom";
+import seach from "../assets/icon/vector.svg";
 
 const Admindetail = () => {
   const [dataAgain, setDataAgain] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const handleDelete = async (packageId) => {
+    try {
+      setIsError(false);
+      setIsLoading(true);
+      await axios.delete(`http://localhost:4000/packages/${packageId}`);
+      await fetchData();
+    } catch (error) {
+      setIsError(true);
+      setIsLoading(false);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -21,23 +35,27 @@ const Admindetail = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(dataAgain);
 
   return (
     <div>
       <section className="w-full  pr-24 flex justify-between h-[10%] px-[60px] py-[16px] ">
-        <div className="flex flex-col justify-center font-bold text-2xl ">
+        <div className="flex flex-col justify-center font-bold text-2xl text-gray-900 ">
           Merry Package
         </div>
-        <div className="flex gap-10 ">
+        <div className="relative flex gap-10 ">
           <input
-            className="w-[320px] border border-gray-300"
+            className="flex pl-10 w-[320px] border border-gray-300 rounded-lg  "
             type="text"
             id="FilterTextBox"
             name="FilterTextBox"
-            class="form-control"
             placeholder="Search..."
           />
+          <button type="submit">
+            <img
+              className="flex absolute left-2 top-3    w-[30px] h-[30px] "
+              src={seach}
+            />
+          </button>
           <Link to="/addpackage">
             <button
               type="submit"
@@ -78,16 +96,23 @@ const Admindetail = () => {
                 <span className="grid justify-start">{e.created_at}</span>
                 <span className="grid justify-start">{e.updated_at}</span>
                 <span className="flex justify-center gap-2">
-                  {/* edit */}
-                  <button type="submit" className="">
+                  {/* delete */}
+                  <button
+                    type="submit"
+                    className="hover:scale-150 duration-1000"
+                  >
                     <img
                       className="w-[24px] h-[24px]"
                       src={deleteicon}
                       alt="delete Icon"
+                      onClick={() => handleDelete(e.package_id)}
                     />
                   </button>
-                  {/* delete */}
-                  <button type="submit" className="">
+                  {/* edit */}
+                  <button
+                    type="submit"
+                    className="hover:scale-150 duration-1000"
+                  >
                     <img
                       className="w-[24px] h-[24px]"
                       src={edit}
