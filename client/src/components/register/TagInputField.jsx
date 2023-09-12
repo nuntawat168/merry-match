@@ -17,7 +17,7 @@ function TagInputField(props) {
               </label>
             )}
             <div
-              className={`w-full flex flex-wrap flex-row p-3 pl-4 bg-white border rounded-lg border-gray-400 focus:outline-gray-400 ${
+              className={`w-full flex flex-wrap flex-row p-3 pl-4 bg-white border rounded-lg focus:outline-gray-400 ${
                 meta.error && typeof meta.error === "string"
                   ? `border-red-300 `
                   : `border-gray-300 `
