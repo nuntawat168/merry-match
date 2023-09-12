@@ -1,7 +1,6 @@
 import "../App.css";
 import AdminSideBar from "../components/AdminSideBar";
-// import AdminNavBar from "../components/AdminNavBar";
-import AdminAddPackageForm from "../components/AdminPackageForm";
+import AdminPackageForm from "../components/AdminPackageForm";
 
 function AdminAddPackage() {
   const obj = { title: "Add Package", button: "Create" };
@@ -18,7 +17,7 @@ function AdminAddPackage() {
   return (
     <div className="flex flex-row h-screen">
       <AdminSideBar />
-      <AdminAddPackageForm {...obj} initialValues={initialValues} />
+      <AdminPackageForm {...obj} initialValues={initialValues} />
     </div>
   );
 }

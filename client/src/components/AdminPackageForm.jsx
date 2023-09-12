@@ -5,14 +5,17 @@ import PreviewImage from "./PreviewImage";
 import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const AdminAddPackageForm = (props) => {
-  const { button, title, initialValues } = props;
-  const [files, setFiles] = useState(null);
+const AdminPackageForm = (props) => {
+  const navigate = useNavigate();
+  const params = useParams();
+  const { button, title, initialValues, remove } = props;
 
   const validationSchema = Yup.object({
     package_name: Yup.string().required("Required"),
@@ -24,12 +27,14 @@ const AdminAddPackageForm = (props) => {
 
   const onSubmit = async (values, { resetForm }) => {
     alert(JSON.stringify(values, null, 2));
-
+    console.log(formik.values.package_icon);
     const { data, error } = await supabase.storage
       .from("Files")
       .upload(
-        `public/${files.name.split(".").join("-" + Date.now() + ".")}`,
-        files,
+        `public/${formik.values.package_icon.name
+          .split(".")
+          .join("-" + Date.now() + ".")}`,
+        formik.values.package_icon,
         {
           cacheControl: "3600",
           upsert: false,
@@ -37,8 +42,8 @@ const AdminAddPackageForm = (props) => {
       );
 
     values = { ...values, package_icon: data.path };
-    console.log(values);
-    createPackage(values);
+
+    button === "Create" ? createPackage(values) : updatePackage(values);
     resetForm();
   };
 
@@ -49,9 +54,27 @@ const AdminAddPackageForm = (props) => {
   });
 
   const createPackage = async (values) => {
-    console.log("packageDetails", values);
+    console.log("createPackage", values);
     try {
       await axios.post("http://localhost:4000/packages", values);
+      navigate("/admin");
+    } catch (error) {
+      console.log("Request error:", error);
+    }
+  };
+
+  const updatePackage = async (values) => {
+    try {
+      await axios.put(`http://localhost:4000/packages/${params.id}`, values);
+    } catch (error) {
+      console.log("Request error:", error);
+    }
+  };
+
+  const deletePackage = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/packages/${id}`);
+      navigate("/admin");
     } catch (error) {
       console.log("Request error:", error);
     }
@@ -85,7 +108,7 @@ const AdminAddPackageForm = (props) => {
         </section>
 
         <section className="border border-gray-100 h-[90%] bg-gray-100 ">
-          <div className="border border-gray-300 mx-[60px] mt-[40px] mb-[242px w-[90%] h-auto flex bg-white">
+          <div className="border border-gray-300 mx-[60px] mt-[40px] mb-[242px w-[90%] h-auto flex bg-white rounded-xl">
             <div className="w-[100%] h-[20% mx-[100px] mt-[40px] mb-[60px]">
               <div className="flex flex-row justify-between">
                 {/* Package Name */}
@@ -169,7 +192,7 @@ const AdminAddPackageForm = (props) => {
 
               {/* Upload Icon */}
 
-              {/* <div className="w-[100px]">
+              <div className="w-[100px]">
                 <label htmlFor="upload">
                   <div className="border w-[100px] m-0 h-[100px] flex flex-col justify-center items-center text-[30px] text-purple-600 bg-gray-100 rounded-xl cursor-pointer hover:bg-gray-300">
                     + <div className="text-[15px]">Upload icon</div>
@@ -182,8 +205,6 @@ const AdminAddPackageForm = (props) => {
                 name="package_icon"
                 onChange={(e) => {
                   formik.setFieldValue("package_icon", e.target.files[0]);
-                  setFiles(e.target.files[0]);
-                  console.log(e.target.files[0]);
                 }}
                 hidden
               />
@@ -192,7 +213,7 @@ const AdminAddPackageForm = (props) => {
               )}
               {formik.values.package_icon && (
                 <PreviewImage file={formik.values.package_icon} />
-              )} */}
+              )}
 
               <hr className=" mt-[30px] border-gray-300 " />
 
@@ -271,10 +292,18 @@ const AdminAddPackageForm = (props) => {
               />
             </div>
           </div>
+          {params.id && (
+            <button
+              className=" w-[90%] ml-[60px] text-right text-gray-700 px-[8x] py-[4px] mt-[10px]"
+              onClick={() => deletePackage(params.id)}
+            >
+              {remove}
+            </button>
+          )}
         </section>
       </form>
     </FormikProvider>
   );
 };
 
-export default AdminAddPackageForm;
+export default AdminPackageForm;

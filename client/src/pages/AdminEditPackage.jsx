@@ -1,12 +1,16 @@
 import AdminSideBar from "../components/AdminSideBar";
-import AdminAddPackageForm from "../components/AdminPackageForm";
+import AdminPackageForm from "../components/AdminPackageForm";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function AdminEditPackage() {
   const params = useParams();
-  const obj = { title: "Edit Premium", button: "Edit" };
+  const obj = {
+    title: "Edit Premium",
+    button: "Edit",
+    remove: "Delete Package",
+  };
 
   const initialValues = {
     package_name: "",
@@ -17,7 +21,7 @@ function AdminEditPackage() {
     created_by: null,
   };
 
-  const [editPackage, setEditPackage] = useState({});
+  const [editPackage, setEditPackage] = useState(initialValues);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(null);
 
@@ -30,8 +34,12 @@ function AdminEditPackage() {
       setIsError(false);
       setIsLoading(true);
       const result = await axios.get(`http://localhost:4000/packages/${id}`);
-      setEditPackage(...result.data.data);
-      console.log("edit package", editPackage);
+      const image = await axios.get(
+        `https://gacngpsoekbrifxahpkg.supabase.co/storage/v1/object/public/Files/${result.data.data.package_icon}`
+      );
+      const blob = new Blob([image.data], { type: "image/svg+xml" });
+      console.log("blob", blob);
+      setEditPackage({ ...result.data.data, package_icon: blob });
       setIsLoading(false);
     } catch (error) {
       console.log("Error fetching package data:", error);
@@ -41,16 +49,11 @@ function AdminEditPackage() {
   };
 
   return isLoading ? (
-    <h1>load</h1>
+    <h1>Loading ...</h1>
   ) : (
     <div className="flex flex-row h-screen">
       <AdminSideBar />
-      <AdminAddPackageForm
-        {...obj}
-        initialValues={editPackage}
-        // isLoading={isLoading}
-        // isError={isError}
-      />
+      <AdminPackageForm {...obj} initialValues={editPackage} />
     </div>
   );
 }

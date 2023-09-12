@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
+import AdminEditPackage from "./pages/AdminEditPackage";
 import PackagePage from "./pages/packagepage";
 import Adminpackage from "../src/pages/Adminpackage";
 import PaymentPage1 from "./pages/PaymentPage1";
