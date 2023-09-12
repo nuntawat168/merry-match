@@ -1,8 +1,11 @@
 import heroImg1 from "../assets/image/heroImg1.png";
 import heroImg2 from "../assets/image/heroImg2.png";
 import littleWhiteHeart from "../assets/image/littleWhiteHeart.svg";
+import { useNavigate } from "react-router-dom";
 
 function Hero() {
+    const navigate = useNavigate();
+
     return (
         <section className="w-full bg flex justify-center">
             <main className="bg w-[1440px] flex justify-center relative font-nunito">            
@@ -16,7 +19,12 @@ function Hero() {
                     <h1 className="text-[60px] font-extrabold pb-[24px]">Make the first ‘Merry’</h1>
                     <p className="text-[20px]">If you feel lonely, let’s start meeting new people in your area!</p>
                     <p className="text-[20px]">Dont’t forget to get Merry with us</p>
-                    <button className="text-[16px] py-[12px] px-[24px] bg-red-500 rounded-[99px] mt-[60px]">Start matching!</button>
+                    <button 
+                        className="text-[16px] py-[12px] px-[24px] bg-red-500 rounded-[99px] mt-[60px]"
+                        onClick={() => navigate("/login")}
+                    >
+                        Start matching!
+                    </button>
                 </div>
 
                 <img src={heroImg2} alt="photo2" className="absolute left-[203px] top-[258px]"/>
