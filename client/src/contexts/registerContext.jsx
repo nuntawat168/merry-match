@@ -4,9 +4,10 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useAuth } from "../contexts/authentication";
 
-const UserProfileContext = React.createContext();
+// const UserProfileContext = React.createContext();
+const RegisterContext = React.createContext();
 
-function UserProfileProvider(props) {
+function RegisterProvider(props) {
   const { register } = useAuth();
   const initDataForm = {
     name: "",
@@ -109,6 +110,7 @@ function UserProfileProvider(props) {
       formData.append("picturesProfile", data.profilePictures[key]);
     }
     register(formData);
+    // setSubmitting(false);
   }
 
   const [picturesProfile, setPicturesProfile] = useState([
@@ -118,10 +120,25 @@ function UserProfileProvider(props) {
     null,
     null,
   ]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(1);
+
+  const titleForm = [
+    "Basic Infomations",
+    "Identities and Interests",
+    "Upload Photos",
+  ];
 
   return (
-    <UserProfileContext.Provider
-      value={{ picturesProfile, setPicturesProfile, initDataForm, formSchema }}
+    <RegisterContext.Provider
+      value={{
+        picturesProfile,
+        setPicturesProfile,
+        initDataForm,
+        formSchema,
+        currentStepIndex,
+        setCurrentStepIndex,
+        titleForm,
+      }}
     >
       <Formik
         initialValues={initDataForm}
@@ -130,10 +147,10 @@ function UserProfileProvider(props) {
       >
         {props.children}
       </Formik>
-    </UserProfileContext.Provider>
+    </RegisterContext.Provider>
   );
 }
 
-const useUserProfile = () => React.useContext(UserProfileContext);
+const useRegister = () => React.useContext(RegisterContext);
 
-export { UserProfileProvider, useUserProfile };
+export { RegisterProvider, useRegister };

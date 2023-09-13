@@ -1,9 +1,12 @@
 import { useFormikContext } from "formik";
+import jwtDecode from "jwt-decode";
 
 function UserProfileHeader() {
   const formik = useFormikContext();
   const handleOnClickUpdate = () => {
-    console.log(formik.values);
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    console.log(user.id);
   };
 
   return (
@@ -23,7 +26,7 @@ function UserProfileHeader() {
         </button>
         <button
           className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
-          type="button"
+          type="submit"
           onClick={handleOnClickUpdate}
         >
           Update Profile

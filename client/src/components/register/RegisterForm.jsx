@@ -1,13 +1,11 @@
-import { useContext } from "react";
-import { FormContext } from "../../pages/RegisterPage.jsx";
-
 import BasicInfomationForm from "../../components/register/BasicInfomationForm";
 import IdentitiesAndInterestsForm from "../../components/register/IdentitiesAndInterestsForm";
 import ProfilePicturesForm from "../../components/register/ProfilePicturesForm";
 import TextInputField from "./TextInputField.jsx";
+import { useRegister } from "../../contexts/registerContext";
 
 function RegisterForm() {
-  const { currentStepIndex } = useContext(FormContext);
+  const { currentStepIndex } = useRegister();
 
   function currentFrom(step) {
     switch (step) {

@@ -12,8 +12,6 @@ function TextAreaInputField(props) {
         {...field}
         {...props}
         name={props.name}
-        cols="30"
-        rows="10"
         className={`w-full h-[120px] rounded-lg border bg-white p-3 pl-4 text-gray-900 outline-gray-300 ${
           meta.error && typeof meta.error === "string"
             ? `border-red-300 `

@@ -6,14 +6,11 @@ import BasicInfomationForm from "../components/register/BasicInfomationForm";
 import IdentitiesAndInterestsForm from "../components/register/IdentitiesAndInterestsForm";
 import ProfilePicturesForm from "../components/register/ProfilePicturesForm";
 import TextAreaInputField from "../components/TextAreaInputField";
-import { UserProfileProvider } from "../contexts/userProfileManagement.jsx";
+import { UserProfileProvider } from "../contexts/userProfileContext.jsx";
 
 export const FormContext = createContext();
 
 function UserProfilePage() {
-  function handleOnSubmit(data) {
-    console.log(data);
-  }
   return (
     <UserProfileProvider>
       <div className="w-full flex flex-col justify-start items-center bg-main font-nunito relative">

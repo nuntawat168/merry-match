@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { FormContext } from "../../pages/RegisterPage.jsx";
+import { useRegister } from "../../contexts/registerContext.jsx";
 
 function StepperForm() {
-  const { currentStepIndex, setCurrentStepIndex, titleForm } =
-    useContext(FormContext);
+  const { currentStepIndex, setCurrentStepIndex, titleForm } = useRegister();
 
   function renderSelectTag(text, stepIndex, isOnSelect) {
     if (isOnSelect) {
