@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { pool } from "./utils/db.js";
 import userRouter from "./apps/user.js";
 import authRouter from "./apps/auth.js";
+import userProfileRouter from "./apps/userProfile.js";
 import { createClient } from "@supabase/supabase-js";
 import packageRouter from "./apps/package.js";
 import fs from "fs";
@@ -19,6 +20,7 @@ async function init() {
   app.use(cors());
   app.use(bodyParser.json());
 
+  app.use("/user-profile", userProfileRouter);
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
 
