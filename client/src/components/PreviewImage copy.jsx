@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFormikContext } from "formik";
 
 const PreviewImage = ({ file }) => {
@@ -6,19 +6,13 @@ const PreviewImage = ({ file }) => {
 
   const formik = useFormikContext();
 
-  useEffect(() => {
-    if (typeof file === "string") {
-      setPreview(
-        `https://gacngpsoekbrifxahpkg.supabase.co/storage/v1/object/public/Files/${file}`
-      );
-    } else {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setPreview(reader.result);
-      };
-    }
-  }, [file]);
+  if (file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPreview(reader.result);
+    };
+  }
 
   return (
     <div className="relative border rounded-md w-[50px]">

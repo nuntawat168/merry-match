@@ -32,9 +32,8 @@ const AdminPackageForm = (props) => {
     //   [formik.values.package_icon.blob],
     //   formik.values.package_icon.name
     // );
-
-    // if (formik.values.package_icon.name) {
-    if (typeof formik.values.package_icon !== "string") {
+    console.log("file of blob", formik.values.package_icon);
+    if (formik.values.package_icon.name) {
       const { data, error } = await supabase.storage
         .from("Files")
         .upload(

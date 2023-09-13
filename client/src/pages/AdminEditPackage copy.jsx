@@ -34,12 +34,12 @@ function AdminEditPackage() {
       setIsError(false);
       setIsLoading(true);
       const result = await axios.get(`http://localhost:4000/packages/${id}`);
-      // const image = await axios.get(
-      //   `https://gacngpsoekbrifxahpkg.supabase.co/storage/v1/object/public/Files/${result.data.data.package_icon}`
-      // );
-      // const blob = new Blob([image.data], {
-      //   type: ["image/svg+xml"],
-      // });
+      const image = await axios.get(
+        `https://gacngpsoekbrifxahpkg.supabase.co/storage/v1/object/public/Files/${result.data.data.package_icon}`
+      );
+      const blob = new Blob([image.data], {
+        type: ["image/svg+xml"],
+      });
 
       // const iconName = result.data.data.package_icon.split("/").pop();
       // const blob = {
@@ -48,8 +48,7 @@ function AdminEditPackage() {
       //   isUpload: true,
       // };
 
-      // setEditPackage({ ...result.data.data, package_icon: blob });
-      setEditPackage(result.data.data);
+      setEditPackage({ ...result.data.data, package_icon: blob });
       setIsLoading(false);
     } catch (error) {
       setIsError(true);
