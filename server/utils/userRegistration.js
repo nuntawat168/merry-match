@@ -28,7 +28,7 @@ const createUser = async (userData) => {
         userData.updated_at,
       ]
     );
-
+    console.log("create user complete");
     return userInsertResult.rows[0].user_id;
   } catch (error) {
     throw error;
@@ -57,6 +57,7 @@ const createHobbyInterest = async (hobbyInterestName) => {
           `,
         [hobbyInterestName]
       );
+      console.log("insert hobby interest complete");
       return newHobbyInterest.rows[0].hobby_interest_id;
     }
   } catch (error) {
