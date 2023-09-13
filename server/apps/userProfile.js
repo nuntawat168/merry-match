@@ -16,8 +16,8 @@ userProfileRouter.get("/:userId", async (req, res) => {
     u.date_of_birth,
     u.sexual_preferences,
     u.racial_preferences,
-    u.sex_identities,
     u.meeting_interests,
+    u.about_me,
     (
       select image from profile_images pi
       WHERE pi.user_id = u.user_id
@@ -32,17 +32,15 @@ userProfileRouter.get("/:userId", async (req, res) => {
   WHERE
     u.user_id = $1
   GROUP BY
-    u.user_id, u.username, u.email, u.name, u.sex, u.city, u.location, u.date_of_birth, u.sexual_preferences, u.racial_preferences, u.sex_identities, u.meeting_interests
+    u.user_id, u.username, u.email, u.name, u.sex, u.city, u.location, u.date_of_birth, u.sexual_preferences, u.racial_preferences, u.sex_identities, u.meeting_interests, about_me
   `;
 
   try {
     const userId = req.params.userId;
     console.log(userId);
     const respone = await pool.query(query, [userId]);
-    console.log("+++++++++++++++++++++++++++++++++++++++");
-    console.log(respone.rows[0]);
     return res.json({
-      message: "testAPI",
+      data: respone.rows[0],
     });
   } catch (error) {
     console.error(`Get user profile failed: ${error.message}`);
