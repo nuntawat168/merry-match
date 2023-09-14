@@ -1,16 +1,12 @@
 import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup"; // For validation
+import * as Yup from "yup";
 import manImage from "../../src/assets/image/manOnLoginPage.svg";
-import dotImage from "../../src/assets/image/dotOnLoginPage.svg";
 import Navbar from "../components/Navbar.jsx";
-import { useAuth } from "../contexts/authentication.jsx";
-import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import axios from 'axios';
 
 function UserComplaintPage() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
   // Define the initial form values
   const initialValues = {
     issue: "",
@@ -25,16 +21,36 @@ function UserComplaintPage() {
     dateSubmitted: Yup.date().required("Date Submitted is required"),
   });
 
-  // Handle form submission
   const onSubmit = (values) => {
-    // Perform the form submission logic here
-    console.log(values);
+
+    values.dateSubmitted = new Date(values.dateSubmitted).toISOString();
+    postDataToSupabase(values);
+  };
+  const postDataToSupabase = async (data) => {
+    try {
+      const response = await axios.post(
+        'https://gacngpsoekbrifxahpkg.supabase.co',
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhY25ncHNvZWticmlmeGFocGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM1Mzk4MTQsImV4cCI6MjAwOTExNTgxNH0.FsPo5sRvcobf8AchCc51g32FGRBVtuSw0oXSPKuJwms', // Replace with your API key
+          },
+        }
+      );
+
+      console.log('Data posted to Supabase:', response.data);
+      // Optionally, you can handle success or perform further actions here.
+    } catch (error) {
+      console.error('Error posting data to Supabase:', error);
+      // Handle errors here.
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div className="mt-20 flex w-full">
+      <div className="mt-20 mb-20 flex w-full">
         <div className="w-1/2 flex flex-col justify-start items-center pl-10 mt-10 mb-10 ml-10">
           <div>
             <p className="text-purple-500 font-nunito text-[14px] font-semibold uppercase">
@@ -48,7 +64,6 @@ function UserComplaintPage() {
             </p>
           </div>
 
-          {/* Use Formik to create the form */}
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -118,6 +133,7 @@ function UserComplaintPage() {
           <img src={manImage} className="w-[65%]" alt="manImage" />
         </div>
       </div>
+      <Footer/>
     </>
   );
 }
