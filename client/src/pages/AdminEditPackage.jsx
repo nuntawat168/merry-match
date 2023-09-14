@@ -17,7 +17,7 @@ function AdminEditPackage() {
     package_price: 0,
     package_limit: 0,
     package_icon: "",
-    package_details: [""],
+    package_details: [{}],
     created_by: null,
   };
 
@@ -34,21 +34,6 @@ function AdminEditPackage() {
       setIsError(false);
       setIsLoading(true);
       const result = await axios.get(`http://localhost:4000/packages/${id}`);
-      // const image = await axios.get(
-      //   `https://gacngpsoekbrifxahpkg.supabase.co/storage/v1/object/public/Files/${result.data.data.package_icon}`
-      // );
-      // const blob = new Blob([image.data], {
-      //   type: ["image/svg+xml"],
-      // });
-
-      // const iconName = result.data.data.package_icon.split("/").pop();
-      // const blob = {
-      //   name: iconName,
-      //   blob: new Blob([image.data], { type: "image/svg+xml" }),
-      //   isUpload: true,
-      // };
-
-      // setEditPackage({ ...result.data.data, package_icon: blob });
       setEditPackage(result.data.data);
       setIsLoading(false);
     } catch (error) {

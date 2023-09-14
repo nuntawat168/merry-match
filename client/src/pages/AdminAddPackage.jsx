@@ -10,7 +10,7 @@ function AdminAddPackage() {
     package_price: 0,
     package_limit: 0,
     package_icon: "",
-    package_details: [""],
+    package_details: [{ detail: "" }],
     created_by: null,
   };
 
