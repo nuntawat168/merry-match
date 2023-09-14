@@ -10,12 +10,13 @@ const DiscoverSideBar = () => {
     const fetchMatchList = async (user_id) => {
         try {
             const response = await axios.get(`http://localhost:4000/user/matchlist/${user_id}`);
-            return response.data;
+            return response.data.data;
         } catch (error) {
             console.error('Error fetching data:', error);
             throw error;
         }
     };
+
 
     useEffect(() => {
         const user_id = '7';
