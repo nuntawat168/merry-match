@@ -4,9 +4,25 @@ import { pool } from "../utils/db.js";
 const packageRouter = Router();
 
 packageRouter.get("/", async (req, res) => {
+  const keywords = req.query.keywords || "";
+
   try {
     const result = await pool.query(
-      "SELECT * FROM packages JOIN package_details ON packages.package_id = package_details.package_id;"
+      `SELECT
+        packages.*,
+        array_agg(DISTINCT package_details) AS distinct_package_details,
+        array_agg(DISTINCT packages) AS distinct_packages
+      FROM
+        packages
+      JOIN
+        package_details
+      ON
+        packages.package_id = package_details.package_id
+      WHERE
+        package_name ILIKE $1
+      GROUP BY
+        packages.package_id`,
+      [`%${keywords}%`]
     );
     return res.json({
       data: result.rows,
@@ -16,6 +32,7 @@ packageRouter.get("/", async (req, res) => {
     res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
   }
 });
+
 packageRouter.delete("/:id", async (req, res) => {
   const packageId = parseInt(req.params.id);
 

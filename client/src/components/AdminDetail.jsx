@@ -11,30 +11,41 @@ const Admindetail = () => {
   const [dataAgain, setDataAgain] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = async (packageId) => {
     try {
       setIsError(false);
       setIsLoading(true);
       await axios.delete(`http://localhost:4000/packages/${packageId}`);
-      await fetchData();
+      await fetchData(searchTerm);
     } catch (error) {
       setIsError(true);
       setIsLoading(false);
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (keywords) => {
     try {
-      const response = await axios.get("http://localhost:4000/packages");
+      const response = await axios.get(
+        `http://localhost:4000/packages?keywords=${keywords}`
+      );
       setDataAgain(response.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(searchTerm);
+  }, [searchTerm]);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm) {
+      searchFromServer(searchTerm);
+    }
+  };
 
   return (
     <div>
@@ -43,23 +54,27 @@ const Admindetail = () => {
           Merry Package
         </div>
         <div className="relative flex gap-10 ">
-          <input
-            className="flex pl-10 w-[320px] border border-gray-300 rounded-lg  "
-            type="text"
-            id="FilterTextBox"
-            name="FilterTextBox"
-            placeholder="Search..."
-          />
-          <button type="submit">
-            <img
-              className="flex absolute left-2 top-3    w-[30px] h-[30px] "
-              src={seach}
+          <form onSubmit={handleFormSubmit}>
+            <input
+              value={searchTerm}
+              className="flex pl-10 w-[320px] h-[48px]  mt-6  border border-gray-300 rounded-lg  "
+              onChange={(event) => setSearchTerm(event.target.value)}
+              type="text"
+              id="FilterTextBox"
+              name="FilterTextBox"
+              placeholder="Search..."
             />
-          </button>
+            <button type="submit">
+              <img
+                className="flex absolute left-2 top-9    w-[30px] h-[30px] "
+                src={seach}
+              />
+            </button>
+          </form>
           <Link to="/addpackage">
             <button
               type="submit"
-              className="flex flex-col justify-center px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
+              className="flex flex-col justify-center mt-6 px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
             >
               + Add Package
             </button>

@@ -32,7 +32,9 @@ import AdminComplaintListPage from "./pages/AdminComplaintListPage";
 //         <Route path="/chat" element={<Chat />} />
 //         <Route path="/test" element={<Test1 />} />
 //  <Route path="/Complaint" element={<AdminComplaintListPage />} />
-//       </Routes>
+{
+  /* <Route path="/Complaint/:id" element={<ComplaintSeeDetailsPage />} /> */
+} //       </Routes>
 //     </>
 //   );
 // }
