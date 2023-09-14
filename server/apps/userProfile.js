@@ -1,8 +1,32 @@
 import { Router } from "express";
 import { pool } from "../utils/db.js";
+import jwt from "jsonwebtoken";
 
 const userProfileRouter = Router();
-
+userProfileRouter.get("/check-available", async (req, res) => {
+  const checkColumn = req.query.checkColumn;
+  const checkValue = req.query.checkValue;
+  const token = req.headers.authorization;
+  const userInfo = jwt.decode(token.replace("Bearer ", ""));
+  const userId = userInfo.id;
+  try {
+    const query = `
+      SELECT COUNT(${checkColumn}) AS count
+      FROM users
+      WHERE ${checkColumn} = $1 AND user_id <> $2
+    `;
+    const respone = await pool.query(query, [checkValue, userId]);
+    const count = parseInt(respone.rows[0].count);
+    return res.json({
+      data: !(count > 0),
+    });
+  } catch (error) {
+    console.error(`Check Avilable Error: ${error}`);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
 userProfileRouter.get("/:userId", async (req, res) => {
   const query = `
   SELECT
@@ -37,7 +61,6 @@ userProfileRouter.get("/:userId", async (req, res) => {
 
   try {
     const userId = req.params.userId;
-    console.log(userId);
     const respone = await pool.query(query, [userId]);
     return res.json({
       data: respone.rows[0],
