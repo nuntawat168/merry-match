@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -22,7 +22,6 @@ function UserProfileProvider(props) {
     aboutMe: "",
     profilePictures: {},
   };
-
   const formSchema = Yup.object().shape({
     name: Yup.string().required("Name is a required field").max(25),
     dateOfBirth: Yup.string().required("Date of birth is a required field"),
@@ -38,7 +37,7 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `http://localhost:4000/auth/check-available?checkColumn=username&checkValue=${value}`
+              `http://localhost:4000/user-profile/check-available?checkColumn=username&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -56,7 +55,7 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `http://localhost:4000/auth/check-available?checkColumn=email&checkValue=${value}`
+              `http://localhost:4000/user-profile/check-available?checkColumn=email&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -113,21 +112,9 @@ function UserProfileProvider(props) {
     null,
   ]);
 
-  async function getUserData() {
-    const token = localStorage.getItem("token");
-    const user = jwtDecode(token);
-    console.log(user.id);
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/user-profile/${user.id}`
-      );
-    } catch (error) {
-      console.error(`getUserData Error: ${error}`);
-    }
+  function a() {
+    return formSchema;
   }
-  useEffect(() => {
-    getUserData();
-  }, []);
 
   return (
     <UserProfileContext.Provider
@@ -135,8 +122,9 @@ function UserProfileProvider(props) {
     >
       <Formik
         initialValues={initDataForm}
-        validationSchema={formSchema}
+        validationSchema={(initialValues) => a(initialValues)}
         onSubmit={handleOnSubmit}
+        enableReinitialize={true}
       >
         {props.children}
       </Formik>
