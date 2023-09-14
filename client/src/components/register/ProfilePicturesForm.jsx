@@ -1,8 +1,18 @@
 import { useEffect, useContext } from "react";
 import { useFormikContext } from "formik";
-import { FormContext } from "../../pages/RegisterPage.jsx";
+import { useRegister } from "../../contexts/registerContext";
+import { useUserProfile } from "../../contexts/userProfileContext";
 function ProfilePicturesForm() {
-  const { picturesProfile, setPicturesProfile } = useContext(FormContext);
+  function importModule() {
+    try {
+      const { picturesProfile, setPicturesProfile } = useRegister();
+      return { picturesProfile, setPicturesProfile };
+    } catch {
+      const { picturesProfile, setPicturesProfile } = useUserProfile();
+      return { picturesProfile, setPicturesProfile };
+    }
+  }
+  const { picturesProfile, setPicturesProfile } = importModule();
   const formik = useFormikContext();
 
   const handleFileChange = (event, index) => {

@@ -1,7 +1,7 @@
 import SelectInputField from "./SelectInputField.jsx";
 import TagInputField from "./TagInputField.jsx";
 
-function IdentitiesAndInterestsForm() {
+function IdentitiesAndInterestsForm(props) {
   const sexualIdentitesList = ["Male", "Female"];
   const sexualPreferences = ["Male", "Female"];
   const racialPreferences = ["Asian", "American", "European"];
@@ -42,6 +42,7 @@ function IdentitiesAndInterestsForm() {
         placeholder={"Typing your Hobbies/Interests and Enter"}
         label={"Hobbies/Interests(Maximum 10)"}
       />
+      {props.children}
     </div>
   );
 }

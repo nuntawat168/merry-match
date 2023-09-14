@@ -11,13 +11,14 @@ import Adminpackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/authentication";
+import UserProfilePage from "./UserProfilePage";
 
 // user test  email: user1@example.com  pw: password1
 // admin test email: admin1@example.com pw: admin1password
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();
-  console.log(userRole)
+  // console.log(userRole);
 
   return (
     <div className="App">
@@ -28,6 +29,7 @@ function AuthenticatedApp() {
         {/* Routes for user */}
         {userRole === "user" && (
           <>
+            <Route path="/user-profile" element={<UserProfilePage />} />
             <Route path="/packages" element={<PackagePage />} />
             <Route path="/match" element={<MatchPages />} />
             <Route path="/login" element={<LoginPage />} />

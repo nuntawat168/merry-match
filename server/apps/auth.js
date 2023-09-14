@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import { cloudinaryUpload } from "../utils/uploadImg.js";
+
 import {
   createUser,
   createHobbyInterest,
@@ -48,7 +49,15 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
 
     const picturesProfileUrl = await cloudinaryUpload(req.files);
     userData["picturesProfile"] = picturesProfileUrl;
-
+    console.log("upload to couldinary complete");
+    await pool.query(
+      `
+        insert into profile_images (user_id, image)
+        values ($1, $2::json)
+      `,
+      [userId, JSON.stringify(userData.picturesProfile)]
+    );
+    console.log("insert picture url complete");
     const hobbyInterestNames = req.body.hobbiesInterests.split(",");
     const hobbyInterestIds = [];
 
@@ -58,6 +67,7 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
     }
 
     await createUserHobbyInterests(userId, hobbyInterestIds);
+    // console.log("create user")
 
     console.log("User registration successful.");
     return res.json({
@@ -92,7 +102,6 @@ authRouter.get("/check-available", async (req, res) => {
     });
   }
 });
-
 
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;

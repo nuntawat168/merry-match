@@ -1,11 +1,10 @@
-import { useContext } from "react";
 import { useFormikContext } from "formik";
-import { FormContext } from "../../pages/RegisterPage.jsx";
+import { useRegister } from "../../contexts/registerContext.jsx";
 import arrowBackGray500 from "../../assets/icon/arrow_back_gray_500.svg";
 import arrowBackRed500 from "../../assets/icon/arrow_back_red_500.svg";
 
 function RegisterFooter() {
-  const { currentStepIndex, setCurrentStepIndex } = useContext(FormContext);
+  const { currentStepIndex, setCurrentStepIndex } = useRegister();
   const formik = useFormikContext();
 
   const isLastStep = currentStepIndex === 3;

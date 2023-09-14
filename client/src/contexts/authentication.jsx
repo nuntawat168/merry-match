@@ -64,7 +64,7 @@ function AuthProvider(props) {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
   // const userRole = state.user && state.user.role;
   const userRole = state && state.role;
-  
+
   return (
     <AuthContext.Provider
       value={{ state, login, logout, register, isAuthenticated, userRole }}
