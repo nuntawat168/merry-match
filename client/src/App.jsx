@@ -1,20 +1,21 @@
-import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import MatchPages from "./pages/MatchPages";
-import MerryListPage from "./pages/MerryListPage";
-import AdminAddPackage from "./pages/AdminAddPackage";
-import AdminEditPackage from "./pages/AdminEditPackage";
-import PackagePage from "./pages/packagepage";
-import Adminpackage from "../src/pages/Adminpackage";
-import PaymentPage1 from "./pages/PaymentPage1";
-import Chat from "./pages/Chat";
-import Test1 from "./pages/Test1";
-import AdminComplaintListPage from "./pages/AdminComplaintListPage";
+// import "./App.css";
+// import { Routes, Route } from "react-router-dom";
+// import LandingPage from "./pages/LandingPage";
+// import LoginPage from "./pages/LoginPage";
+// import RegisterPage from "./pages/RegisterPage";
+// import MatchPages from "./pages/MatchPages";
+// import MerryListPage from "./pages/MerryListPage";
+// import AdminAddPackage from "./pages/AdminAddPackage";
+// import PackagePage from "./pages/packagepage";
+// import Adminpackage from "../src/pages/Adminpackage";
+// import PaymentPage1 from "./pages/PaymentPage1";
+// import Chat from "./pages/Chat";
+// import Test1 from "./pages/Test1";
+// import AdminComplaintListPage from "./pages/AdminComplaintListPage";
+
 
 // function App() {
+
 //   return (
 //     <>
 //       <Routes>
@@ -38,6 +39,7 @@ import AdminComplaintListPage from "./pages/AdminComplaintListPage";
 //   );
 // }
 // export default App;
+
 
 import AuthenticatedApp from "./pages/AuthenticatedApp";
 import UnauthenticatedApp from "./pages/UnauthenticatedApp";

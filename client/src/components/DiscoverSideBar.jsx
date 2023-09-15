@@ -1,8 +1,35 @@
 import React from 'react';
 import discoverIcon from '../assets/icon/discover.svg';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
 
 
 const DiscoverSideBar = () => {
+
+    const fetchMatchList = async (user_id) => {
+        try {
+            const response = await axios.get(`http://localhost:4000/user/matchlist/${user_id}`);
+            return response.data.data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error;
+        }
+    };
+
+
+    useEffect(() => {
+        const user_id = '7';
+        fetchMatchList(user_id)
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+
     return (
         <div className='h-[936px] bg-[#ffff] w-[316px] flex flex-col justify-between'>
             <button className='flex flex-col justify-center items-center w-[275px] p-2 border-[2px] rounded-xl border-purple-500 m-[20px] hover:bg-purple-200'>
