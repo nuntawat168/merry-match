@@ -30,7 +30,18 @@ function BasicInfomationForm(props) {
           placeholder={"name@website.com"}
           label={"Email"}
         />
-        {props.children}
+        <TextInputField
+          name={"password"}
+          type={"password"}
+          placeholder={"At least 8 charactor"}
+          label={"Password"}
+        />
+        <TextInputField
+          name={"passwordConfirmation"}
+          type={"password"}
+          placeholder={"At least 8 charactor"}
+          label={"Confirm password"}
+        />
       </div>
     </div>
   );
