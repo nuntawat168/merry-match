@@ -1,11 +1,12 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
 
 const UserContext = createContext();
 
 const ContextProvider = ({ children }) => {
-  const [dataAgain, setDataAgain] = useState([]);
   const [dataPackage, setDataPackage] = useState([]);
+  const [dataAgain, setDataAgain] = useState([]);
+
   const [dataAdmin, setDataAdmin] = useState([]);
   const [savePackage, setSavePackage] = useState([]);
 
