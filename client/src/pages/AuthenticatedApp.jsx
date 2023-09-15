@@ -37,7 +37,7 @@ function AuthenticatedApp() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<MatchPages />} />
             <Route path="/logout" element={<LogoutTestPage />} />
-            <Route path="/complain" element={<UserComplaintPage />} />
+            <Route path="/complaint" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
           </>
         )}
@@ -47,10 +47,11 @@ function AuthenticatedApp() {
           <>
             <Route path="/package/add" element={<AdminAddPackage />} />
             <Route path="/package/edit/:id" element={<AdminEditPackage />} />
-            <Route path="/admin" element={<Adminpackage />} />
+            <Route path="/package" element={<Adminpackage />} />
             <Route path="/match" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutTestPage />} />
+            <Route path="/complaint" element={<AdminComplaintListPage />} />
           </>
         )}
       </Routes>
