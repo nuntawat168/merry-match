@@ -31,11 +31,11 @@ const MatchCard = () => {
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            const user_id = '60';
-            // const token = localStorage.getItem("token");
-            // const user = jwtDecode(token);
-            // console.log(user.id);
-            const apiUrl = `http://localhost:4000/user/unmatchlist/${user_id}`;
+            // const user_id = '60';
+            const token = localStorage.getItem("token");
+            const user = jwtDecode(token);
+            console.log(user.id);
+            const apiUrl = `http://localhost:4000/user/unmatchlist/${user.id}`;
             const queryParams = new URLSearchParams();
 
             if (minAge) {
@@ -74,19 +74,20 @@ const MatchCard = () => {
 
     const handleHeartClick = async (user_response, index) => {
         try {
-            const user_interest = displayedUser.user_id;
-
             if (cardRefs.current[index]) {
                 cardRefs.current[index].swipe("right");
+
+                const response1 = await axios.post(`http://localhost:4000/user/like/${user_response}`);
+                console.log(response1.data.message);
+
+                const response2 = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
+                console.log(response2.data.message);
             }
-
-
-
-            console.log("Match Result:", response.data.data);
         } catch (error) {
-            console.error("Error matching:", error);
+            console.error('Error liking user:', error);
         }
     };
+
 
     const handleCrossClick = (user_response, index) => {
         try {
@@ -222,10 +223,13 @@ const MatchCard = () => {
                                             <p className='mb-[20px] text-[16px] text-gray-700 font-semibold'>Male</p>
                                             <p className='mb-[20px] text-[16px] text-gray-700 font-semibold'>{selectedUser.sexual_preferences}</p>
                                             <p className='mb-[20px] text-[16px] text-gray-700 font-semibold'>{selectedUser.racial_preferences}</p>
-                                            <p className='mb-[20px] text-[16px] text-gray-700 font-semibold'>{selectedUser.meeting_interests}</p>
+                                            <p className='mb-[40px] text-[16px] text-gray-700 font-semibold'>{selectedUser.meeting_interests}</p>
                                         </div>
                                     </div>
+                                    <p className='text-[24px] font-bold'>About Me</p>
+                                    <p>{selectedUser.about_me}</p>
                                     <p className='text-[24px] font-bold'>Hobbies and Interests</p>
+                                    <p></p>
                                 </div>
 
                                 {/* เพิ่มข้อมูลอื่นๆที่คุณต้องการแสดง */}

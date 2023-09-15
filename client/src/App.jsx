@@ -6,7 +6,6 @@ import RegisterPage from "./pages/RegisterPage";
 import MatchPages from "./pages/MatchPages";
 import MerryListPage from "./pages/MerryListPage";
 import AdminAddPackage from "./pages/AdminAddPackage";
-import AdminEditPackage from "./pages/AdminEditPackage";
 import PackagePage from "./pages/packagepage";
 import Adminpackage from "../src/pages/Adminpackage";
 import PaymentPage1 from "./pages/PaymentPage1";
@@ -37,11 +36,13 @@ function App() {
 export default App;
 
 
+
 // import AuthenticatedApp from "./pages/AuthenticatedApp";
 // import UnauthenticatedApp from "./pages/UnauthenticatedApp";
 // import { useAuth } from "./contexts/authentication";
 
 // function App() {
+
 //   return (
 //     <>
 //       <Routes>
@@ -65,3 +66,14 @@ export default App;
 //   );
 // }
 // export default App;
+
+
+import AuthenticatedApp from "./pages/AuthenticatedApp";
+import UnauthenticatedApp from "./pages/UnauthenticatedApp";
+import { useAuth } from "./contexts/authentication";
+
+function App() {
+  const auth = useAuth();
+  return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+}
+export default App;
