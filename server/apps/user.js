@@ -47,34 +47,12 @@ userRouter.get("/matchlist/:user_id", async (req, res) => {
     }
 });
 
-userRouter.get("/unmatchlist/:user_id", async (req, res) => {
-    try {
-        const { user_id } = req.params;
-
-        const result = await pool.query(
-            `SELECT DISTINCT users.user_id, users.sex, users.name, users.age, users.email, users.city, users.location, users.sex_identities, users.sexual_preferences,users.racial_preferences, users.meeting_interests, profile_images.image
-            FROM users
-            INNER JOIN profile_images ON users.user_id = profile_images.user_id
-            INNER JOIN merry_lists ON users.user_id = merry_lists.user_interest OR users.user_id = merry_lists.user_response
-            WHERE (merry_lists.merry_match_status IS NULL OR merry_lists.merry_match_status = FALSE) OR (merry_lists.merry_match_status = TRUE AND users.user_id != $1)
-            `,
-            [user_id]
-
-        );
 
 
 
+        
 
-        );
 
-res.json({
-    data: result.rows,
-});
-    } catch (error) {
-    console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
-}
-});
 
 
 
