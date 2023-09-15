@@ -79,7 +79,6 @@ const MatchCard = () => {
                 const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
                 console.log(response.data.message);
 
-                // เรียกใช้ฟังก์ชัน checkPopup เมื่อ API ทำงานเสร็จสิ้น
                 checkPopup(user_response);
             }
         } catch (error) {
