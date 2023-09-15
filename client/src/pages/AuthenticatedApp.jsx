@@ -10,6 +10,7 @@ import AdminEditPackage from "./AdminEditPackage";
 import PackagePage from "./packagepage";
 import Adminpackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
+import UserComplaintPage from "./userComplaint";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
@@ -36,6 +37,7 @@ function AuthenticatedApp() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<MatchPages />} />
             <Route path="/logout" element={<LogoutTestPage />} />
+            <Route path="/complain" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
           </>
         )}
