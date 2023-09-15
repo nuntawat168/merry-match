@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import manImage from "../../src/assets/image/manOnLoginPage.svg";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
-import axios from 'axios';
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 function UserComplaintPage() {
+  const token = localStorage.getItem("token");
+  const user = jwtDecode(token);
+  const userState = JSON.parse(localStorage.getItem("state"));
+  const userId = userState.id;
+  const user_id = user.id
+  console.log(user)
+console.log(userState);
+console.log(userId);
+  // console.log(user.id);
   // Define the initial form values
   const initialValues = {
     issue: "",
@@ -21,28 +31,44 @@ function UserComplaintPage() {
     dateSubmitted: Yup.date().required("Date Submitted is required"),
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
+    // Convert the date to a JavaScript Date object
+    // const dateSubmitted = new Date(values.dateSubmitted);
+    // const formattedDate = new Date(dateSubmitted).toISOString().split("T")[0];
+    // console.log(dateSubmitted)
+    console.log(values.dateSubmitted)
 
-    values.dateSubmitted = new Date(values.dateSubmitted).toISOString();
-    postDataToSupabase(values);
-  };
-  const postDataToSupabase = async (data) => {
+    // Format the date as 'yyyy-MM-dd'
+    // const formattedDate = `${dateSubmitted.getFullYear()}-${(
+    //   dateSubmitted.getMonth() + 1
+    // )
+    //   .toString()
+    //   .padStart(2, "0")}-${dateSubmitted
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")}`;
+
+
+
+    // Update the values object with the formatted date
+    // values.dateSubmitted = formattedDate;
+    values.user_id = user_id
+
     try {
       const response = await axios.post(
-        'https://gacngpsoekbrifxahpkg.supabase.co',
-        data,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhY25ncHNvZWticmlmeGFocGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTM1Mzk4MTQsImV4cCI6MjAwOTExNTgxNH0.FsPo5sRvcobf8AchCc51g32FGRBVtuSw0oXSPKuJwms', // Replace with your API key
-          },
-        }
+        "http://localhost:4000/complain",
+        values
       );
 
-      console.log('Data posted to Supabase:', response.data);
-      // Optionally, you can handle success or perform further actions here.
+      console.log(
+        "Data posted to http://localhost:4000/complain:",
+        response.data
+      );
     } catch (error) {
-      console.error('Error posting data to Supabase:', error);
+      console.error(
+        "Error posting data to http://localhost:4000/complain:",
+        error
+      );
       // Handle errors here.
     }
   };
@@ -84,7 +110,11 @@ function UserComplaintPage() {
                   placeholder="Enter Issue"
                   className="w-[548px] h-[48px] border border-[#D6D9E4] rounded-lg mt-2 p-4"
                 />
-                <ErrorMessage name="issue" component="div" className="text-red-500" />
+                <ErrorMessage
+                  name="issue"
+                  component="div"
+                  className="text-red-500"
+                />
               </div>
 
               <div className="mt-10 mb-4 flex flex-col items-start">
@@ -101,7 +131,11 @@ function UserComplaintPage() {
                   placeholder="Enter Description"
                   className="w-[548px] h-[196px] border border-[#D6D9E4] rounded-lg mt-2 p-4"
                 />
-                <ErrorMessage name="description" component="div" className="text-red-500" />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="text-red-500"
+                />
               </div>
 
               <div className="mt-10 mb-4 flex flex-col items-start">
@@ -115,9 +149,14 @@ function UserComplaintPage() {
                   type="date"
                   id="dateSubmitted"
                   name="dateSubmitted"
+                  max ={new Date().toISOString().split("T")[0]}
                   className="w-[357px] h-[48px] border border-[#D6D9E4] rounded-lg mt-2 p-4"
                 />
-                <ErrorMessage name="dateSubmitted" component="div" className="text-red-500" />
+                <ErrorMessage
+                  name="dateSubmitted"
+                  component="div"
+                  className="text-red-500"
+                />
               </div>
 
               <button
@@ -133,7 +172,7 @@ function UserComplaintPage() {
           <img src={manImage} className="w-[65%]" alt="manImage" />
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }
