@@ -1,13 +1,97 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useFormikContext } from "formik";
 import jwtDecode from "jwt-decode";
+import { useFormikContext } from "formik";
+import { useUserProfile } from "../contexts/userProfileContext";
 
 function UserProfileHeader() {
+  const {
+    originalUserProfile,
+    setOriginalUserProfile,
+    deleteOriginalPicturesProfile,
+  } = useUserProfile();
+
   const formik = useFormikContext();
+  // const loggedValues = useRef(0);
+  const [countFormikValuesChange, setCountFormikValuesChange] = useState(0);
+
+  useEffect(() => {
+    if (countFormikValuesChange >= 0 && countFormikValuesChange < 2) {
+      // console.log("Formik Values (Initial):");
+      // console.log(formik.values);
+      setOriginalUserProfile(formik.values);
+      setCountFormikValuesChange(countFormikValuesChange + 1);
+    }
+  }, [formik.values]);
   const handleOnClickUpdate = () => {
+    console.log("+------------------------------------------+");
+    console.log("New User Profile");
     console.log(formik.values);
+    console.log("Original User Profile");
+    console.log(originalUserProfile);
+    const newUserProfile = { ...formik.values };
+    const editUserProfile = {};
+    const nameAllTextFields = [
+      "name",
+      "dateOfBirth",
+      "location",
+      "city",
+      "username",
+      "email",
+      "sexualIdentites",
+      "racialPreferences",
+      "meetingInterests",
+      "aboutMe",
+    ];
+    for (const nameTextField of nameAllTextFields) {
+      if (
+        newUserProfile[nameTextField] !== originalUserProfile[nameTextField]
+      ) {
+        editUserProfile[
+          `new${nameTextField.charAt(0).toUpperCase() + nameTextField.slice(1)}`
+        ] = newUserProfile[nameTextField];
+      }
+    }
+    let originalHobbiesInterests = [...originalUserProfile["hobbiesInterests"]];
+    const editHobbiesInterests = newUserProfile["hobbiesInterests"];
+    const newHobbiesInterests = [];
+    for (let i = 0; i < editHobbiesInterests.length; i++) {
+      const tag = editHobbiesInterests[i];
+      if (originalHobbiesInterests.includes(tag)) {
+        originalHobbiesInterests.splice(
+          originalHobbiesInterests.indexOf(tag),
+          1
+        );
+      } else {
+        newHobbiesInterests.push(editHobbiesInterests[i]);
+      }
+    }
+    const deleteHobbiesInterests = [...originalHobbiesInterests];
+    if (newHobbiesInterests.length > 0) {
+      editUserProfile["hobbiesInterests"] = {
+        newHobbiesInterests: [...newHobbiesInterests],
+      };
+    }
+    if (deleteHobbiesInterests.length > 0) {
+      editUserProfile["hobbiesInterests"] = {
+        deleteHobbiesInterests: [...deleteOriginalPicturesProfile],
+      };
+    }
+
+    // for (const picture of newUserProfile["profilePictures"]) {
+    //   // console.log(picture);
+    // }
+    if (deleteOriginalPicturesProfile.length > 0) {
+      editUserProfile["profilePictures"] = {
+        deleteProfilePictures: [...deleteOriginalPicturesProfile],
+      };
+    }
+    console.log(editUserProfile.profilePictures?.deleteProfilePictures);
+
+    console.log("Edit User Profile");
+    console.log(editUserProfile);
   };
+
   async function initialFormik() {
     const token = localStorage.getItem("token");
     const user = jwtDecode(token);
@@ -15,12 +99,7 @@ function UserProfileHeader() {
       const response = await axios.get(
         `http://localhost:4000/user-profile/${user.id}`
       );
-      console.log(response.data.data);
-
       const userProfile = response.data.data;
-
-      // formik.initialValues("name": userProfile.name);
-      // formik.initialValues = { name: userProfile.name };
       formik.setFieldValue("name", userProfile.name);
       formik.setFieldValue(
         "dateOfBirth",
@@ -36,9 +115,18 @@ function UserProfileHeader() {
       formik.setFieldValue("meetingInterests", userProfile.meeting_interests);
       formik.setFieldValue("hobbiesInterests", userProfile.hobby_interests);
       formik.setFieldValue("aboutMe", userProfile.about_me);
-      console.log(formik.values);
+      const tempPicturesProfile = [...formik.values.profilePictures];
+      for (const i in userProfile.image) {
+        tempPicturesProfile[i] = userProfile.image[i];
+      }
+      formik.setFieldValue("profilePictures", [...tempPicturesProfile]);
+      // console.log("hi");
+      // console.log(formik.values); // why values in field in empty?
+      // setOriginalUserProfile({ ...formik.values });
+      return true;
     } catch (error) {
       console.error(error);
+      return true;
     }
   }
   useEffect(() => {

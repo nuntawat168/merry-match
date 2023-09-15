@@ -7,6 +7,9 @@ import jwtDecode from "jwt-decode";
 const UserProfileContext = React.createContext();
 
 function UserProfileProvider(props) {
+  const [originalUserProfile, setOriginalUserProfile] = useState({});
+  const [deleteOriginalPicturesProfile, setDeleteOriginalPicturesProfile] =
+    useState([]);
   const initDataForm = {
     name: "",
     dateOfBirth: "",
@@ -20,7 +23,7 @@ function UserProfileProvider(props) {
     meetingInterests: "",
     hobbiesInterests: [],
     aboutMe: "",
-    profilePictures: {},
+    profilePictures: [null, null, null, null, null],
   };
   const formSchema = Yup.object().shape({
     name: Yup.string().required("Name is a required field").max(25),
@@ -80,11 +83,11 @@ function UserProfileProvider(props) {
       .of(Yup.string())
       .max(10, "Maximum of 10 Hobbies/Interests"),
     aboutMe: Yup.string().max(150, "About me must be at most 150 characters"),
-    profilePictures: Yup.object().test(
-      "has-minimum-keys",
+    profilePictures: Yup.array().test(
+      "has-minimum-picture",
       "Profile Pictures must have at least 2 photos",
       (value) => {
-        return Object.keys(value).length >= 2;
+        return value.filter((element) => element === null).length <= 3;
       }
     ),
   });
@@ -97,32 +100,43 @@ function UserProfileProvider(props) {
         formData.append(key, data[key]);
       }
     }
-    for (let key in data.profilePictures) {
-      formData.append("picturesProfile", data.profilePictures[key]);
-    }
+    // for (let key in data.profilePictures) {
+    //   formData.append("picturesProfile", data.profilePictures[key]);
+    // }
     // register(formData);
-    console.log(formData);
-  }
+    console.log(data);
 
-  const [picturesProfile, setPicturesProfile] = useState([
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
-
-  function a() {
-    return formSchema;
+    // const register = async (data) => {
+    //   try {
+    //     const respone = await axios.post(
+    //       "http://localhost:4000/auth/register",
+    //       data,
+    //       {
+    //         headers: { "Content-Type": "multipart/form-data" },
+    //       }
+    //     );
+    //     navigate("/login");
+    //   } catch (error) {
+    //     console.log(`Register Error: ${error}`);
+    //     alert(`Register Error: ${error}`);
+    //   }
+    // };
   }
 
   return (
     <UserProfileContext.Provider
-      value={{ picturesProfile, setPicturesProfile, initDataForm, formSchema }}
+      value={{
+        initDataForm,
+        formSchema,
+        originalUserProfile,
+        setOriginalUserProfile,
+        deleteOriginalPicturesProfile,
+        setDeleteOriginalPicturesProfile,
+      }}
     >
       <Formik
         initialValues={initDataForm}
-        validationSchema={(initialValues) => a(initialValues)}
+        validationSchema={formSchema}
         onSubmit={handleOnSubmit}
         enableReinitialize={true}
       >
