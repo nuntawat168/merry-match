@@ -76,18 +76,55 @@ const MatchCard = () => {
         try {
             if (cardRefs.current[index]) {
                 cardRefs.current[index].swipe("right");
+                const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
+                console.log(response.data.message);
 
-                const response1 = await axios.post(`http://localhost:4000/user/like/${user_response}`);
-                console.log(response1.data.message);
-
-                const response2 = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
-                console.log(response2.data.message);
+                // เรียกใช้ฟังก์ชัน checkPopup เมื่อ API ทำงานเสร็จสิ้น
+                checkPopup(user_response);
             }
         } catch (error) {
             console.error('Error liking user:', error);
         }
     };
 
+    const checkPopup = async (user_response) => {
+        try {
+            const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
+            console.log(response.data.message);
+
+            if (response.data.message === "User is matched") {
+
+                const matchUserData = await axios.get(`http://localhost:4000/user/unmatchlist/${user_response}`);
+
+                openMatchPopup(matchUserData.data.data);
+
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const openMatchPopup = (userData) => {
+        const popup = document.createElement('div');
+        popup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'bg-black', 'p-6', 'border', 'border-gray-300', 'w-[720px]', 'h-[720px]', 'rounded-[50px]');
+
+        popup.innerHTML = `
+            <div class="text-center mt-[48%]">
+                <h2 class="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
+                <p>Name: ${userData.name}</p>
+                <p>Age: ${userData.age}</p>
+            </div>
+            <div class='relative bottom-[60%] left-[95%]'>
+            <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">x</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+
+        const closeBtn = popup.querySelector('button');
+        closeBtn.addEventListener('click', () => {
+            popup.remove();
+        });
+    };
 
     const handleCrossClick = (user_response, index) => {
         try {
@@ -231,8 +268,6 @@ const MatchCard = () => {
                                     <p className='text-[24px] font-bold'>Hobbies and Interests</p>
                                     <p></p>
                                 </div>
-
-                                {/* เพิ่มข้อมูลอื่นๆที่คุณต้องการแสดง */}
                             </>
                         )}
                         <button className='relative top-[-250px] left-4' onClick={closePopup}><p className='text-[20px] font-bold text-gray-500'>x</p></button>
@@ -240,7 +275,7 @@ const MatchCard = () => {
                 </div>
             )}
 
-            <section className="bg-white p-4 shadow ml-[869px] mt-[-93px] h-[936px] w-[220px]">
+            <section className="bg-white p-4 shadow ml-[869px] mt-[-103.5px] h-[936px] w-[220px]">
                 <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
                 <div className='mt-[40px]'>
                     <p>Gender you are interested in</p>
