@@ -6,6 +6,7 @@ import RegisterPage from "./RegisterPage";
 import MatchPages from "./MatchPages";
 import MerryListPage from "./MerryListPage";
 import AdminAddPackage from "./AdminAddPackage";
+import AdminEditPackage from "./AdminEditPackage";
 import PackagePage from "./packagepage";
 import Adminpackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
@@ -42,7 +43,8 @@ function AuthenticatedApp() {
         {/* Routes for admin */}
         {userRole === "admin" && (
           <>
-            <Route path="/addPackage" element={<AdminAddPackage />} />
+            <Route path="/package/add" element={<AdminAddPackage />} />
+            <Route path="/package/edit/:id" element={<AdminEditPackage />} />
             <Route path="/admin" element={<Adminpackage />} />
             <Route path="/match" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
