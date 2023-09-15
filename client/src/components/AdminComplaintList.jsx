@@ -6,17 +6,19 @@ import { useState } from "react";
 // import axios from "axios";
 import { Link } from "react-router-dom";
 import seach from "../assets/icon/vector.svg";
+import { Select } from "@chakra-ui/react";
 
 const AdminComplaintList = () => {
+  const [selectedColor, setSelectedColor] = useState("");
   return (
     <div>
       <section className="w-full  pr-24 flex justify-between h-[10%] px-[60px] py-[16px] ">
         <div className="flex flex-col justify-center font-bold text-2xl text-gray-900 ">
           Complanit List
         </div>
-        <div className="relative flex gap-10 ">
+        <div className="relative flex gap-1.5 ">
           <input
-            className="flex pl-10 w-[320px] border border-gray-300 rounded-lg  "
+            className="flex pl-10 w-[320px] h-[48px] border border-gray-300 rounded-lg  "
             type="text"
             id="FilterTextBox"
             name="FilterTextBox"
@@ -24,18 +26,51 @@ const AdminComplaintList = () => {
           />
           <button type="submit">
             <img
-              className="flex absolute left-2 top-3    w-[30px] h-[30px] "
+              className="flex absolute left-2 top-2.5    w-[30px] h-[30px] "
               src={seach}
             />
           </button>
-          <Link to="/addpackage">
-            <button
-              type="submit"
-              className="flex flex-col justify-center px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
+          <Select
+            className={`${
+              selectedColor === "option1"
+                ? "text-beige-700"
+                : selectedColor === "option2"
+                ? "text-yellow-500"
+                : selectedColor === "option3"
+                ? "text-green-500"
+                : selectedColor === "option4"
+                ? "text-gray-700"
+                : " bg-gray-400 text-gray-400"
+            } `}
+            size="lg"
+            placeholder="All status"
+            onChange={(e) => setSelectedColor(e.target.value)}
+          >
+            <option
+              className="w-[46px] h-[26px] border rounded-lg bg-beige-100 text-beige-700  "
+              value="option1"
             >
-              + Add Package
-            </button>
-          </Link>
+              New
+            </option>
+            <option
+              className="w-[46px] h-[26px] border rounded-lg  bg-yellow-100 text-yellow-500  "
+              value="option2"
+            >
+              Pending
+            </option>
+            <option
+              className="w-[46px] h-[26px] border rounded-lg bg-green-100 text-green-500"
+              value="option3"
+            >
+              Resolved
+            </option>
+            <option
+              className="w-[46px] h-[26px] border rounded-lg bg-gray-200 text-gray-700"
+              value="option4"
+            >
+              Cancel
+            </option>
+          </Select>
         </div>
       </section>
       <section>
@@ -58,7 +93,6 @@ const AdminComplaintList = () => {
           </div>
         </div>
       </section>
-      ;
     </div>
   );
 };
