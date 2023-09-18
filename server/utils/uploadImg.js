@@ -32,7 +32,6 @@ const cloudinarySingleUpload = async (filePicture) => {
 
 const cloudinarySingleDelete = async (picture) => {
   const public_id = picture.publicId;
-  console.log(public_id);
   const result = await cloudinary.uploader.destroy(public_id, {
     type: "private",
   });

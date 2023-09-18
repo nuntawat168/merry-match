@@ -224,10 +224,7 @@ userProfileRouter.put("/:userId", picturesProfileUpload, async (req, res) => {
     if (req.body.deleteProfilePictures) {
       const deleteProfilePictures = JSON.parse(req.body.deleteProfilePictures);
       for (let picture of deleteProfilePictures) {
-        console.log(picture);
-        console.log(picture.publicId);
         const result = await cloudinarySingleDelete(picture);
-        console.log(result);
       }
       console.log("Delete unused profile picture succeed");
     }
