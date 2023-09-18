@@ -23,12 +23,31 @@ function UserProfileHeader() {
       setCountFormikValuesChange(countFormikValuesChange + 1);
     }
   }, [formik.values]);
+
+  async function sendEditProfile(data) {
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/user-profile/${user.id}`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.log("Edit Profile Error");
+      console.log(error);
+      return true;
+    }
+  }
+
   const handleOnClickUpdate = () => {
-    console.log("+------------------------------------------+");
-    console.log("New User Profile");
-    console.log(formik.values);
-    console.log("Original User Profile");
-    console.log(originalUserProfile);
+    // console.log("New User Profile");
+    // console.log(formik.values);
+    // console.log("Original User Profile");
+    // console.log(originalUserProfile);
     const newUserProfile = { ...formik.values };
     const editUserProfile = {};
     const nameAllTextFields = [
@@ -39,10 +58,14 @@ function UserProfileHeader() {
       "username",
       "email",
       "sexualIdentites",
+      "sexualPreferences",
       "racialPreferences",
       "meetingInterests",
       "aboutMe",
     ];
+    const formData = new FormData();
+
+    //=========Filter edit text input==============================
     for (const nameTextField of nameAllTextFields) {
       if (
         newUserProfile[nameTextField] !== originalUserProfile[nameTextField]
@@ -52,6 +75,8 @@ function UserProfileHeader() {
         ] = newUserProfile[nameTextField];
       }
     }
+
+    //=========Filter edit hobbies and interests====================
     let originalHobbiesInterests = [...originalUserProfile["hobbiesInterests"]];
     const editHobbiesInterests = newUserProfile["hobbiesInterests"];
     const newHobbiesInterests = [];
@@ -68,28 +93,47 @@ function UserProfileHeader() {
     }
     const deleteHobbiesInterests = [...originalHobbiesInterests];
     if (newHobbiesInterests.length > 0) {
-      editUserProfile["hobbiesInterests"] = {
-        newHobbiesInterests: [...newHobbiesInterests],
-      };
+      editUserProfile["newHobbiesInterests"] = [...newHobbiesInterests];
     }
     if (deleteHobbiesInterests.length > 0) {
-      editUserProfile["hobbiesInterests"] = {
-        deleteHobbiesInterests: [...deleteOriginalPicturesProfile],
-      };
+      editUserProfile["deleteHobbiesInterests"] = [...deleteHobbiesInterests];
     }
 
-    // for (const picture of newUserProfile["profilePictures"]) {
-    //   // console.log(picture);
-    // }
+    //========Filter edit image==================
+
     if (deleteOriginalPicturesProfile.length > 0) {
-      editUserProfile["profilePictures"] = {
-        deleteProfilePictures: [...deleteOriginalPicturesProfile],
-      };
+      editUserProfile["deleteProfilePictures"] = [
+        ...deleteOriginalPicturesProfile,
+      ];
     }
-    console.log(editUserProfile.profilePictures?.deleteProfilePictures);
 
-    console.log("Edit User Profile");
     console.log(editUserProfile);
+
+    //---------add edit userprofile to form data------------------
+    for (let key in editUserProfile) {
+      if (Array.isArray(editUserProfile[key])) {
+        formData.append(key, JSON.stringify(editUserProfile[key]));
+      } else {
+        formData.append(key, editUserProfile[key]);
+      }
+    }
+
+    //------------------add edit picture to form data------------------------
+    const newPicturesProfile = formik.values.profilePictures.filter(
+      (picture) => picture !== null
+    );
+
+    for (let i = 0; i < newPicturesProfile.length; i++) {
+      const picture = newPicturesProfile[i];
+      if (picture?.url !== undefined) {
+        formData.append(`newPicturesProfile_${i}`, JSON.stringify(picture));
+      } else {
+        const filePicture = picture[Object.keys(picture)[0]];
+        formData.append(`newPicturesProfile_${i}`, filePicture);
+      }
+    }
+
+    sendEditProfile(formData);
   };
 
   async function initialFormik() {
@@ -113,7 +157,10 @@ function UserProfileHeader() {
       formik.setFieldValue("sexualPreferences", userProfile.sexual_preferences);
       formik.setFieldValue("racialPreferences", userProfile.racial_preferences);
       formik.setFieldValue("meetingInterests", userProfile.meeting_interests);
-      formik.setFieldValue("hobbiesInterests", userProfile.hobby_interests);
+      formik.setFieldValue(
+        "hobbiesInterests",
+        userProfile.hobby_interests.filter((element) => element !== null)
+      );
       formik.setFieldValue("aboutMe", userProfile.about_me);
       const tempPicturesProfile = [...formik.values.profilePictures];
       for (const i in userProfile.image) {
