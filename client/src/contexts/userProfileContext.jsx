@@ -91,36 +91,110 @@ function UserProfileProvider(props) {
       }
     ),
   });
+  async function sendEditProfile(data) {
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/user-profile/${user.id}`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.log("Edit Profile Error");
+      console.log(error);
+      return true;
+    }
+  }
 
   function handleOnSubmit(data) {
-    console.log("hi from OnSubmit");
+    const newUserProfile = { ...data };
+    const editUserProfile = {};
+    const nameAllTextFields = [
+      "name",
+      "dateOfBirth",
+      "location",
+      "city",
+      "username",
+      "email",
+      "sexualIdentites",
+      "sexualPreferences",
+      "racialPreferences",
+      "meetingInterests",
+      "aboutMe",
+    ];
     const formData = new FormData();
-    for (let key in data) {
-      if (key !== "profilePictures") {
-        formData.append(key, data[key]);
+
+    //=========Filter edit text input==============================
+    for (const nameTextField of nameAllTextFields) {
+      if (
+        newUserProfile[nameTextField] !== originalUserProfile[nameTextField]
+      ) {
+        editUserProfile[
+          `new${nameTextField.charAt(0).toUpperCase() + nameTextField.slice(1)}`
+        ] = newUserProfile[nameTextField];
       }
     }
-    // for (let key in data.profilePictures) {
-    //   formData.append("picturesProfile", data.profilePictures[key]);
-    // }
-    // register(formData);
-    console.log(data);
 
-    // const register = async (data) => {
-    //   try {
-    //     const respone = await axios.post(
-    //       "http://localhost:4000/auth/register",
-    //       data,
-    //       {
-    //         headers: { "Content-Type": "multipart/form-data" },
-    //       }
-    //     );
-    //     navigate("/login");
-    //   } catch (error) {
-    //     console.log(`Register Error: ${error}`);
-    //     alert(`Register Error: ${error}`);
-    //   }
-    // };
+    //=========Filter edit hobbies and interests====================
+    let originalHobbiesInterests = [...originalUserProfile["hobbiesInterests"]];
+    const editHobbiesInterests = newUserProfile["hobbiesInterests"];
+    const newHobbiesInterests = [];
+    for (let i = 0; i < editHobbiesInterests.length; i++) {
+      const tag = editHobbiesInterests[i];
+      if (originalHobbiesInterests.includes(tag)) {
+        originalHobbiesInterests.splice(
+          originalHobbiesInterests.indexOf(tag),
+          1
+        );
+      } else {
+        newHobbiesInterests.push(editHobbiesInterests[i]);
+      }
+    }
+    const deleteHobbiesInterests = [...originalHobbiesInterests];
+    if (newHobbiesInterests.length > 0) {
+      editUserProfile["newHobbiesInterests"] = [...newHobbiesInterests];
+    }
+    if (deleteHobbiesInterests.length > 0) {
+      editUserProfile["deleteHobbiesInterests"] = [...deleteHobbiesInterests];
+    }
+
+    //========Filter edit image==================
+
+    if (deleteOriginalPicturesProfile.length > 0) {
+      editUserProfile["deleteProfilePictures"] = [
+        ...deleteOriginalPicturesProfile,
+      ];
+    }
+    //---------add edit userprofile to form data------------------
+    for (let key in editUserProfile) {
+      if (Array.isArray(editUserProfile[key])) {
+        formData.append(key, JSON.stringify(editUserProfile[key]));
+      } else {
+        formData.append(key, editUserProfile[key]);
+      }
+    }
+
+    //------------------add edit picture to form data------------------------
+    const newPicturesProfile = data.profilePictures.filter(
+      (picture) => picture !== null
+    );
+
+    for (let i = 0; i < newPicturesProfile.length; i++) {
+      const picture = newPicturesProfile[i];
+      if (picture?.url !== undefined) {
+        formData.append(`newPicturesProfile_${i}`, JSON.stringify(picture));
+      } else {
+        const filePicture = picture[Object.keys(picture)[0]];
+        formData.append(`newPicturesProfile_${i}`, filePicture);
+      }
+    }
+    console.log("From onSubmit");
+    console.log(editUserProfile);
+    sendEditProfile(formData);
   }
 
   return (
