@@ -113,7 +113,14 @@ function UserProfileProvider(props) {
   function handleOnSubmit(data) {
     const newUserProfile = { ...data };
     const editUserProfile = {};
-    const nameAllTextFields = [
+
+    // Utility function to check if a field has changed
+    function hasFieldChanged(fieldName) {
+      return newUserProfile[fieldName] !== originalUserProfile[fieldName];
+    }
+
+    // Filter edit text input
+    const textFieldsToCheck = [
       "name",
       "dateOfBirth",
       "location",
@@ -126,35 +133,24 @@ function UserProfileProvider(props) {
       "meetingInterests",
       "aboutMe",
     ];
-    const formData = new FormData();
 
-    //=========Filter edit text input==============================
-    for (const nameTextField of nameAllTextFields) {
-      if (
-        newUserProfile[nameTextField] !== originalUserProfile[nameTextField]
-      ) {
+    textFieldsToCheck.forEach((fieldName) => {
+      if (hasFieldChanged(fieldName)) {
         editUserProfile[
-          `new${nameTextField.charAt(0).toUpperCase() + nameTextField.slice(1)}`
-        ] = newUserProfile[nameTextField];
+          `new${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`
+        ] = newUserProfile[fieldName];
       }
-    }
+    });
 
-    //=========Filter edit hobbies and interests====================
-    let originalHobbiesInterests = [...originalUserProfile["hobbiesInterests"]];
-    const editHobbiesInterests = newUserProfile["hobbiesInterests"];
-    const newHobbiesInterests = [];
-    for (let i = 0; i < editHobbiesInterests.length; i++) {
-      const tag = editHobbiesInterests[i];
-      if (originalHobbiesInterests.includes(tag)) {
-        originalHobbiesInterests.splice(
-          originalHobbiesInterests.indexOf(tag),
-          1
-        );
-      } else {
-        newHobbiesInterests.push(editHobbiesInterests[i]);
-      }
-    }
-    const deleteHobbiesInterests = [...originalHobbiesInterests];
+    // Filter edit hobbies and interests
+    const originalHobbiesInterests = [...originalUserProfile.hobbiesInterests];
+    const editHobbiesInterests = newUserProfile.hobbiesInterests;
+    const newHobbiesInterests = editHobbiesInterests.filter(
+      (tag) => !originalHobbiesInterests.includes(tag)
+    );
+    const deleteHobbiesInterests = originalHobbiesInterests.filter(
+      (tag) => !editHobbiesInterests.includes(tag)
+    );
     if (newHobbiesInterests.length > 0) {
       editUserProfile["newHobbiesInterests"] = [...newHobbiesInterests];
     }
@@ -162,15 +158,16 @@ function UserProfileProvider(props) {
       editUserProfile["deleteHobbiesInterests"] = [...deleteHobbiesInterests];
     }
 
-    //========Filter edit image==================
-
+    // Filter edit images
     if (deleteOriginalPicturesProfile.length > 0) {
       editUserProfile["deleteProfilePictures"] = [
         ...deleteOriginalPicturesProfile,
       ];
     }
-    //---------add edit userprofile to form data------------------
-    for (let key in editUserProfile) {
+
+    // Create FormData and add fields
+    const formData = new FormData();
+    for (const key in editUserProfile) {
       if (Array.isArray(editUserProfile[key])) {
         formData.append(key, JSON.stringify(editUserProfile[key]));
       } else {
@@ -178,22 +175,20 @@ function UserProfileProvider(props) {
       }
     }
 
-    //------------------add edit picture to form data------------------------
+    // Add new profile pictures to FormData
     const newPicturesProfile = data.profilePictures.filter(
       (picture) => picture !== null
     );
 
-    for (let i = 0; i < newPicturesProfile.length; i++) {
-      const picture = newPicturesProfile[i];
+    newPicturesProfile.forEach((picture, i) => {
       if (picture?.url !== undefined) {
         formData.append(`newPicturesProfile_${i}`, JSON.stringify(picture));
       } else {
         const filePicture = picture[Object.keys(picture)[0]];
         formData.append(`newPicturesProfile_${i}`, filePicture);
       }
-    }
-    console.log("From onSubmit");
-    console.log(editUserProfile);
+    });
+
     sendEditProfile(formData);
   }
 
