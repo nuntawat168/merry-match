@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import { useUserProfile } from "../contexts/userProfileContext";
 function UserProfileLoading() {
-  const { isSubmit, setIsSubmit } = useUserProfile();
+  const { isSubmitting, setIsSubmitting } = useUserProfile();
   useEffect(() => {
-    if (isSubmit) {
+    if (isSubmitting) {
       // Disable scroll
       document.body.style.overflow = "hidden";
     } else {
       // Enable scroll
       document.body.style.overflow = "auto";
     }
-  }, [isSubmit]);
+  }, [isSubmitting]);
   return (
     <>
-      {isSubmit && (
+      {isSubmitting && (
         <div className="w-screen h-screen backdrop-blur-sm z-50 flex justify-center items-center absolute top-0 left-0">
           <svg
             className="animate-spin"

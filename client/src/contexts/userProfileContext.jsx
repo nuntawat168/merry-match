@@ -8,7 +8,8 @@ const UserProfileContext = React.createContext();
 
 function UserProfileProvider(props) {
   const [originalUserProfile, setOriginalUserProfile] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmissionFinished, setIsSubmissionFinished] = useState(false);
   const [deleteOriginalPicturesProfile, setDeleteOriginalPicturesProfile] =
     useState([]);
   const initDataForm = {
@@ -103,19 +104,20 @@ function UserProfileProvider(props) {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      setIsSubmit(false);
+      setIsSubmitting(false);
+      setIsSubmissionFinished(true);
       return true;
     } catch (error) {
       alert("Update Profile Error");
       console.log("Update Profile Error");
       console.log(error);
-      setIsSubmit(false);
+      setIsSubmitting(false);
       return true;
     }
   }
 
   function handleOnSubmit(data) {
-    setIsSubmit(true);
+    setIsSubmitting(true);
     const newUserProfile = { ...data };
     const editUserProfile = {};
 
@@ -196,7 +198,11 @@ function UserProfileProvider(props) {
 
     sendEditProfile(formData);
   }
-
+  useEffect(() => {
+    if (isSubmissionFinished) {
+      window.location.reload();
+    }
+  }, [isSubmissionFinished]);
   return (
     <UserProfileContext.Provider
       value={{
@@ -206,8 +212,8 @@ function UserProfileProvider(props) {
         setOriginalUserProfile,
         deleteOriginalPicturesProfile,
         setDeleteOriginalPicturesProfile,
-        isSubmit,
-        setIsSubmit,
+        isSubmitting,
+        setIsSubmitting,
       }}
     >
       <Formik
