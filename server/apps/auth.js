@@ -11,7 +11,7 @@ import {
   createUser,
   createHobbyInterest,
   createUserHobbyInterests,
-} from "../utils/userRegistration.js";
+} from "../utils/userManagement.js";
 
 dotenv.config();
 cloudinary.config({
@@ -28,6 +28,7 @@ const picturesProfileUpload = multerUpload.fields([
 ]);
 
 authRouter.post("/register", picturesProfileUpload, async (req, res) => {
+  console.log(req);
   const userData = {
     username: req.body.username,
     password: req.body.password,
@@ -46,6 +47,7 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
 
   try {
     const userId = await createUser(userData);
+    console.log("create user complete");
 
     const picturesProfileUrl = await cloudinaryUpload(req.files);
     userData["picturesProfile"] = picturesProfileUrl;
@@ -67,7 +69,7 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
     }
 
     await createUserHobbyInterests(userId, hobbyInterestIds);
-    // console.log("create user")
+    console.log("Insert hobby interest complete");
 
     console.log("User registration successful.");
     return res.json({
