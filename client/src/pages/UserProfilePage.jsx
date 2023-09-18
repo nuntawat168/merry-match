@@ -6,6 +6,7 @@ import UserEditBasicInfomationForm from "../components/UserEditBasicInfomationFo
 import UserEditIdentitiesAndInterestsForm from "../components/UserEditIdentitiesAndInterestsForm";
 import UserEditProfilePicturesForm from "../components/UserEditProfilePicturesForm";
 import UserDeleteAccount from "./UserDeleteAccount";
+import UserProfileLoading from "../components/UserProfileLoading";
 import { UserProfileProvider } from "../contexts/userProfileContext.jsx";
 
 export const FormContext = createContext();
@@ -21,6 +22,7 @@ function UserProfilePage() {
           <UserEditIdentitiesAndInterestsForm />
           <UserEditProfilePicturesForm />
           <UserDeleteAccount />
+          <UserProfileLoading />
         </div>
         <Footer />
       </div>
