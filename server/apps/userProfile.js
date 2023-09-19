@@ -13,6 +13,7 @@ import {
 } from "../utils/userManagement.js";
 
 const userProfileRouter = Router();
+
 userProfileRouter.get("/check-available", async (req, res) => {
   const checkColumn = req.query.checkColumn;
   const checkValue = req.query.checkValue;
@@ -79,6 +80,92 @@ userProfileRouter.get("/:userId", async (req, res) => {
     });
   } catch (error) {
     console.error(`Get user profile failed: ${error.message}`);
+    return res.status(500).json({
+      message: "An error occurred while processing your request",
+    });
+  }
+});
+
+userProfileRouter.delete("/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // get user picture profile
+    const queryGetUserPicturesProfile = `
+    select image from profile_images pi
+    WHERE pi.user_id = $1
+    `;
+    const getUserPicturesProfile = await pool.query(
+      queryGetUserPicturesProfile,
+      [userId]
+    );
+    const userPicturesProfile = getUserPicturesProfile.rows[0].image;
+
+    // get user hobbies/interests
+    const queryGetUserHobbiesInterests = `
+    SELECT
+      array_agg(hi.hobby_interest_name) AS hobby_interests
+    FROM
+      users_hobbies_interests uhi
+    LEFT JOIN
+      hobbies_interests hi ON uhi.hobby_interest_id = hi.hobby_interest_id
+    WHERE
+      uhi.user_id = $1
+    GROUP BY
+      uhi.user_id
+    `;
+    const getUserHobbiesInterests = await pool.query(
+      queryGetUserHobbiesInterests,
+      [userId]
+    );
+
+    // delete user data in users table
+    const queryDeleteUser = `
+    DELETE FROM users WHERE user_id = $1
+  `;
+    const deleteUserResult = await pool.query(queryDeleteUser, [userId]);
+
+    // delete user pictures profile on cloudinary
+    for (const picture of userPicturesProfile) {
+      await cloudinarySingleDelete(picture);
+    }
+
+    // delete hobbies/interests that have no any users used
+    if (getUserHobbiesInterests.rows[0]) {
+      const userHobbiesInterests =
+        getUserHobbiesInterests.rows[0].hobby_interests;
+      for (const tag of userHobbiesInterests) {
+        const countHobbyExistsResponse = await pool.query(
+          `
+            SELECT COUNT(hobby_interest_id) AS count
+            FROM users_hobbies_interests
+            WHERE hobby_interest_id = (
+                SELECT hobby_interest_id FROM hobbies_interests WHERE hobby_interest_name = $1
+            );
+            `,
+          [tag]
+        );
+        const countHobbyExists = parseInt(
+          countHobbyExistsResponse.rows[0].count
+        );
+        if (countHobbyExists === 0) {
+          await pool.query(
+            `
+              DELETE FROM hobbies_interests WHERE hobby_interest_name = $1
+              `,
+            [tag]
+          );
+        }
+      }
+    }
+
+    console.log(`Delete user profile succeed: ${userId}`);
+    console.log("------------------------");
+    return res.json({
+      message: "Delete user profile succeed",
+    });
+  } catch (error) {
+    console.error(`Delete user profile failed: ${error.message}`);
     return res.status(500).json({
       message: "An error occurred while processing your request",
     });
@@ -231,7 +318,7 @@ userProfileRouter.put("/:userId", picturesProfileUpload, async (req, res) => {
 
     console.log("------------------------------");
     return res.json({
-      message: "test Api",
+      message: "Update user profile succeed",
     });
   } catch (error) {
     console.log("Edit User Profile Error :");
