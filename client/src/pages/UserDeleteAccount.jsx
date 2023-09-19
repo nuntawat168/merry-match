@@ -1,24 +1,15 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
   useDisclosure,
-  Button,
 } from "@chakra-ui/react";
 
 function UserDeleteAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
-  const dialogContentStyles = {
-    borderRadius: "24px", // Set the border radius to 24px
-    padding: "20px", // Add some padding for better aesthetics
-  };
   return (
     <>
       <div className="flex justify-end">
@@ -34,52 +25,53 @@ function UserDeleteAccount() {
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
+        isCentered={true}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent borderRadius="24px" w={500} h="200px">
-            <AlertDialogHeader
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              px="24px"
-              py="8px"
-            >
-              <h1 className="text-xl text-black font-semibold">
-                Delete Confirmation
-              </h1>
-              <button onClick={onClose}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="41"
-                  height="40"
-                  viewBox="0 0 41 40"
-                  fill="none"
-                >
-                  <path
-                    d="M15.5312 24.8485L25.4706 15.1515M15.5312 15.1515L25.4706 24.8485"
-                    stroke="#C8CCDB"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </AlertDialogHeader>
-            <hr />
-            <div className="p-6 flex flex-col  ">
-              <AlertDialogBody>Do you sure to delete account?</AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button onClick={onClose}>Yes, I want to delete</Button>
-                <Button
-                  ref={cancelRef}
-                  colorScheme="red"
-                  onClick={onClose}
-                  ml={3}
-                >
-                  No, I don't
-                </Button>
-              </AlertDialogFooter>
+          <AlertDialogContent
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <div className="w-[528px] h-[200px] bg-white rounded-3xl flex flex-col shadow-btn">
+              <div className="w-full border-b border-gray-300 flex flex-row justify-between items-center px-6 py-2">
+                <h1 className="text-black text-xl font-semibold">
+                  Delete Confirmation
+                </h1>
+                <button onClick={onClose}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="41"
+                    height="40"
+                    viewBox="0 0 41 40"
+                    fill="none"
+                  >
+                    <path
+                      d="M15.5312 24.8485L25.4706 15.1515M15.5312 15.1515L25.4706 24.8485"
+                      stroke="#C8CCDB"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6 flex flex-col space-y-6">
+                <p className="text-gray-700 text-base font-normal">
+                  Do you sure to delete account?
+                </p>
+                <div className="w-full flex space-x-4">
+                  <button className="bg-red-100 px-6 py-3 shadow-btn rounded-full text-red-600 text-base font-bold hover:bg-red-200  focus:bg-red-300">
+                    Yes, I want to delete
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="bg-red-500 px-6 py-3 shadow-btn rounded-full text-white text-base font-bold hover:bg-red-400 focus:bg-red-600"
+                  >
+                    No, I don't
+                  </button>
+                </div>
+              </div>
             </div>
           </AlertDialogContent>
         </AlertDialogOverlay>
