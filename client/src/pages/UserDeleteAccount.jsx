@@ -5,14 +5,30 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+import { useAuth } from "../contexts/authentication";
 
 function UserDeleteAccount() {
+  const { logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
-  function handleDeleteAccount() {
-    console.log("handleDeleteAccount");
-    onClose();
+  async function handleDeleteAccount() {
+    try {
+      const token = localStorage.getItem("token");
+      const user = jwtDecode(token);
+      const result = axios.delete(
+        `http://localhost:4000/user-profile/${user.id}`
+      );
+      console.log("handleDeleteAccount");
+      onClose();
+      logout();
+    } catch (error) {
+      console.log("Delete user profile failed");
+      console.log(error);
+      alert("Delete user profile failed");
+    }
   }
 
   return (
@@ -65,11 +81,11 @@ function UserDeleteAccount() {
                 <p className="text-gray-700 text-base font-normal">
                   Do you sure to delete account?
                 </p>
-                <div
-                  onClick={handleDeleteAccount}
-                  className="w-full flex space-x-4"
-                >
-                  <button className="bg-red-100 px-6 py-3 shadow-btn rounded-full text-red-600 text-base font-bold hover:bg-red-200  focus:bg-red-300">
+                <div className="w-full flex space-x-4">
+                  <button
+                    onClick={handleDeleteAccount}
+                    className="bg-red-100 px-6 py-3 shadow-btn rounded-full text-red-600 text-base font-bold hover:bg-red-200  focus:bg-red-300"
+                  >
                     Yes, I want to delete
                   </button>
                   <button
