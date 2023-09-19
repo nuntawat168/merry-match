@@ -103,7 +103,11 @@ function RegisterProvider(props) {
     const formData = new FormData();
     for (let key in data) {
       if (key !== "profilePictures") {
-        formData.append(key, data[key]);
+        if (Array.isArray(data[key])) {
+          formData.append(key, JSON.stringify(data[key]));
+        } else {
+          formData.append(key, data[key]);
+        }
       }
     }
     for (let key in data.profilePictures) {
