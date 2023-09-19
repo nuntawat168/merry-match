@@ -14,6 +14,8 @@ import UserComplaintPage from "./userComplaint";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
+import AdminComplaintListPage from "./AdminComplaintListPage";
+import Chat from "./Chat";
 
 // user test  email: user1@example.com  pw: password1
 // admin test email: admin1@example.com pw: admin1password
@@ -39,6 +41,7 @@ function AuthenticatedApp() {
             <Route path="/logout" element={<LogoutTestPage />} />
             <Route path="/complaint" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
+            <Route path="/chat" element={<Chat />} />
           </>
         )}
 

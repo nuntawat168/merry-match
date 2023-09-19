@@ -5,48 +5,32 @@ import packageIcon from "../assets/icon/package.svg";
 import complaintIcon from "../assets/icon/complaint.svg";
 import logoutIcon from "../assets/icon/logout.svg";
 import { useAuth } from "../contexts/authentication";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function UserDropdown() {
-  const { logout } = useAuth();
-  // เหลือเพิ่ม link ไปแต่ละหน้า
-  const lists = [
-    { icon: profileIcon, alt: "profile icon", title: "Profile", link: "" },
-    {
-      icon: merryListIcon,
-      alt: "merry list icon",
-      title: "Merry list",
-      link: "",
-    },
-    {
-      icon: packageIcon,
-      alt: "package icon",
-      title: "Merry Membership",
-      link: "",
-    },
-    {
-      icon: complaintIcon,
-      alt: "complaint icon",
-      title: "Compliant",
-      link: "",
-    },
-  ];
+    const { logout } = useAuth();
+    const [isMember, setIsMember ] = useState(false);
+    // เหลือเพิ่ม link ไปแต่ละหน้า
+    const lists = [
+        {icon: profileIcon, alt: "profile icon", title: "Profile", link: "" },
+        {icon: merryListIcon, alt: "merry list icon", title: "Merry list", link: "/merry-list" },
+        {icon: packageIcon, alt: "package icon", title: "Merry Membership", link: isMember? "" : "/packages" },
+        {icon: complaintIcon, alt: "complaint icon", title: "Compliant", link: "" },
+    ]
 
-  // อย่าลืม render แบบมีเงื่อนไขกรณียังไม่เป็น membership
-  const renderedLists = lists.map((list, index) => {
-    return (
-      <div
-        key={index}
-        className="flex py-[8px] mr-4 items-center hover:cursor-pointer"
-      >
-        <img
-          src={list.icon}
-          alt={list.alt}
-          className="ml-[16px] w-[16px] h-[16px] mr-[12px]"
-        />
-        <p>{list.title}</p>
-      </div>
-    );
-  });
+    // อย่าลืม render แบบมีเงื่อนไขกรณียังไม่เป็น membership
+    const renderedLists = lists.map((list, index) => {        
+        return (
+            <Link to={list.link} key={index}>
+                <div className="flex py-[8px] mr-4 items-center hover:cursor-pointer">
+                    <img src={list.icon} alt={list.alt} className="ml-[16px] w-[16px] h-[16px] mr-[12px]"/>
+                    <p>{list.title}</p>
+                </div>
+            </Link>
+            
+        )
+    })
 
   return (
     <section className="flex flex-col z-20 w-[198px] h-[258px] bg-white rounded-2xl absolute top-[60px] right-[0px] font-nunito text-[14px] font-normal text-gray-700 shadow-userDropdown">

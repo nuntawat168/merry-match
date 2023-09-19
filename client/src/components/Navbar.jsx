@@ -1,6 +1,6 @@
 import logo from "../assets/icon/logo.svg";
 import { Link as ScrollLink } from "react-scroll";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import notiIcon from "../assets/icon/noti.svg";
 import UserDropdown from "./UserDropdown";
@@ -12,6 +12,9 @@ function Navbar() {
     const [subscribed, setSubscribed] = useState(false);
     const [userDropdown, setUserDropdown] = useState(false);
     const [notificationDropdown, setNotificationDropdown] = useState(false);
+
+    const location = useLocation();
+    console.log(location)
 
     const toggleUserDropdown = () => {
         setNotificationDropdown(false)
@@ -36,9 +39,12 @@ function Navbar() {
             <li key={anchor.id} className="text-purple-800 px-[24px] py-[32px] hover:cursor-pointer">
                 { isAuthenticated ? (
                     <RouterLink to={anchor.destination}>{anchor.text}</RouterLink>
-                ) : (
+                ) : location.pathname == "/login" ? (
+                    <RouterLink to={`/#${anchor.destination}`}>{anchor.text}</RouterLink>
+                  ) : (
                     <ScrollLink to={anchor.destination}>{anchor.text}</ScrollLink>
-                )}
+                  )}
+            
             </li>          
         )
     }) 
