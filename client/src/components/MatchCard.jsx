@@ -93,7 +93,8 @@ const MatchCard = () => {
 
             if (response.data.message === "User is matched") {
 
-                const matchUserData = await axios.get(`http://localhost:4000/user/unmatchlist/${user_response}`);
+                const matchUserData = await axios.get(`http://localhost:4000/user/matchlist/${user_response}`);
+                console.log(matchUserData.data.data);
 
                 openMatchPopup(matchUserData.data.data);
 
