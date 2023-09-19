@@ -205,8 +205,8 @@ const AdminComplaintList = () => {
           {complaints.map((complaint) => (
             <div
               key={complaint.complaint_id}
-              className="text-[16px] items-center bg-white pl-2 grid grid-cols-[15%_20%_38%_15%_12%] w-[85%] h-[42px] mx-auto  font-normal  last:rounded-b-xl"
-              >
+              className="text-[16px] items-center bg-white pl-2 grid grid-cols-[15%_20%_38%_15%_12%] w-[85%] h-[90px] mx-auto  font-normal  mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl"
+            >
               <span className="flex ml-5">{complaint.username}</span>
               <span className="flex ml-5">
                 {complaint.issue.length > 20
