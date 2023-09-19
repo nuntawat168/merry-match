@@ -24,7 +24,7 @@ function HowToMerry () {
     })
 
     return (
-        <section className="w-full bg flex justify-center">
+        <section id="howToMerry" className="w-full bg flex justify-center">
             <main name="howToMerry" className="w-[1440px] flex justify-center pt-[80px] pb-[88px] bg">
                 <div className="flex flex-col w-[1120px] font-nunito items-center"> 
                     <h1 className="text-purple-300 text-[46px] font-extrabold mb-[40px]">How to Merry</h1>
