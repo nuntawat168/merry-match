@@ -14,7 +14,6 @@ function Navbar() {
     const [notificationDropdown, setNotificationDropdown] = useState(false);
 
     const location = useLocation();
-    console.log(location)
 
     const toggleUserDropdown = () => {
         setNotificationDropdown(false)
@@ -33,7 +32,6 @@ function Navbar() {
     ];
 
     // render each list
-    // render each list
     const renderAnchor = anchors.map((anchor) => {
         return (
             <li key={anchor.id} className="text-purple-800 px-[24px] py-[32px] hover:cursor-pointer">
@@ -44,12 +42,10 @@ function Navbar() {
                   ) : (
                     <ScrollLink to={anchor.destination}>{anchor.text}</ScrollLink>
                   )}
-            
             </li>          
         )
     }) 
 
-    // render navbar
     // render navbar
     return (
         <header className="w-full bg-white h-[88px] shadow-nav flex justify-center">
@@ -58,7 +54,6 @@ function Navbar() {
                     <img src={logo} alt="Merry Match Logo" className="h-[56px]"/>
                 </section>
                 <section className="flex items-center font-nunito font-bold">
-                    {/* render each list */}
                     {/* render each list */}
                     <ul className="flex">{renderAnchor}</ul>
                     {/* if logged in show user noti and profile img, else show login btn*/}
