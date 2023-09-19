@@ -2,8 +2,8 @@ import whyMerryMatchImg from "../assets/image/whyMerryMatch.svg";
 
 function WhyMerrryMatch() {
     return (
-        <main id="whyMerryMatch" className="w-full bg flex justify-center">
-            <div name="whyMerryMatch" className="w-[1440px] bg pt-[105px] pb-[80px] px-[160px] grid grid-cols-2 gap-[25px]">
+        <main className="w-full bg flex justify-center">
+            <div id="whyMerryMatch" name="whyMerryMatch" className="w-[1440px] bg pt-[105px] pb-[80px] px-[160px] grid grid-cols-2 gap-[25px]">
                 <section className="font-nunito text-gray-100 text-[16px] text-start">
                     <h1 className="text-purple-300 text-[46px] font-extrabold mb-[40px]">Why Merry Match?</h1>
                     <h2 className="text-white font-medium text-[20px]">Merry Match is a new generation of online dating website for everyone</h2>
