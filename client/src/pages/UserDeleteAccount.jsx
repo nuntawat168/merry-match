@@ -10,6 +10,11 @@ function UserDeleteAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
+  function handleDeleteAccount() {
+    console.log("handleDeleteAccount");
+    onClose();
+  }
+
   return (
     <>
       <div className="flex justify-end">
@@ -60,7 +65,10 @@ function UserDeleteAccount() {
                 <p className="text-gray-700 text-base font-normal">
                   Do you sure to delete account?
                 </p>
-                <div className="w-full flex space-x-4">
+                <div
+                  onClick={handleDeleteAccount}
+                  className="w-full flex space-x-4"
+                >
                   <button className="bg-red-100 px-6 py-3 shadow-btn rounded-full text-red-600 text-base font-bold hover:bg-red-200  focus:bg-red-300">
                     Yes, I want to delete
                   </button>
