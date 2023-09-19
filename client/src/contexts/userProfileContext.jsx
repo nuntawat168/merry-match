@@ -7,6 +7,11 @@ import jwtDecode from "jwt-decode";
 const UserProfileContext = React.createContext();
 
 function UserProfileProvider(props) {
+  const [originalUserProfile, setOriginalUserProfile] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmissionFinished, setIsSubmissionFinished] = useState(false);
+  const [deleteOriginalPicturesProfile, setDeleteOriginalPicturesProfile] =
+    useState([]);
   const initDataForm = {
     name: "",
     dateOfBirth: "",
@@ -20,7 +25,7 @@ function UserProfileProvider(props) {
     meetingInterests: "",
     hobbiesInterests: [],
     aboutMe: "",
-    profilePictures: {},
+    profilePictures: [null, null, null, null, null],
   };
   const formSchema = Yup.object().shape({
     name: Yup.string().required("Name is a required field").max(25),
@@ -80,49 +85,140 @@ function UserProfileProvider(props) {
       .of(Yup.string())
       .max(10, "Maximum of 10 Hobbies/Interests"),
     aboutMe: Yup.string().max(150, "About me must be at most 150 characters"),
-    profilePictures: Yup.object().test(
-      "has-minimum-keys",
+    profilePictures: Yup.array().test(
+      "has-minimum-picture",
       "Profile Pictures must have at least 2 photos",
       (value) => {
-        return Object.keys(value).length >= 2;
+        return value.filter((element) => element === null).length <= 3;
       }
     ),
   });
+  async function sendEditProfile(data) {
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/user-profile/${user.id}`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      setIsSubmitting(false);
+      setIsSubmissionFinished(true);
+      return true;
+    } catch (error) {
+      alert("Update Profile Error");
+      console.log("Update Profile Error");
+      console.log(error);
+      setIsSubmitting(false);
+      return true;
+    }
+  }
 
   function handleOnSubmit(data) {
-    console.log("hi from OnSubmit");
+    setIsSubmitting(true);
+    const newUserProfile = { ...data };
+    const editUserProfile = {};
+
+    // Utility function to check if a field has changed
+    function hasFieldChanged(fieldName) {
+      return newUserProfile[fieldName] !== originalUserProfile[fieldName];
+    }
+
+    // Filter edit text input
+    const textFieldsToCheck = [
+      "name",
+      "dateOfBirth",
+      "location",
+      "city",
+      "username",
+      "email",
+      "sexualIdentites",
+      "sexualPreferences",
+      "racialPreferences",
+      "meetingInterests",
+      "aboutMe",
+    ];
+
+    textFieldsToCheck.forEach((fieldName) => {
+      if (hasFieldChanged(fieldName)) {
+        editUserProfile[
+          `new${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`
+        ] = newUserProfile[fieldName];
+      }
+    });
+
+    // Filter edit hobbies and interests
+    const originalHobbiesInterests = [...originalUserProfile.hobbiesInterests];
+    const editHobbiesInterests = newUserProfile.hobbiesInterests;
+    const newHobbiesInterests = editHobbiesInterests.filter(
+      (tag) => !originalHobbiesInterests.includes(tag)
+    );
+    const deleteHobbiesInterests = originalHobbiesInterests.filter(
+      (tag) => !editHobbiesInterests.includes(tag)
+    );
+    if (newHobbiesInterests.length > 0) {
+      editUserProfile["newHobbiesInterests"] = [...newHobbiesInterests];
+    }
+    if (deleteHobbiesInterests.length > 0) {
+      editUserProfile["deleteHobbiesInterests"] = [...deleteHobbiesInterests];
+    }
+
+    // Filter edit images
+    if (deleteOriginalPicturesProfile.length > 0) {
+      editUserProfile["deleteProfilePictures"] = [
+        ...deleteOriginalPicturesProfile,
+      ];
+    }
+
+    // Create FormData and add fields
     const formData = new FormData();
-    for (let key in data) {
-      if (key !== "profilePictures") {
-        formData.append(key, data[key]);
+    for (const key in editUserProfile) {
+      if (Array.isArray(editUserProfile[key])) {
+        formData.append(key, JSON.stringify(editUserProfile[key]));
+      } else {
+        formData.append(key, editUserProfile[key]);
       }
     }
-    for (let key in data.profilePictures) {
-      formData.append("picturesProfile", data.profilePictures[key]);
+
+    // Add new profile pictures to FormData
+    const newPicturesProfile = data.profilePictures.filter(
+      (picture) => picture !== null
+    );
+
+    newPicturesProfile.forEach((picture, i) => {
+      if (picture?.url !== undefined) {
+        formData.append(`newPicturesProfile_${i}`, JSON.stringify(picture));
+      } else {
+        const filePicture = picture[Object.keys(picture)[0]];
+        formData.append(`newPicturesProfile_${i}`, filePicture);
+      }
+    });
+
+    sendEditProfile(formData);
+  }
+  useEffect(() => {
+    if (isSubmissionFinished) {
+      window.location.reload();
     }
-    // register(formData);
-    console.log(formData);
-  }
-
-  const [picturesProfile, setPicturesProfile] = useState([
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
-
-  function a() {
-    return formSchema;
-  }
-
+  }, [isSubmissionFinished]);
   return (
     <UserProfileContext.Provider
-      value={{ picturesProfile, setPicturesProfile, initDataForm, formSchema }}
+      value={{
+        initDataForm,
+        formSchema,
+        originalUserProfile,
+        setOriginalUserProfile,
+        deleteOriginalPicturesProfile,
+        setDeleteOriginalPicturesProfile,
+        isSubmitting,
+        setIsSubmitting,
+      }}
     >
       <Formik
         initialValues={initDataForm}
-        validationSchema={(initialValues) => a(initialValues)}
+        validationSchema={formSchema}
         onSubmit={handleOnSubmit}
         enableReinitialize={true}
       >

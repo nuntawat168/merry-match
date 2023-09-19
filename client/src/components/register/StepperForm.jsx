@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { FormContext } from "../../pages/RegisterPage.jsx";
 import { useRegister } from "../../contexts/registerContext.jsx";
 
 function StepperForm() {

@@ -1,13 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useFormikContext } from "formik";
 import jwtDecode from "jwt-decode";
+import { useFormikContext } from "formik";
+import { useUserProfile } from "../contexts/userProfileContext";
 
 function UserProfileHeader() {
+  const { setOriginalUserProfile } = useUserProfile();
+
   const formik = useFormikContext();
+  const [countFormikValuesChange, setCountFormikValuesChange] = useState(0);
+
+  useEffect(() => {
+    if (countFormikValuesChange >= 0 && countFormikValuesChange < 2) {
+      setOriginalUserProfile(formik.values);
+      setCountFormikValuesChange(countFormikValuesChange + 1);
+    }
+  }, [formik.values]);
+
   const handleOnClickUpdate = () => {
-    console.log(formik.values);
+    formik.handleSubmit();
   };
+
   async function initialFormik() {
     const token = localStorage.getItem("token");
     const user = jwtDecode(token);
@@ -15,12 +28,7 @@ function UserProfileHeader() {
       const response = await axios.get(
         `http://localhost:4000/user-profile/${user.id}`
       );
-      console.log(response.data.data);
-
       const userProfile = response.data.data;
-
-      // formik.initialValues("name": userProfile.name);
-      // formik.initialValues = { name: userProfile.name };
       formik.setFieldValue("name", userProfile.name);
       formik.setFieldValue(
         "dateOfBirth",
@@ -34,11 +42,20 @@ function UserProfileHeader() {
       formik.setFieldValue("sexualPreferences", userProfile.sexual_preferences);
       formik.setFieldValue("racialPreferences", userProfile.racial_preferences);
       formik.setFieldValue("meetingInterests", userProfile.meeting_interests);
-      formik.setFieldValue("hobbiesInterests", userProfile.hobby_interests);
+      formik.setFieldValue(
+        "hobbiesInterests",
+        userProfile.hobby_interests.filter((element) => element !== null)
+      );
       formik.setFieldValue("aboutMe", userProfile.about_me);
-      console.log(formik.values);
+      const tempPicturesProfile = [...formik.values.profilePictures];
+      for (const i in userProfile.image) {
+        tempPicturesProfile[i] = userProfile.image[i];
+      }
+      formik.setFieldValue("profilePictures", [...tempPicturesProfile]);
+      return true;
     } catch (error) {
       console.error(error);
+      return true;
     }
   }
   useEffect(() => {
@@ -54,13 +71,13 @@ function UserProfileHeader() {
       </div>
       <div className="flex space-x-4 font-nunito">
         <button
-          className="bg-red-100 text-red-600 text-base font-bold space-x-2 px-6 py-3 rounded-full"
+          className="bg-red-100 text-red-600 text-base font-bold space-x-2 px-6 py-3 rounded-full hover:bg-red-200 focus:ring-4 focus:ring-red-100"
           type="button"
         >
           Preview Profile
         </button>
         <button
-          className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
+          className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full hover:bg-red-600 focus:ring-4 focus:ring-red-100 "
           type="submit"
           onClick={handleOnClickUpdate}
         >
