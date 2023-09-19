@@ -15,9 +15,11 @@ import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
 
+
+
+
 function AuthenticatedApp() {
   const { userRole } = useAuth();
-  // console.log(userRole);
 
   return (
     <div className="App">
