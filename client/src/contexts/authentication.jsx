@@ -5,8 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 const AuthContext = React.createContext();
 const getState = () => {
-  const data = JSON.parse(localStorage.getItem("state"));
-  return data;
+  const token = localStorage.getItem("token");
+  if (token) {
+    const userDataFromToken = jwtDecode(token);
+    return userDataFromToken;
+  } else {
+    return null;
+  }
 };
 
 function AuthProvider(props) {
@@ -25,8 +30,7 @@ function AuthProvider(props) {
 
       const token = result.data.token;
       localStorage.setItem("token", token);
-      const userDataFromToken = jwtDecode(token);
-      localStorage.setItem("state", JSON.stringify(userDataFromToken));
+      // localStorage.setItem("state", JSON.stringify(userDataFromToken));
       setState(getState());
       navigate("/match");
     } catch (error) {
@@ -57,7 +61,6 @@ function AuthProvider(props) {
   // clear the token in localStorage and the user data
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("state");
     setState({ ...state, user: null, error: null });
   };
 
