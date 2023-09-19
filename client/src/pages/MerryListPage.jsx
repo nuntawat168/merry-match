@@ -6,12 +6,13 @@ import viewIcon from "../assets/icon/Frame.svg";
 import merryDefault from "../assets/icon/merryDefault.svg";
 import merrySelected from "../assets/icon/merrySelected.png";
 import MerryMatchStatus from "../assets/icon/match.svg";
+import NotMatchStatus from "../assets/icon/not match.png";
 
 function MerryListPage() {
     const matchLists = [
-        {id: 1, img: "", name: "Daeny", age: 24, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment"}, 
-        {id: 2, img: "", name: "Ygritte", age: 32, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment"},
-        {id: 3, img: "", name: "Ygritte", age: 29, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment"},
+        {id: 1, img: "", name: "Daeny", age: 24, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: true,}, 
+        {id: 2, img: "", name: "Ygritte", age: 32, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: false,},
+        {id: 3, img: "", name: "Ygritte", age: 29, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: true},
     ];
 
     const renderedMatch = matchLists.map((user) => {
@@ -47,15 +48,19 @@ function MerryListPage() {
                     </div>
                 </section>
                 <section className="flex flex-col items-end">
-                    <img src={MerryMatchStatus} alt="merry match" className="mb-[24px]"/>
-                    <div className="flex justify-between w-[176px]">
-                        <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl">
+                    {user.isMatch ? (
+                        <img src={MerryMatchStatus} alt="Match" className="mb-[24px]" />
+                        ) : (
+                        <img src={NotMatchStatus} alt="Not Match" className="mb-[24px]" />
+                    )}
+                    <div className="flex justify-end w-[176px]">
+                        <div className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ${user.isMatch ? '' : 'hidden'}`}>
                             <img src={chatIcon} alt="message icon" className="w-[24px] h-[24px]"/>
                         </div>
-                        <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl">
+                        <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ml-[16px]">
                             <img src={viewIcon} alt="view icon" className="w-[24px] h-[24px]"/>
                         </div>
-                        <div className="w-[48px] h-[48px] bg-red-500 flex justify-center items-center rounded-2xl">
+                        <div className="w-[48px] h-[48px] bg-red-500 flex justify-center items-center rounded-2xl ml-[16px]">
                             <img src={merrySelected} alt="merry icon" />
                         </div>
                     </div>
