@@ -13,15 +13,7 @@ import { useDisclosure } from "@chakra-ui/react";
 
 function MerryListPage() {
     const matchLists = fetchMatchListData();
-
-    // const matchLists = [
-    //     {id: 1, img: "", name: "Daeny", age: 24, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: true,}, 
-    //     {id: 2, img: "", name: "Ygritte", age: 32, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: false,},
-    //     {id: 3, img: "", name: "Ygritte", age: 29, location: "Bangkok, Thailand", sexual_identity: "Female", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: true},
-    //     {id: 4, img: "", name: "Timothyte", age: 22, location: "Bangkok, Thailand", sexual_identity: "Male", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: true},
-    //     {id: 5, img: "", name: "Yana", age: 35, location: "Bangkok, Thailand", sexual_identity: "Male", sexual_preference: "Male", racial_preference: "Indefinite", interests: "Long-term commitment", isMatch: false},
-    // ];
-
+    console.log("test ของพี่อิ่ม: ", matchLists)
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleUnmatchConfirm = () => {
@@ -65,13 +57,13 @@ function MerryListPage() {
                     </div>
                 </section>
                 <section className="flex flex-col items-end">
-                    { matchLists.includes(user) ? (
+                    { user.matchstatus === "match" ? (
                         <img src={MerryMatchStatus} alt="Match" className="mb-[24px]" />
                         ) : (
                         <img src={NotMatchStatus} alt="Not Match" className="mb-[24px]" />
                     )}
                     <div className="flex justify-end w-[176px]">
-                        <div className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl hover:cursor-pointer ${ matchLists.includes(user) ? '' : 'hidden'}`}>
+                        <div className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl hover:cursor-pointer ${ user.matchstatus === "match" ? '' : 'hidden'}`}>
                             <img src={chatIcon} alt="message icon" className="w-[24px] h-[24px]"/>
                         </div>
                         <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ml-[16px] hover:cursor-pointer">
