@@ -3,9 +3,12 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useFormikContext } from "formik";
 import { useUserProfile } from "../contexts/userProfileContext";
+import { useDisclosure } from "@chakra-ui/react";
+import UserProfileModal from "./UserProfileModal";
 
 function UserProfileHeader() {
   const { setOriginalUserProfile } = useUserProfile();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const formik = useFormikContext();
   const [countFormikValuesChange, setCountFormikValuesChange] = useState(0);
@@ -71,13 +74,15 @@ function UserProfileHeader() {
       </div>
       <div className="flex space-x-4 font-nunito">
         <button
-          className="bg-red-100 text-red-600 text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-200  focus:bg-red-300"
+          onClick={onOpen}
+          className="bg-red-100 text-red-600 text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-200  active:bg-red-300"
           type="button"
         >
           Preview Profile
         </button>
+        <UserProfileModal isOpen={isOpen} onClose={onClose} />
         <button
-          className="bg-red-500 text-white text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-400 focus:bg-red-600"
+          className="bg-red-500 text-white text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-400 active:bg-red-600"
           type="submit"
           onClick={handleOnClickUpdate}
         >
