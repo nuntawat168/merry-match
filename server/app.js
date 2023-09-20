@@ -43,7 +43,6 @@ async function init() {
 
   app.use("/packages", packageRouter);
   app.use("/complain", complaintRouter);
-
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
