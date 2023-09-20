@@ -18,7 +18,7 @@ const UploadField = (props) => {
       </div>
       <input id={props.name} {...props} />
       {meta.touched && meta.error && <p className="text-red">{meta.error}</p>}
-      {field.value && <PreviewImage file={field.value} />}
+      {field.value && <PreviewImage file={field.value} page="AddEditPackage" />}
     </>
   );
 };

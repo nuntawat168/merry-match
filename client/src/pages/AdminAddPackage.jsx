@@ -1,6 +1,6 @@
 import "../App.css";
-import AdminSideBar from "../components/AdminSideBar";
-import AdminPackageForm from "../components/AdminPackageForm";
+import AdminSideBar from "../components/admin_packages/AdminSideBar";
+import AdminPackageForm from "../components/admin_packages/AdminPackageForm";
 
 function AdminAddPackage() {
   const obj = { title: "Add Package", button: "Create" };

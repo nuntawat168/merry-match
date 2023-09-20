@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFormikContext } from "formik";
 
-const PreviewImage = ({ file }) => {
+const PreviewImage = ({ file, page }) => {
   const [preview, setPreview] = useState("");
 
   const formik = useFormikContext();
@@ -20,7 +20,7 @@ const PreviewImage = ({ file }) => {
     }
   }, [file]);
 
-  return (
+  return page === "AddEditPackage" ? (
     <div className="relative border rounded-md w-[50px]">
       <img
         className="w-[60px] h-[50px] rounded-md "
@@ -33,6 +33,14 @@ const PreviewImage = ({ file }) => {
       >
         x
       </button>
+    </div>
+  ) : (
+    <div className="relative rounded-md w-[50px]">
+      <img
+        className="w-[60px] h-[50px] rounded-md "
+        src={preview}
+        alt="previewImage"
+      />
     </div>
   );
 };
