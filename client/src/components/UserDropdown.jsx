@@ -11,12 +11,13 @@ import { useState } from "react";
 function UserDropdown() {
     const { logout } = useAuth();
     const [isMember, setIsMember ] = useState(false);
+
     // เหลือเพิ่ม link ไปแต่ละหน้า
     const lists = [
-        {icon: profileIcon, alt: "profile icon", title: "Profile", link: "" },
+        {icon: profileIcon, alt: "profile icon", title: "Profile", link: "/user-profile" }, 
         {icon: merryListIcon, alt: "merry list icon", title: "Merry list", link: "/merry-list" },
-        {icon: packageIcon, alt: "package icon", title: "Merry Membership", link: isMember? "" : "/packages" },
-        {icon: complaintIcon, alt: "complaint icon", title: "Compliant", link: "" },
+        {icon: packageIcon, alt: "package icon", title: "Merry Membership", link: isMember? "" : "/packages" }, //ขอลิงค์หน้าดู package ของคนที่สมัครแล้ว
+        {icon: complaintIcon, alt: "complaint icon", title: "Compliant", link: "/complaint" },
     ]
 
     // อย่าลืม render แบบมีเงื่อนไขกรณียังไม่เป็น membership
