@@ -9,6 +9,7 @@ import userProfileRouter from "./apps/userProfile.js";
 import { createClient } from "@supabase/supabase-js";
 import packageRouter from "./apps/package.js";
 import complaintRouter from "./apps/complaint.js";
+import matchListRouter from "./apps/matchList.js";
 import fs from "fs";
 
 async function init() {
@@ -24,9 +25,11 @@ async function init() {
   app.use("/user-profile", userProfileRouter);
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
+  app.use("/matchlist", matchListRouter)
 
   app.use("/packages", packageRouter);
-  app.use("/complain", complaintRouter)
+  app.use("/complain", complaintRouter);
+
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
