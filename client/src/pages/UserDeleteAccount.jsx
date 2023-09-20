@@ -61,15 +61,14 @@ function UserDeleteAccount() {
                 </h1>
                 <button onClick={onClose}>
                   <svg
+                    className="stroke-gray-500 hover:stroke-gray-600 active:stroke-gray-700"
                     xmlns="http://www.w3.org/2000/svg"
                     width="41"
                     height="40"
                     viewBox="0 0 41 40"
-                    fill="none"
                   >
                     <path
                       d="M15.5312 24.8485L25.4706 15.1515M15.5312 15.1515L25.4706 24.8485"
-                      stroke="#C8CCDB"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
