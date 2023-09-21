@@ -10,7 +10,7 @@ const usePackages = () => {
     console.log("createPackage", values);
     try {
       await axios.post("http://localhost:4000/packages", values);
-      navigate("/admin");
+      navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
     }
@@ -19,7 +19,7 @@ const usePackages = () => {
   const updatePackage = async (values) => {
     try {
       await axios.put(`http://localhost:4000/packages/${params.id}`, values);
-      navigate("/admin");
+      navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
     }
@@ -28,7 +28,7 @@ const usePackages = () => {
   const deletePackage = async (id) => {
     try {
       await axios.delete(`http://localhost:4000/packages/${id}`);
-      navigate("/admin");
+      navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
     }

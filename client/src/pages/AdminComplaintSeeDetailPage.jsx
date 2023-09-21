@@ -1,5 +1,4 @@
 import AdminSideBar from "../components/AdminSideBar";
-import 
 
 function AdminComplaintSeeDetailPage() {
   return (

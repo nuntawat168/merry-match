@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import drag from "../assets/icon/drag.svg";
-import edit from "../assets/icon/edit.svg";
-import deleteicon from "../assets/icon/delete.svg";
+import drag from "../../assets/icon/drag.svg";
+import edit from "../../assets/icon/edit.svg";
+import deleteicon from "../../assets/icon/delete.svg";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import seach from "../assets/icon/vector.svg";
-import Modal from "../components/Modal";
+import seach from "../../assets/icon/vector.svg";
+import Modal from "../Modal";
 import { Button } from "@chakra-ui/react";
+import PreviewImage from "../PreviewImage";
 
 import { useDisclosure } from "@chakra-ui/react";
 import {
@@ -19,13 +20,15 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 
-const Admindetail = () => {
+const AdminPackageDetail = () => {
   const [dataAgain, setDataAgain] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+
+  const navigate = useNavigate();
 
   const handleDelete = async (packageId) => {
     try {
@@ -85,7 +88,7 @@ const Admindetail = () => {
               />
             </button>
           </form>
-          <Link to="/addpackage">
+          <Link to="/package/add">
             <button
               type="submit"
               className="flex flex-col justify-center mt-4 px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
@@ -119,7 +122,9 @@ const Admindetail = () => {
                   <img src={drag} alt="drag" className="mr-3" />
                 </span>
                 <span>{e.package_id}</span>
-                <span>{e.package_name}</span>
+                <span>
+                  <PreviewImage file={e.package_icon} />
+                </span>
                 <span>{e.package_name}</span>
                 <span className="flex ">{e.package_limit} Merry</span>
                 <span className="grid justify-start">{e.created_at}</span>
@@ -137,6 +142,7 @@ const Admindetail = () => {
                       alt="delete Icon"
                       onClick={onOpen}
                     />
+
                     <AlertDialog
                       motionPreset="slideInBottom"
                       leastDestructiveRef={cancelRef}
@@ -144,7 +150,9 @@ const Admindetail = () => {
                       isOpen={isOpen}
                       isCentered
                     >
-                      <AlertDialogOverlay />
+                      <AlertDialogOverlay
+                        style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}
+                      />
 
                       <AlertDialogContent>
                         <AlertDialogHeader>
@@ -179,16 +187,18 @@ const Admindetail = () => {
                   </button>
 
                   {/* edit */}
-                  <button
-                    type="submit"
-                    className="hover:scale-150 duration-1000"
-                  >
-                    <img
-                      className="w-[24px] h-[24px]"
-                      src={edit}
-                      alt="edit Icon"
-                    />
-                  </button>
+                  <Link to={`/package/edit/${e.package_id}`}>
+                    <button
+                      type="button"
+                      className="hover:scale-150 duration-1000"
+                    >
+                      <img
+                        className="mt-1 w-[24px] h-[24px]"
+                        src={edit}
+                        alt="edit Icon"
+                      />
+                    </button>
+                  </Link>
                 </span>
               </div>
             );
@@ -199,4 +209,4 @@ const Admindetail = () => {
   );
 };
 
-export default Admindetail;
+export default AdminPackageDetail;

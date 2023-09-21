@@ -1,5 +1,5 @@
-import Admindetail from "../components/Admindetail";
-import AdminSideBar from "../components/AdminSideBar";
+import AdminPackageDetail from "../components/admin_packages/AdminPackageDetail";
+import AdminSideBar from "../components/admin_packages/AdminSideBar";
 
 function AdminPackage() {
   return (
@@ -8,7 +8,7 @@ function AdminPackage() {
         <AdminSideBar />
       </div>
       <div className="w-full">
-        <Admindetail />
+        <AdminPackageDetail />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import AdminSideBar from "../components/AdminSideBar";
-import AdminPackageForm from "../components/AdminPackageForm";
+import AdminSideBar from "../components/admin_packages/AdminSideBar";
+import AdminPackageForm from "../components/admin_packages/AdminPackageForm";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";

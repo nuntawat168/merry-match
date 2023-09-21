@@ -8,7 +8,7 @@ import MerryListPage from "./MerryListPage";
 import AdminAddPackage from "./AdminAddPackage";
 import AdminEditPackage from "./AdminEditPackage";
 import PackagePage from "./packagepage";
-import Adminpackage from "./Adminpackage";
+import AdminPackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
 import UserComplaintPage from "./userComplaint";
 import { useEffect } from "react";
@@ -50,7 +50,7 @@ function AuthenticatedApp() {
           <>
             <Route path="/package/add" element={<AdminAddPackage />} />
             <Route path="/package/edit/:id" element={<AdminEditPackage />} />
-            <Route path="/package" element={<Adminpackage />} />
+            <Route path="/package" element={<AdminPackage />} />
             <Route path="/match" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutTestPage />} />
