@@ -1,4 +1,6 @@
 import AdminSideBar from "../components/AdminSideBar";
+import AdminComplaintList from "../components/AdminComplaintList";
+import AdminComplaintDetail from "../components/AdminComplaintDetail";
 
 function AdminComplaintSeeDetailPage() {
   return (
@@ -7,7 +9,7 @@ function AdminComplaintSeeDetailPage() {
         <AdminSideBar />
       </div>
       <div className="w-full">
-        <AdminComplaintList />
+        <AdminComplaintDetail />
       </div>
     </div>
   );

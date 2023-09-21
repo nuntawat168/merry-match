@@ -14,10 +14,13 @@ import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
+import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
+
+
+
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();
-  // console.log(userRole);
 
   return (
     <div className="App">
@@ -50,6 +53,7 @@ function AuthenticatedApp() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutTestPage />} />
             <Route path="/complaint" element={<AdminComplaintListPage />} />
+            <Route path="/complaint/detail/:complaintId" element={<AdminComplaintSeeDetailPage/>} />
           </>
         )}
       </Routes>

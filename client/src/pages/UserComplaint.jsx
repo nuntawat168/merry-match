@@ -10,12 +10,8 @@ import jwtDecode from "jwt-decode";
 function UserComplaintPage() {
   const token = localStorage.getItem("token");
   const user = jwtDecode(token);
-  const userState = JSON.parse(localStorage.getItem("state"));
-  const userId = userState.id;
-  const user_id = user.id
-  console.log(user)
-console.log(userState);
-console.log(userId);
+  const user_id = user.id;
+  console.log(user);
   // console.log(user.id);
   // Define the initial form values
   const initialValues = {
@@ -32,44 +28,26 @@ console.log(userId);
   });
 
   const onSubmit = async (values) => {
-    // Convert the date to a JavaScript Date object
-    // const dateSubmitted = new Date(values.dateSubmitted);
-    // const formattedDate = new Date(dateSubmitted).toISOString().split("T")[0];
-    // console.log(dateSubmitted)
-    console.log(values.dateSubmitted)
+    console.log(values.dateSubmitted);
 
-    // Format the date as 'yyyy-MM-dd'
-    // const formattedDate = `${dateSubmitted.getFullYear()}-${(
-    //   dateSubmitted.getMonth() + 1
-    // )
-    //   .toString()
-    //   .padStart(2, "0")}-${dateSubmitted
-    //   .getDate()
-    //   .toString()
-    //   .padStart(2, "0")}`;
-
-
-
-    // Update the values object with the formatted date
-    // values.dateSubmitted = formattedDate;
-    values.user_id = user_id
+    values.user_id = user_id;
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/complain",
+        "http://localhost:4000/complaint",
         values
       );
-
+      window.alert(`${response.data.message}`)
       console.log(
-        "Data posted to http://localhost:4000/complain:",
+        "Data posted to http://localhost:4000/complaint:",
         response.data
       );
     } catch (error) {
       console.error(
-        "Error posting data to http://localhost:4000/complain:",
+        "Error posting data to http://localhost:4000/complaint:",
         error
       );
-      // Handle errors here.
+      window.alert(`${response.data.error}`)
     }
   };
 
@@ -149,7 +127,7 @@ console.log(userId);
                   type="date"
                   id="dateSubmitted"
                   name="dateSubmitted"
-                  max ={new Date().toISOString().split("T")[0]}
+                  max={new Date().toISOString().split("T")[0]}
                   className="w-[357px] h-[48px] border border-[#D6D9E4] rounded-lg mt-2 p-4"
                 />
                 <ErrorMessage
