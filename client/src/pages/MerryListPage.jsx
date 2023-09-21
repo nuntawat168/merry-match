@@ -9,15 +9,14 @@ import NotMatchStatus from "../assets/icon/not match.png";
 import UnmatchConfirmationDialog from "../components/Modal/UnmatchConfirmDialog";
 import { fetchMatchListData } from "../contexts/fetchMerryListData";
 import useTextConvert from "../hooks/useTextConvert";
-
-import { useDisclosure } from "@chakra-ui/react";
+import UnmatchButton from "../components/UnmatchButton";
+import ViewProfileButton from "../components/ViewProfileButton";
 
 function MerryListPage() {
   const { calculateAge, capitalize } = useTextConvert();
 
   const matchLists = fetchMatchListData();
   console.log("test ของพี่อิ่ม: ", matchLists);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleUnmatchConfirm = () => {
     // ใส่ด้วยยยย !!!!
@@ -97,24 +96,15 @@ function MerryListPage() {
                 className="w-[24px] h-[24px]"
               />
             </div>
-            <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ml-[16px] hover:cursor-pointer">
+            {/* <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ml-[16px] hover:cursor-pointer">
               <img
                 src={viewIcon}
                 alt="view icon"
                 className="w-[24px] h-[24px]"
               />
-            </div>
-            <div
-              className="w-[48px] h-[48px] bg-red-500 flex justify-center items-center rounded-2xl ml-[16px] hover:cursor-pointer"
-              onClick={onOpen}
-            >
-              <img src={merrySelected} alt="merry icon" />
-              <UnmatchConfirmationDialog
-                isOpen={isOpen}
-                onClose={onClose}
-                onConfirm={handleUnmatchConfirm}
-              />
-            </div>
+            </div> */}
+            <ViewProfileButton user={user} />
+            <UnmatchButton />
           </div>
         </section>
       </div>
