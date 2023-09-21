@@ -1,4 +1,4 @@
-import AdminSideBar from "../components/AdminSideBar";
+import AdminSideBar from "../components/admin_packages/AdminSideBar"
 import AdminComplaintList from "../components/AdminComplaintList";
 import AdminComplaintDetail from "../components/AdminComplaintDetail";
 
