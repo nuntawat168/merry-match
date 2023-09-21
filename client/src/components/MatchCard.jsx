@@ -7,10 +7,25 @@ import { ImCross } from "react-icons/im";
 import { Link } from 'react-router-dom';
 import jwtDecode from "jwt-decode";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { SlArrowRight } from "react-icons/sl";
+import { SlArrowLeft } from "react-icons/sl";
 
-
-
-
+const MatchPopup = ({ userData, onClose }) => {
+    console.log(userData);
+    return (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black p-6 border border-gray-300 w-[720px] h-[720px] rounded-[50px]">
+            <div className="text-center mt-[48%]">
+                <h2 className="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
+                <p className='text-white'>Name: {userData.name}</p>
+                <p className='text-white'>Sex: {userData.sex}</p>
+                <p className='text-white'>Email: {userData.email}</p>
+            </div>
+            <div className='relative bottom-[60%] left-[95%]'>
+                <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>x</button>
+            </div>
+        </div>
+    );
+};
 
 const MatchCard = () => {
     const [originalUsers, setOriginalUsers] = useState([]);
@@ -26,6 +41,9 @@ const MatchCard = () => {
     const [isSearching, setIsSearching] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [matchPopupOpen, setmatchPopupOpen] = useState(false);
+    const [matchUserData, setMatchUserData] = useState(null);
 
 
     const fetchData = async () => {
@@ -71,6 +89,37 @@ const MatchCard = () => {
             setIsSearching(false);
         }
     };
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const handleTouchStart = (e) => {
+        touchStartX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        touchEndX = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchEndX < touchStartX && currentImageIndex < selectedUser.image.length - 1) {
+            setCurrentImageIndex(currentImageIndex + 1);
+        } else if (touchEndX > touchStartX && currentImageIndex > 0) {
+            setCurrentImageIndex(currentImageIndex - 1);
+        }
+    };
+
+    const handlePrevClick = () => {
+        if (currentImageIndex > 0) {
+            setCurrentImageIndex(currentImageIndex - 1);
+        }
+    };
+
+    const handleNextClick = () => {
+        if (currentImageIndex < selectedUser.image.length - 1) {
+            setCurrentImageIndex(currentImageIndex + 1);
+        }
+    };
+
 
     const handleHeartClick = async (user_response, index) => {
         try {
@@ -92,39 +141,20 @@ const MatchCard = () => {
             console.log(response.data.message);
 
             if (response.data.message === "User is matched") {
-
-                const matchUserData = await axios.get(`http://localhost:4000/user/matchlist/${user_response}`);
-                console.log(matchUserData.data.data);
-
-                openMatchPopup(matchUserData.data.data);
-
+                const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
+                const userData = matchUserDataResponse.data.data;
+                setMatchUserData(userData);
+                setmatchPopupOpen(true);
             }
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
-    const openMatchPopup = (userData) => {
-        const popup = document.createElement('div');
-        popup.classList.add('fixed', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'bg-black', 'p-6', 'border', 'border-gray-300', 'w-[720px]', 'h-[720px]', 'rounded-[50px]');
-
-        popup.innerHTML = `
-            <div class="text-center mt-[48%]">
-                <h2 class="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
-                <p>Name: ${userData.name}</p>
-                <p>Age: ${userData.age}</p>
-            </div>
-            <div class='relative bottom-[60%] left-[95%]'>
-            <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">x</button>
-            </div>
-        `;
-        document.body.appendChild(popup);
-
-        const closeBtn = popup.querySelector('button');
-        closeBtn.addEventListener('click', () => {
-            popup.remove();
-        });
+    const closeMatchPopup = () => {
+        setmatchPopupOpen(false);
     };
+
 
     const handleCrossClick = (user_response, index) => {
         try {
@@ -203,7 +233,7 @@ const MatchCard = () => {
                             <button
                                 onClick={() => openPopup(user)}>
                                 <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
-                                <img src={user.image} alt={user.name} className='w-full h-full rounded-3xl' />
+                                <img src={user.image[0].url} alt={user.name} className='w-[85vw] h-[620px] rounded-3xl' />
                             </button>
 
                             <div className='flex flex-row absolute top-[550px] left-[220px]'>
@@ -234,9 +264,27 @@ const MatchCard = () => {
                     <div className="bg-white p-8 rounded-xl flex flex-row">
                         {selectedUser && (
                             <>
-                                <div>
-                                    <img className='w-[478px] h-[478px]' src={selectedUser.image} alt={selectedUser.name} />
+                                <div
+                                    onTouchStart={handleTouchStart}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={handleTouchEnd}>
+                                    <img className='w-[478px] h-[478px] mr-[20px] rounded-3xl'
+                                        src={selectedUser.image[currentImageIndex].url}
+                                        alt={selectedUser.name} />
                                 </div>
+                                <div className="flex justify-between items-center p-4">
+                                    <button onClick={handlePrevClick} disabled={currentImageIndex === 0} className="text-2xl relative left-[-500px] text-gray-600"><div>
+                                        <SlArrowLeft />
+                                    </div>
+                                    </button>
+                                    <button onClick={handleNextClick} disabled={currentImageIndex === selectedUser.image.length - 1} className="text-2xl relative left-[-95px] text-gray-600">
+                                        <div>
+                                            <SlArrowRight />
+                                        </div>
+                                    </button>
+                                </div>
+
+
                                 <div className='mt-[10px]'>
                                     <span className="text-[58px] font-bold mr-2">{selectedUser.name}</span>
                                     <span className='text-[58px] font-bold text-gray-700'>{selectedUser.age}</span>
@@ -274,6 +322,13 @@ const MatchCard = () => {
                     </div>
                 </div>
             )}
+
+            <div>
+                <button onClick={() => checkPopup(user.user_id)}>Like</button>
+                {matchPopupOpen && <MatchPopup userData={matchUserData} onClose={closeMatchPopup} />}
+            </div>
+
+
 
             <section className="bg-white p-4 shadow ml-[869px] mt-[-103.5px] h-[936px] w-[220px]">
                 <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
