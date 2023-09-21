@@ -23,10 +23,10 @@ function MerryListPage() {
     // ใส่ด้วยยยย !!!!
   };
 
-  const renderedMatch = matchLists.map((user) => {
+  const renderedMatch = matchLists.map((user, index) => {
     return (
       <div
-        key={user.user_response}
+        key={index}
         className="flex justify-evenly border-solid border-b-[1px] border-gray-300 mb-[24px] pb-[40px] pt-[16px]"
       >
         <section className="flex w-[674px]">
