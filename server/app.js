@@ -9,9 +9,10 @@ import userProfileRouter from "./apps/userProfile.js";
 import { createClient } from "@supabase/supabase-js";
 import packageRouter from "./apps/package.js";
 import complaintRouter from "./apps/complaint.js";
+import matchListRouter from "./apps/matchList.js";
 import fs from "fs";
 import { Server } from "socket.io";
-import http from 'http';
+import http from "http";
 
 async function init() {
   dotenv.config();
@@ -22,16 +23,15 @@ async function init() {
   const server = http.createServer(app);
   const io = new Server(server, {
     cors: {
-      origin: 'http://localhost:5173',
-      methods: ['GET', 'POST'],
-    }
+      origin: "http://localhost:5173",
+      methods: ["GET", "POST"],
+    },
   });
   const corsOptions = {
-    origin: 'http://localhost:5173',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: "http://localhost:5173",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   };
-
 
   app.use(express());
   app.use(cors(corsOptions));
@@ -39,8 +39,10 @@ async function init() {
   app.use("/user-profile", userProfileRouter);
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
+  app.use("/matchlist", matchListRouter);
+
   app.use("/packages", packageRouter);
-  app.use("/complain", complaintRouter)
+  app.use("/complain", complaintRouter);
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
@@ -50,14 +52,14 @@ async function init() {
   });
 
   io.on("connect", (socket) => {
-    console.log('User connected');
+    console.log("User connected");
     socket.on("chat message", (msg) => {
       io.emit("chat message", msg);
-    })
+    });
     socket.on("disconnect", () => {
       console.log("User disconnected");
-    })
-  })
+    });
+  });
 
   server.listen(port, () => {
     console.log(`server listening on port ${port}`);

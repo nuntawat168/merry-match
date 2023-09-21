@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import "../App.css";
 import LandingPage from "./LandingPage";
 import LoginPage from "./LoginPage";
-import RegisterPage from "./RegisterPage";
 import MatchPages from "./MatchPages";
 import MerryListPage from "./MerryListPage";
 import AdminAddPackage from "./AdminAddPackage";
@@ -11,14 +10,10 @@ import PackagePage from "./packagepage";
 import AdminPackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
 import UserComplaintPage from "./userComplaint";
-import { useEffect } from "react";
 import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
-
-// user test  email: user1@example.com  pw: password1
-// admin test email: admin1@example.com pw: admin1password
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();

@@ -1,20 +1,23 @@
 import logo from "../assets/icon/logo.svg";
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState} from "react";
 import notiIcon from "../assets/icon/noti.svg";
 import UserDropdown from "./UserDropdown";
 import Notification from "./Notification";
 import { useAuth } from "../contexts/authentication"
+import { HashLink } from 'react-router-hash-link';
+import { fetchUserData } from "../contexts/fetchUserData";
+
 
 function Navbar() {
     const { isAuthenticated } = useAuth(); // get authen value
-    const [subscribed, setSubscribed] = useState(false);
+    const [subscribed, setSubscribed] = useState(false); // รอใส่สถานะว่าสมัครแพคเกจแล้วยัง
     const [userDropdown, setUserDropdown] = useState(false);
     const [notificationDropdown, setNotificationDropdown] = useState(false);
 
-    const location = useLocation();
-
+    const userData = fetchUserData();
+    
     const toggleUserDropdown = () => {
         setNotificationDropdown(false)
         setUserDropdown(!userDropdown);
@@ -31,14 +34,16 @@ function Navbar() {
         { id: 2, destination: isAuthenticated ? (subscribed ? "/merry-list" : "/packages") : "howToMerry", text: isAuthenticated ? "Merry Membership" : "How to Merry" },
     ];
 
+    const location = useLocation(); // to check current page 
+
     // render each list
     const renderAnchor = anchors.map((anchor) => {
         return (
             <li key={anchor.id} className="text-purple-800 px-[24px] py-[32px] hover:cursor-pointer">
                 { isAuthenticated ? (
                     <RouterLink to={anchor.destination}>{anchor.text}</RouterLink>
-                ) : location.pathname == "/login" ? (
-                    <RouterLink to={`/#${anchor.destination}`}>{anchor.text}</RouterLink>
+                ) : location.pathname !== "/" ? (
+                    <HashLink smooth to={`/#${anchor.destination}`}>{anchor.text}</HashLink>
                   ) : (
                     <ScrollLink to={anchor.destination}>{anchor.text}</ScrollLink>
                   )}
@@ -51,7 +56,7 @@ function Navbar() {
         <header className="w-full bg-white h-[88px] shadow-nav flex justify-center">
             <div className="w-[1440px] h-[88px] bg-white px-[160px] flex justify-between items-center">
                 <section>
-                    <img src={logo} alt="Merry Match Logo" className="h-[56px]"/>
+                    <RouterLink to={ isAuthenticated? "/match" : "/" }><img src={logo} alt="Merry Match Logo" className="h-[56px] hover:cursor-pointer"/></RouterLink>
                 </section>
                 <section className="flex items-center font-nunito font-bold">
                     {/* render each list */}
@@ -69,6 +74,7 @@ function Navbar() {
                             <div 
                                 className="ml-[12px] w-[48px] h-[48px] rounded-full bg relative hover:cursor-pointer"
                                 onClick={toggleUserDropdown}
+                                style={userData ? { backgroundImage: `url(${userData.image[0].url})`, backgroundSize: 'cover' } : {}}
                             > 
                                 {userDropdown && <UserDropdown />}
                             </div>
