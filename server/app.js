@@ -10,6 +10,8 @@ import { createClient } from "@supabase/supabase-js";
 import packageRouter from "./apps/package.js";
 import complaintRouter from "./apps/complaint.js";
 import fs from "fs";
+import { Server } from "socket.io";
+import http from 'http';
 
 async function init() {
   dotenv.config();
@@ -17,14 +19,26 @@ async function init() {
   const app = express();
   const port = 4000;
 
-  app.use(express());
-  app.use(cors());
-  app.use(bodyParser.json());
+  const server = http.createServer(app);
+  const io = new Server(server, {
+    cors: {
+      origin: 'http://localhost:5173',
+      methods: ['GET', 'POST'],
+    }
+  });
+  const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  };
 
+
+  app.use(express());
+  app.use(cors(corsOptions));
+  app.use(bodyParser.json());
   app.use("/user-profile", userProfileRouter);
   app.use("/user", userRouter);
   app.use("/auth", authRouter);
-
   app.use("/packages", packageRouter);
   app.use("/complain", complaintRouter)
   app.get("/", (req, res) => {
@@ -35,7 +49,17 @@ async function init() {
     res.status(404).send("Not found");
   });
 
-  app.listen(port, () => {
+  io.on("connect", (socket) => {
+    console.log('User connected');
+    socket.on("chat message", (msg) => {
+      io.emit("chat message", msg);
+    })
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
+    })
+  })
+
+  server.listen(port, () => {
     console.log(`server listening on port ${port}`);
   });
 }

@@ -2,13 +2,39 @@ import React from 'react';
 import discoverIcon from '../assets/icon/discover.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-
-
+import jwtDecode from 'jwt-decode';
+import merryHeart from "../assets/icon/merry.png";
 
 const DiscoverSideBar = () => {
+    const [matchList, setMatchList] = useState([]);
+    const [displayedUsers, setDisplayedUsers] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        if (matchList.length > 0) {
+            setDisplayedUsers(matchList.slice(currentIndex, currentIndex + 2));
+        }
+    }, [matchList, currentIndex]);
+
+
+    const handleNextClick = () => {
+        if (currentIndex + 2 < matchList.length) {
+            setCurrentIndex(currentIndex + 2);
+        }
+    };
+
+    const handlePrevClick = () => {
+        if (currentIndex >= 2) {
+            setCurrentIndex(currentIndex - 2);
+        }
+    };
+
+
 
     const fetchMatchList = async (user_id) => {
         try {
+            const token = localStorage.getItem('token');
+            const user = jwtDecode(token);
             const response = await axios.get(`http://localhost:4000/user/matchlist/${user_id}`);
             return response.data.data;
         } catch (error) {
@@ -17,17 +43,22 @@ const DiscoverSideBar = () => {
         }
     };
 
+    const fetchData = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const user = jwtDecode(token);
+            const data = await fetchMatchList(user.id);
+            setMatchList(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
-        const user_id = '7';
-        fetchMatchList(user_id)
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        fetchData();
     }, []);
+
+
 
 
     return (
@@ -41,6 +72,24 @@ const DiscoverSideBar = () => {
                 <p className='text-left ml-[20px] font-bold text-[24px]'>
                     Merry Match!
                 </p>
+                <div className="flex flex-wrap">
+                    {displayedUsers.map((user) => (
+                        <div key={user.id} className='flex'>
+                            <div className='relative'>
+                                <div className='flex justify-end relative left-[75px] bottom-[-100px] w-[34px] h-[20px]'>
+                                    <img src={merryHeart} alt="heart" className='z-10 absolute right-[10px] w-[20px] h-[20px]' />
+                                    <img src={merryHeart} alt="heart" className='z-30 w-[20px] h-[20px]' />
+                                </div>
+                                <img src={user.image[0].url} alt={user.name} className='w-[100px] h-[100px] rounded-xl ml-[10px]' />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="flex justify-between items-center p-4">
+                    <button onClick={handlePrevClick} disabled={currentIndex === 0} className="text-xl">Previous</button>
+                    <button onClick={handleNextClick} disabled={currentIndex + 2 >= matchList.length} className="text-xl">Next</button>
+                </div>
             </div>
             <div>
                 <p className='text-left ml-[20px] font-bold text-[24px]'>

@@ -35,7 +35,7 @@ userRouter.get("/matchlist/:user_id", async (req, res) => {
             LEFT JOIN match_users ON
               (users.user_id = match_users.user_id_1 AND $1 = match_users.user_id_2) OR
               (users.user_id = match_users.user_id_2 AND $1 = match_users.user_id_1)
-            WHERE match_users.user_id_1 IS not NULL OR match_users.user_id_2 IS not NULL
+            WHERE match_users.user_id_1 IS not NULL OR match_users.user_id_2 IS not NULL AND users.user_id != $1
             `,
             [user_id]
         );
@@ -61,7 +61,8 @@ userRouter.get("/unmatchlist/:user_id", async (req, res) => {
             LEFT JOIN match_users ON
               (users.user_id = match_users.user_id_1 AND $1 = match_users.user_id_2) OR
               (users.user_id = match_users.user_id_2 AND $1 = match_users.user_id_1)
-            WHERE match_users.user_id_1 IS NULL OR match_users.user_id_2 IS NULL
+            WHERE match_users.user_id_1 IS NULL OR match_users.user_id_2 IS NULL AND users.user_id != $1
+
             `,
             [user_id]
 
@@ -159,6 +160,31 @@ userRouter.post('/unmatch/:matched_user_id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+userRouter.get("/:user_id", async (req, res) => {
+    try {
+        const { user_id } = req.params;
+
+        const result = await pool.query(
+            "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.package_id, users.name, profile_images.image " +
+            "FROM users " +
+            "INNER JOIN profile_images ON users.user_id = profile_images.user_id " +
+            "WHERE users.user_id = $1",
+            [user_id]
+        );
+
+        res.json({
+            data: result.rows,
+        });
+    } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
+    }
+});
+
+
+
+
 
 export default userRouter;
 
