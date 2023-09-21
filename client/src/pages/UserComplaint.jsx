@@ -12,15 +12,12 @@ function UserComplaintPage() {
   const user = jwtDecode(token);
   const user_id = user.id;
   console.log(user);
-  // console.log(user.id);
-  // Define the initial form values
   const initialValues = {
     issue: "",
     description: "",
     dateSubmitted: "",
   };
 
-  // Define a validation schema using Yup
   const validationSchema = Yup.object({
     issue: Yup.string().required("Issue is required"),
     description: Yup.string().required("Description is required"),
@@ -37,7 +34,7 @@ function UserComplaintPage() {
         "http://localhost:4000/complaint",
         values
       );
-      window.alert(`${response.data.message}`)
+      window.alert(`${response.data.message}`);
       console.log(
         "Data posted to http://localhost:4000/complaint:",
         response.data
@@ -47,7 +44,7 @@ function UserComplaintPage() {
         "Error posting data to http://localhost:4000/complaint:",
         error
       );
-      window.alert(`${response.data.error}`)
+      window.alert(`${response.data.error}`);
     }
   };
 

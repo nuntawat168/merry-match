@@ -101,7 +101,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import Axios
-
+import { Link } from "react-router-dom";
 import seach from "../assets/icon/vector.svg";
 import { Select } from "@chakra-ui/react";
 
@@ -123,10 +123,8 @@ const AdminComplaintList = () => {
     fetchData();
   }, []);
 
-  // Function to update the status of a complaint
   const markComplaintAsPending = async (complaintId) => {
     try {
-      // Make an Axios PUT request to update the status
       await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
         status: "Pending",
       });
@@ -218,39 +216,44 @@ const AdminComplaintList = () => {
             <span>Status</span>
           </div>
           {complaints.map((complaint) => (
-            <div
+            <Link
+              to={`/complaint/detail/${complaint.complaint_id}`}
               key={complaint.complaint_id}
-              onClick={() => markComplaintAsPending(complaint.complaint_id)}
-              className="text-[16px] items-center bg-white pl-2 grid grid-cols-[15%_20%_38%_15%_12%] w-[85%] h-[90px] mx-auto  font-normal  mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl"
             >
-              <span className="flex ml-5">{complaint.username}</span>
-              <span className="flex ml-5">
-                {complaint.issue.length > 20
-                  ? complaint.issue.substring(0, 20) + "..."
-                  : complaint.issue}
-              </span>
-              <span>
-                {complaint.description.length > 50
-                  ? complaint.description.substring(0, 50) + "..."
-                  : complaint.description}
-              </span>
-              <span>{complaint.date_submitted}</span>
-              <span
-                className={`${
-                  complaint.status === "New"
-                    ? "text-[12px] border rounded-lg  bg-beige-100 text-beige-700 w-[46px] h-[26px] pl-2.5 pt-1"
-                    : complaint.status === "Pending"
-                    ? "text-[12px] border rounded-lg  bg-yellow-100 text-yellow-500 w-[65px] h-[26px] pl-2.5 pt-1"
-                    : complaint.status === "Cancel"
-                    ? "text-[12px] border rounded-lg  bg-gray-200 text-gray-700 w-[57px] h-[26px] pl-2.5 pt-1"
-                    : complaint.status === "Resolved"
-                    ? "text-[12px] border rounded-lg  bg-[#E7FFE7] text-[#197418] w-[70px] h-[26px] pl-2.5 pt-1"
-                    : ""
-                }`}
+              <div
+                key={complaint.complaint_id}
+                onClick={() => markComplaintAsPending(complaint.complaint_id)}
+                className="text-[16px] items-center bg-white pl-2 grid grid-cols-[15%_20%_38%_15%_12%] w-[85%] h-[90px] mx-auto  font-normal  mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl"
               >
-                {complaint.status}
-              </span>
-            </div>
+                <span className="flex ml-5">{complaint.username}</span>
+                <span className="flex ml-5">
+                  {complaint.issue.length > 20
+                    ? complaint.issue.substring(0, 20) + "..."
+                    : complaint.issue}
+                </span>
+                <span>
+                  {complaint.description.length > 50
+                    ? complaint.description.substring(0, 50) + "..."
+                    : complaint.description}
+                </span>
+                <span>{complaint.date_submitted}</span>
+                <span
+                  className={`${
+                    complaint.status === "New"
+                      ? "text-[12px] border rounded-lg  bg-beige-100 text-beige-700 w-[46px] h-[26px] pl-2.5 pt-1"
+                      : complaint.status === "Pending"
+                      ? "text-[12px] border rounded-lg  bg-yellow-100 text-yellow-500 w-[65px] h-[26px] pl-2.5 pt-1"
+                      : complaint.status === "Cancel"
+                      ? "text-[12px] border rounded-lg  bg-gray-200 text-gray-700 w-[57px] h-[26px] pl-2.5 pt-1"
+                      : complaint.status === "Resolved"
+                      ? "text-[12px] border rounded-lg  bg-[#E7FFE7] text-[#197418] w-[70px] h-[26px] pl-2.5 pt-1"
+                      : ""
+                  }`}
+                >
+                  {complaint.status}
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
       </section>
