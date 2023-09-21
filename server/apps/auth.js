@@ -28,7 +28,6 @@ const picturesProfileUpload = multerUpload.fields([
 ]);
 
 authRouter.post("/register", picturesProfileUpload, async (req, res) => {
-  console.log(req);
   const userData = {
     username: req.body.username,
     password: req.body.password,
@@ -60,7 +59,8 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
       [userId, JSON.stringify(userData.picturesProfile)]
     );
     console.log("insert picture url complete");
-    const hobbyInterestNames = req.body.hobbiesInterests.split(",");
+
+    const hobbyInterestNames = JSON.parse(req.body.hobbiesInterests);
     const hobbyInterestIds = [];
 
     for (const hobbyInterestName of hobbyInterestNames) {
@@ -72,6 +72,7 @@ authRouter.post("/register", picturesProfileUpload, async (req, res) => {
     console.log("Insert hobby interest complete");
 
     console.log("User registration successful.");
+    console.log("------------------------");
     return res.json({
       message: "User has been registered successfully.",
     });
