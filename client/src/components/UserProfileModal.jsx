@@ -190,7 +190,6 @@ function UserProfileModal(props) {
                   </p>
                   <p className="text-gray-700 text-xl font-semibold">
                     {capitalize(formik.values.meetingInterests) || ""}
-                    male
                   </p>
                 </div>
               </div>
