@@ -15,10 +15,7 @@ import { useEffect } from "react";
 import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
-<<<<<<< HEAD
 import Chat from "./Chat";
-=======
->>>>>>> 5fb05dc (feat:Completed Admin Package)
 
 // user test  email: user1@example.com  pw: password1
 // admin test email: admin1@example.com pw: admin1password
