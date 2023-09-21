@@ -4,7 +4,8 @@ import jwtDecode from "jwt-decode";
 import { useFormikContext } from "formik";
 import { useUserProfile } from "../contexts/userProfileContext";
 import { useDisclosure } from "@chakra-ui/react";
-import UserProfileModal from "./UserProfileModal";
+// import UserProfileModal from "./UserProfileModal";
+import UserProfilePreviewModal from "./UserProfilePreviewModal";
 
 function UserProfileHeader() {
   const { setOriginalUserProfile } = useUserProfile();
@@ -80,7 +81,7 @@ function UserProfileHeader() {
         >
           Preview Profile
         </button>
-        <UserProfileModal isOpen={isOpen} onClose={onClose} />
+        <UserProfilePreviewModal isOpen={isOpen} onClose={onClose} />
         <button
           className="bg-red-500 text-white text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-400 active:bg-red-600"
           type="submit"

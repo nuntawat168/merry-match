@@ -3,7 +3,7 @@ import { Modal, ModalOverlay, ModalContent } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { useUserProfile } from "../contexts/userProfileContext";
 
-function UserProfileModal(props) {
+function UserProfilePreviewModal(props) {
   const formik = useFormikContext();
   const { capitalize, calculateAge } = useUserProfile();
   const [pictureToRender, setPictureToRender] = useState([]);
@@ -226,4 +226,4 @@ function UserProfileModal(props) {
   );
 }
 
-export default UserProfileModal;
+export default UserProfilePreviewModal;
