@@ -113,7 +113,7 @@ const AdminComplaintList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/complain");
+        const response = await axios.get("http://localhost:4000/complaint");
         setComplaints(response.data);
       } catch (error) {
         console.error("Error fetching complaints:", error);
@@ -123,10 +123,25 @@ const AdminComplaintList = () => {
     fetchData();
   }, []);
 
-  const markComplaintAsPending = (complaintId) => {
-    // Make an API request to update the status of the complaint
-    // You will need to implement this API endpoint on your server
-    // Example: axios.post(`http://localhost:4000/complaints/${complaintId}/mark-as-pending`)
+  // Function to update the status of a complaint
+  const markComplaintAsPending = async (complaintId) => {
+    try {
+      // Make an Axios PUT request to update the status
+      await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
+        status: "Pending",
+      });
+
+      // Update the local state to reflect the change in status
+      setComplaints((prevComplaints) =>
+        prevComplaints.map((complaint) =>
+          complaint.complaint_id === complaintId
+            ? { ...complaint, status: "Pending" }
+            : complaint
+        )
+      );
+    } catch (error) {
+      console.error("Error updating complaint status:", error);
+    }
   };
 
   return (
@@ -205,6 +220,7 @@ const AdminComplaintList = () => {
           {complaints.map((complaint) => (
             <div
               key={complaint.complaint_id}
+              onClick={() => markComplaintAsPending(complaint.complaint_id)}
               className="text-[16px] items-center bg-white pl-2 grid grid-cols-[15%_20%_38%_15%_12%] w-[85%] h-[90px] mx-auto  font-normal  mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl"
             >
               <span className="flex ml-5">{complaint.username}</span>
@@ -222,13 +238,13 @@ const AdminComplaintList = () => {
               <span
                 className={`${
                   complaint.status === "New"
-                    ? "text-[12px] border rounded-lg  bg-beige-100 text-beige-700 w-[46px] h-[26px] pl-2 pt-1"
+                    ? "text-[12px] border rounded-lg  bg-beige-100 text-beige-700 w-[46px] h-[26px] pl-2.5 pt-1"
                     : complaint.status === "Pending"
-                    ? "text-[12px] border rounded-lg  bg-yellow-100 text-yellow-500 w-[65px] h-[26px] pl-2 pt-1"
+                    ? "text-[12px] border rounded-lg  bg-yellow-100 text-yellow-500 w-[65px] h-[26px] pl-2.5 pt-1"
                     : complaint.status === "Cancel"
-                    ? "text-[12px] border rounded-lg  bg-gray-200 text-gray-700 w-[57px] h-[26px] pl-2 pt-1"
+                    ? "text-[12px] border rounded-lg  bg-gray-200 text-gray-700 w-[57px] h-[26px] pl-2.5 pt-1"
                     : complaint.status === "Resolved"
-                    ? "text-[12px] border rounded-lg  bg-[#E7FFE7] text-[#197418] w-[70px] h-[26px] pl-2 pt-1"
+                    ? "text-[12px] border rounded-lg  bg-[#E7FFE7] text-[#197418] w-[70px] h-[26px] pl-2.5 pt-1"
                     : ""
                 }`}
               >
