@@ -1,7 +1,6 @@
 import React from "react";
-import { useFormik, FormikProvider, FieldArray } from "formik";
+import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
-import drag from "../../assets/icon/drag.svg";
 import { createClient } from "@supabase/supabase-js";
 import { useParams } from "react-router-dom";
 import usePackages from "../../hooks/usePackages";
@@ -24,9 +23,9 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const AdminPackageForm = (props) => {
+const AdminPackageForm = ({ button, title, initialValues, remove }) => {
   const { createPackage, updatePackage, deletePackage } = usePackages();
-  const { button, title, initialValues, remove } = props;
+
   const params = useParams();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();

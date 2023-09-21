@@ -11,7 +11,7 @@ const PackageDetails = (props) => {
     <FieldArray
       name={props.name}
       render={(arrayHelpers) => (
-        <div>
+        <>
           <div>
             {field.value &&
               field.value.map((item, index) => (
@@ -74,7 +74,7 @@ const PackageDetails = (props) => {
               Reset
             </button>
           </div>
-        </div>
+        </>
       )}
     />
   );
