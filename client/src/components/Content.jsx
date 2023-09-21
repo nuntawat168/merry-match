@@ -9,6 +9,7 @@ import hearticon from "../assets/icon/merry red.svg";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { fadeIn } from "../assets/variants";
+import PreviewImage from "./PreviewImage";
 
 const Content = () => {
   const {
@@ -66,11 +67,7 @@ const Content = () => {
                     ${index < currentIndex ? "" : "hidden"}`}
                   >
                     <div className="w-[60px] h-[60px] ml-12 mt-12 bg-gray100 border-gray-100 flex justify-center items-center border rounded-xl">
-                      <img
-                        className="w-[36px] h-[36px]"
-                        src={e.package_icon}
-                        alt="Love Icon"
-                      />
+                      <PreviewImage file={e.package_icon} />
                     </div>
 
                     <div className="font-nunito ml-12">

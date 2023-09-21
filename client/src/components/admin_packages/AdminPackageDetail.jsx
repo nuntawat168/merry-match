@@ -113,7 +113,6 @@ const AdminPackageDetail = () => {
           </div>
           {/* normal-paragraph 1 */}
           {dataAgain.map((e) => {
-            console.log("e", e);
             return (
               <div
                 key={e.package_id}
