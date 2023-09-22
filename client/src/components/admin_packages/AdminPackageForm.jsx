@@ -36,7 +36,14 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
     package_price: Yup.number().required("Required"),
     package_limit: Yup.number().required("Required"),
     package_icon: Yup.mixed().required("Required"),
-    package_details: Yup.array().of(Yup.object().required("Required")),
+    package_details: Yup.array()
+      .of(
+        Yup.object().shape({
+          detail: Yup.string().required("Required"),
+        })
+      )
+      .required("Required")
+      .min(1, "At least 1 detail"),
   });
 
   const onSubmit = async (values, { resetForm }) => {
