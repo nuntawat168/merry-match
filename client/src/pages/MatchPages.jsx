@@ -5,13 +5,16 @@ import Navbar from '../components/Navbar'
 
 const MatchPages = () => {
     return (
-        <article className='w-[1440px] m-0'>
+        <section className='w-full flex flex-col justify-center'>
             <Navbar />
-            <div className='flex flex-row h-full w-[100vw] bg-[#ffff]'>
-                <DiscoverSideBar />
-                <MatchCard />
+            <div className='flex justify-center'>
+                <div className=' w-[1440px] flex flex-row h-full bg-[#ffff]'>
+                    <DiscoverSideBar />
+                    <MatchCard />
+                </div>
             </div>
-        </article>
+            
+        </section>
     )
 }
 

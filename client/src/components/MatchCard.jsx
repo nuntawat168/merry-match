@@ -220,7 +220,7 @@ const MatchCard = () => {
     console.log(filteredUsers)
 
     return (
-        <div className='w-[1088.97px] bg-[#160404] h-[936px]'>
+        <div className='w-full bg-[#160404] h-[936px] relative'>
             <div className='flex justify-center mt-[12vh] mr-[200px] z-10'>
                 {filteredUsers.map((user, index) => (
                     <TinderCard
@@ -330,16 +330,16 @@ const MatchCard = () => {
 
 
 
-            <section className="bg-white p-4 shadow ml-[869px] mt-[-103.5px] h-[936px] w-[220px]">
+            <section className="bg-white shadow pl-[13px] pr-[16px] h-[936px] w-[220px] absolute top-0 right-0">
                 <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
                 <div className='mt-[40px]'>
-                    <p>Gender you are interested in</p>
+                    <p>Sex you're interested</p>
                 </div>
                 <article className='flex flex-col'>
                     <div className='flex flex-row mt-[30px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isMaleSelected}
                             onChange={() => {
                                 setIsMaleSelected(!isMaleSelected);
@@ -352,7 +352,7 @@ const MatchCard = () => {
                     <div className='flex flex-row mt-[12px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isFemaleSelected}
                             onChange={() => {
                                 setIsFemaleSelected(!isFemaleSelected);
@@ -365,7 +365,7 @@ const MatchCard = () => {
                     <div className='flex flex-row mt-[12px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isDefaultSelected}
                             onChange={() => {
                                 setIsDefaultSelected(!isDefaultSelected);
@@ -407,7 +407,7 @@ const MatchCard = () => {
                     <p>Max Age: {maxAge}</p>
                 </article>
 
-                <div className='mt-[120px]'>
+                <div className='mt-[120px] flex justify-center'>
                     <button className='text-white px-4 py-2 rounded bg-red-400' onClick={handleSearchClick}>
                         Search
                     </button>
