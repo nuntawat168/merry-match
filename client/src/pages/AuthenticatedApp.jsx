@@ -16,6 +16,8 @@ import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
 import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
 
+import PaymentPage1 from "../pages/PaymentPage1";
+
 function AuthenticatedApp() {
   const { userRole } = useAuth();
 
@@ -37,6 +39,7 @@ function AuthenticatedApp() {
             <Route path="/complaint" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/payments" element={<PaymentPage1 />} />
           </>
         )}
 

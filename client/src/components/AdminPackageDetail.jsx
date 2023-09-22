@@ -5,8 +5,6 @@ import deleteicon from "../assets/icon/delete.svg";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import seach from "../assets/icon/vector.svg";
-import Modal from "./Modal";
-import { Button } from "@chakra-ui/react";
 
 import { useDisclosure } from "@chakra-ui/react";
 import {
