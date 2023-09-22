@@ -1,16 +1,8 @@
-<<<<<<< HEAD:client/src/components/admin_packages/AdminSideBar.jsx
 import logo from "../../assets/icon/logo.svg";
 import box from "../../assets/icon/package.svg";
 import complaint from "../../assets/icon/complaint.svg";
 import logOut from "../../assets/icon/logout.svg";
 import { useAuth } from "../../contexts/authentication";
-=======
-import logo from "../assets/icon/logo.svg";
-import box from "../assets/icon/package.svg";
-import complaint from "../assets/icon/complaint.svg";
-import logOut from "../assets/icon/logout.svg";
-import { useAuth } from "../contexts/authentication";
->>>>>>> e2b2948 (bambam:complete-packageAdminPage-finish):client/src/components/AdminSideBar.jsx
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 

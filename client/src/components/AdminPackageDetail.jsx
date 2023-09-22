@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import drag from "../../assets/icon/drag.svg";
-import edit from "../../assets/icon/edit.svg";
-import deleteicon from "../../assets/icon/delete.svg";
+import drag from "../assets/icon/drag.svg";
+import edit from "../assets/icon/edit.svg";
+import deleteicon from "../assets/icon/delete.svg";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import seach from "../../assets/icon/vector.svg";
-import Modal from "../Modal";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import seach from "../assets/icon/vector.svg";
+import Modal from "./Modal";
 import { Button } from "@chakra-ui/react";
-import PreviewImage from "../PreviewImage";
 
 import { useDisclosure } from "@chakra-ui/react";
 import {
@@ -113,7 +112,6 @@ const AdminPackageDetail = () => {
           </div>
           {/* normal-paragraph 1 */}
           {dataAgain.map((e) => {
-            console.log("e", e);
             return (
               <div
                 key={e.package_id}
@@ -124,7 +122,11 @@ const AdminPackageDetail = () => {
                 </span>
                 <span>{e.package_id}</span>
                 <span>
-                  <PreviewImage file={e.package_icon} />
+                  <img
+                    className="h-[32px] w-[32px]"
+                    src={e.package_icon}
+                    alt=""
+                  />
                 </span>
                 <span>{e.package_name}</span>
                 <span className="flex ">{e.package_limit} Merry</span>
