@@ -16,11 +16,6 @@ function MerryListPage() {
   const { calculateAge, capitalize } = useTextConvert();
 
   const matchLists = fetchMatchListData();
-  console.log("test ของพี่อิ่ม: ", matchLists);
-
-  const handleUnmatchConfirm = () => {
-    // ใส่ด้วยยยย !!!!
-  };
 
   const renderedMatch = matchLists.map((user, index) => {
     return (
@@ -96,15 +91,8 @@ function MerryListPage() {
                 className="w-[24px] h-[24px]"
               />
             </div>
-            {/* <div className="w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl ml-[16px] hover:cursor-pointer">
-              <img
-                src={viewIcon}
-                alt="view icon"
-                className="w-[24px] h-[24px]"
-              />
-            </div> */}
             <ViewProfileButton user={user} />
-            <UnmatchButton />
+            <UnmatchButton user_response_id={user.user_response} />
           </div>
         </section>
       </div>

@@ -143,7 +143,7 @@ function UserComplaintPage() {
             </Form>
           </Formik>
         </div>
-        <div className="w-1/2 flex flex justify-center relative">
+        <div className="w-1/2 flex justify-center relative">
           <img src={manImage} className="w-[65%]" alt="manImage" />
         </div>
       </div>

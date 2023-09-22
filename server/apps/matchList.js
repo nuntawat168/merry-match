@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, query } from "express";
 import { pool } from "../utils/db.js";
 
 const matchListRouter = Router();
@@ -119,5 +119,45 @@ matchListRouter.get("/v2/:user_id", async (req, res) => {
 });
 
 // เหลือ put method เพื่ออัพเดตตอนที่ กด unmatch แล้วเอาอันที่โดน unmatch ออก
+matchListRouter.delete("/unmatch", async (req, res) => {
+  try {
+    const user_interest = req.query.user_interest;
+    const user_response = req.query.user_response_id;
+    const queryDeleteMatchUsers = `delete from match_users where (user_id_1 = $1 and user_id_2 = $2) or (user_id_1 = $2 and user_id_2 = $1)`;
+    const queryDeleteMerryLists = `delete from merry_lists where user_interest = $1 and user_response = $2`;
+    const queryCheckMatchstatus = `
+    SELECT count(match_id) FROM match_users mu
+    WHERE (mu.user_id_1 = $1 AND mu.user_id_2 = $2) OR (mu.user_id_1 = $2 AND mu.user_id_2 = $1)`;
+
+    const checkMatchStatus = await pool.query(queryCheckMatchstatus, [
+      user_interest,
+      user_response,
+    ]);
+
+    const match_status = parseInt(checkMatchStatus.rows[0].count);
+
+    if (match_status === 0) {
+      const deleteMerryLists = await pool.query(queryDeleteMerryLists, [
+        user_interest,
+        user_response,
+      ]);
+    } else {
+      const deleteMatchUsers = await pool.query(queryDeleteMatchUsers, [
+        user_interest,
+        user_response,
+      ]);
+      const deleteMerryLists = await pool.query(queryDeleteMerryLists, [
+        user_interest,
+        user_response,
+      ]);
+    }
+    res.json({
+      message: "Unmatch successfully",
+    });
+  } catch (error) {
+    console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
+  }
+});
 
 export default matchListRouter;

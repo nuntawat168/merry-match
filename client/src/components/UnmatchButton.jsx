@@ -11,13 +11,26 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import merrySelected from "../assets/icon/merrySelected.png";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
-function UnmatchButton() {
+function UnmatchButton(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
-  const handleUnmatchConfirm = () => {
-    // ใส่ด้วยยยย !!!!
+  const handleUnmatchConfirm = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const user = jwtDecode(token);
+      const user_id = user.id;
+      const unmatchResult = await axios.delete(
+        `http://localhost:4000/matchlist/unmatch?user_interest=${user_id}&user_response_id=${props.user_response_id}`
+      );
+      onClose();
+      window.location.reload();
+    } catch (error) {
+      alert("Unmatch Failed");
+    }
   };
   return (
     <div
