@@ -62,7 +62,7 @@ userRouter.get("/unmatchlist/:user_id", async (req, res) => {
               (users.user_id = match_users.user_id_1 AND $1 = match_users.user_id_2) OR
               (users.user_id = match_users.user_id_2 AND $1 = match_users.user_id_1)
             WHERE match_users.user_id_1 IS NULL OR match_users.user_id_2 IS NULL AND users.user_id != $1
-
+            
             `,
             [user_id]
 
