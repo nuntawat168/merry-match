@@ -1,4 +1,4 @@
-import { ErrorMessage, FieldArray, useField, Field } from "formik";
+import { FieldArray, useField, Field, getIn } from "formik";
 import drag from "../../assets/icon/drag.svg";
 import React from "react";
 import { useState } from "react";
@@ -64,7 +64,7 @@ const PackageDetails = (props) => {
                           ? `border-red-500`
                           : `border-gray-400`
                       }`}
-                      value={field.value[index].detail}
+                      value={field.value[index]?.detail}
                       onChange={(e) => {
                         const updatedValue = [...field.value];
                         updatedValue[index].detail = e.target.value;
@@ -72,14 +72,15 @@ const PackageDetails = (props) => {
                         console.log("updateValue", updatedValue);
                       }}
                     />
-
-                    {meta.touched && meta.error ? (
-                      <div className="text-red-500">{meta.error[index]}</div>
-                    ) : null}
+                    {meta.touched && meta.error && meta.error[index] && (
+                      <div className="text-red-500">
+                        {meta.error[index].detail}
+                      </div>
+                    )}
                   </div>
                   <button
                     type="button"
-                    className="mt-3 text-gray-500 text-sm ml-3"
+                    className="mt-3 text-red-500 text-sm ml-3 font-bold"
                     onClick={() =>
                       field.value.length > 1 ? arrayHelpers.remove(index) : item
                     }

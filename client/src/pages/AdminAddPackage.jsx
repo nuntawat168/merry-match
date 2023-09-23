@@ -7,8 +7,8 @@ function AdminAddPackage() {
 
   const initialValues = {
     package_name: "",
-    package_price: 0,
-    package_limit: 0,
+    package_price: Number,
+    package_limit: Number,
     package_icon: "",
     package_details: [{ detail: "" }],
     created_by: null,

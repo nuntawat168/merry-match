@@ -4,7 +4,14 @@ import PreviewImage from "../PreviewImage";
 const UploadField = (props) => {
   const [field, meta] = useField(props.name);
 
-  return (
+  return field.value ? (
+    <>
+      <div className="mt-[20px] mb-[20px]">
+        Icon <span className="text-red-500">*</span>
+      </div>
+      <PreviewImage file={field.value} page="AddEditPackage" />
+    </>
+  ) : (
     <>
       <div className="mt-[20px] mb-[20px]">
         Icon <span className="text-red-500">*</span>
@@ -18,7 +25,6 @@ const UploadField = (props) => {
       </div>
       <input id={props.name} {...props} />
       {meta.touched && meta.error && <p className="text-red">{meta.error}</p>}
-      {field.value && <PreviewImage file={field.value} page="AddEditPackage" />}
     </>
   );
 };
