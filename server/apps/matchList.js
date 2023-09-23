@@ -59,7 +59,7 @@ matchListRouter.get("/v2/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const queryGetMatchLists = `
-    SELECT
+    SELECT DISTINCT ON (ml.user_response)
       ml.merry_list_id,
       ml.user_response,
       u.username,
@@ -118,7 +118,6 @@ matchListRouter.get("/v2/:user_id", async (req, res) => {
   }
 });
 
-// เหลือ put method เพื่ออัพเดตตอนที่ กด unmatch แล้วเอาอันที่โดน unmatch ออก
 matchListRouter.delete("/unmatch", async (req, res) => {
   try {
     const user_interest = req.query.user_interest;
