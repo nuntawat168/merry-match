@@ -13,10 +13,13 @@ import {
 import merrySelected from "../assets/icon/merrySelected.png";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import { useMatchLists } from "../contexts/matchListsContext";
 
 function UnmatchButton(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+
+  const { setMatchLists } = useMatchLists();
 
   const handleUnmatchConfirm = async () => {
     try {
@@ -26,8 +29,11 @@ function UnmatchButton(props) {
       const unmatchResult = await axios.delete(
         `http://localhost:4000/matchlist/unmatch?user_interest=${user_id}&user_response_id=${props.user_response_id}`
       );
+
+      setMatchLists((prev) =>
+        prev.filter((user) => user.user_response !== props.user_response_id)
+      );
       onClose();
-      window.location.reload();
     } catch (error) {
       alert("Unmatch Failed");
     }
