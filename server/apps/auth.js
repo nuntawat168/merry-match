@@ -107,23 +107,23 @@ authRouter.get("/check-available", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrUsername, password } = req.body;
 
   try {
     const userQuery = `
           SELECT user_id, email, password, name
           FROM users
-          WHERE email = $1;
+          WHERE email = $1 OR username = $1;
         `;
 
     const adminQuery = `
           SELECT admin_id, email, password
           FROM admins
-          WHERE email = $1;
+          WHERE email = $1 OR username = $1;
         `;
 
-    const { rows: userRows } = await pool.query(userQuery, [email]);
-    const { rows: adminRows } = await pool.query(adminQuery, [email]);
+    const { rows: userRows } = await pool.query(userQuery, [emailOrUsername]);
+    const { rows: adminRows } = await pool.query(adminQuery, [emailOrUsername]);
 
     if (userRows.length === 0 && adminRows.length === 0) {
       return res.status(404).json({
@@ -149,7 +149,7 @@ authRouter.post("/login", async (req, res) => {
         }
       );
       return res.json({
-        message: " User Login successfully",
+        message: "User Login successfully",
         token,
       });
     } else if (
