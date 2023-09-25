@@ -7,9 +7,6 @@ const PackageDetails = (props) => {
   const [field, meta, helpers] = useField(props.name);
   const [dragItem, setDragItem] = useState([{}]);
 
-  console.log("field", field.value);
-  console.log("meta", meta);
-
   const onDragOver = (e) => {
     e.preventDefault();
   };

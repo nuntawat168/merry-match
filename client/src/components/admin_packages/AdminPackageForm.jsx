@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createClient } from "@supabase/supabase-js";
 import { useParams } from "react-router-dom";
 import usePackages from "../../hooks/usePackages";
-import InputField from "./inputField";
+import InputField from "./InputField";
 import UploadField from "./UploadField";
 import PackageDetails from "./PackageDetails";
 import { useNavigate } from "react-router-dom";

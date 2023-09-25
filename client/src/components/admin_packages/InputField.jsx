@@ -1,6 +1,7 @@
 import { useField } from "formik";
 
 const InputField = ({ name, type, title }) => {
+  console.log("name", name);
   const [field, meta] = useField(name);
 
   return (

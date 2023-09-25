@@ -31,6 +31,8 @@ const AdminPackageDetail = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
+  const [dragItem, setDragItem] = useState([{}]);
+
   const handleDelete = async (packageId) => {
     try {
       setIsError(false);
@@ -63,6 +65,22 @@ const AdminPackageDetail = () => {
     if (searchTerm) {
       searchFromServer(searchTerm);
     }
+  };
+
+  const handleOnDrag = (e, item) => {
+    e.preventDefault();
+    setDragItem(item);
+  };
+
+  const handleOnDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleOnDrop = (e, item) => {
+    const newDataAgain = [...dataAgain];
+    newDataAgain.splice(dataAgain.indexOf(dragItem), 1, item);
+    newDataAgain.splice(dataAgain.indexOf(item), 1, dragItem);
+    setDataAgain(newDataAgain);
   };
 
   return (
@@ -119,11 +137,21 @@ const AdminPackageDetail = () => {
                 setPackageIdToDelete(packageId);
                 onOpen();
               };
-
               return (
                 <div
                   key={e.package_id}
-                  className=" text-[16px]  p-2 grid grid-cols-[3%_5%_8%_17%_17%_20%_20%_10%] w-[85%] h-[88px] mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl  "
+                  className=" text-[16px]  p-2 grid grid-cols-[3%_5%_8%_17%_17%_20%_20%_10%] w-[85%] h-[88px] mb-0.5  mx-auto items-center align-middle  bg-white last:rounded-b-xl"
+                  onMouseDown={(event) =>
+                    event.target.parentNode.setAttribute("draggable", "true")
+                  }
+                  onMouseUp={(event) =>
+                    event.target.parentNode.setAttribute("draggable", "false")
+                  }
+                  onDrag={(event) => handleOnDrag(event, e)}
+                  onDrop={(event) => {
+                    handleOnDrop(event, e);
+                  }}
+                  onDragOver={(event) => handleOnDragOver(event)}
                 >
                   <span>
                     <img src={drag} alt="drag" className="mr-3" />
