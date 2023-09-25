@@ -62,13 +62,13 @@ const DiscoverSideBar = () => {
 
 
     return (
-        <div className='h-[936px] bg-[#ffff] w-[316px] flex flex-col justify-between'>
-            <button className='flex flex-col justify-center items-center w-[275px] p-2 border-[2px] rounded-xl border-purple-500 m-[20px] hover:bg-purple-200'>
+        <div className='bg-[#ffff] w-[316px] flex flex-col justify-between'>
+            <section className='flex flex-col justify-center items-center w-[282px] h-[187px] p-[24px] border-[1px] rounded-[16px] border-purple-500 my-[36px] mr-[15px] ml-[17px]'>
                 <img className='w-[66.33px] mt-[30px]' src={discoverIcon} alt="Discover Icon" />
                 <p className='text-[24px] font-bold text-red600'>Discover New Match</p>
                 <p className='text-[14px] mb-[30px] text-gray-600 text-center'>Start find and Merry to get know and connect with new friend!</p>
-            </button>
-            <div>
+            </section>
+            <section>
                 <p className='text-left ml-[20px] font-bold text-[24px]'>
                     Merry Match!
                 </p>
@@ -90,12 +90,12 @@ const DiscoverSideBar = () => {
                     <button onClick={handlePrevClick} disabled={currentIndex === 0} className="text-xl">Previous</button>
                     <button onClick={handleNextClick} disabled={currentIndex + 2 >= matchList.length} className="text-xl">Next</button>
                 </div>
-            </div>
-            <div>
+            </section>
+            <section>
                 <p className='text-left ml-[20px] font-bold text-[24px]'>
                     Chat with Merry Match
                 </p>
-            </div>
+            </section>
         </div>
     )
 }

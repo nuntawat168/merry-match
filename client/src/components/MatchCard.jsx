@@ -16,9 +16,6 @@ const MatchPopup = ({ userData, onClose }) => {
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black p-6 border border-gray-300 w-[720px] h-[720px] rounded-[50px]">
             <div className="text-center mt-[48%]">
                 <h2 className="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
-                <p className='text-white'>Name: {userData.name}</p>
-                <p className='text-white'>Sex: {userData.sex}</p>
-                <p className='text-white'>Email: {userData.email}</p>
             </div>
             <div className='relative bottom-[60%] left-[95%]'>
                 <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>x</button>
@@ -220,7 +217,7 @@ const MatchCard = () => {
     console.log(filteredUsers)
 
     return (
-        <div className='w-full bg-[#160404] h-[936px] relative'>
+        <div className='w-full bg-[#160404] relative'>
             <div className='flex justify-center mt-[12vh] mr-[200px] z-10'>
                 {filteredUsers.map((user, index) => (
                     <TinderCard
@@ -330,7 +327,7 @@ const MatchCard = () => {
 
 
 
-            <section className="bg-white shadow pl-[13px] pr-[16px] h-[936px] w-[220px] absolute top-0 right-0">
+            <section className="bg-white pl-[13px] pr-[16px] h-[936px] w-[220px] absolute top-0 right-0">
                 <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
                 <div className='mt-[40px]'>
                     <p>Sex you're interested</p>
@@ -406,7 +403,6 @@ const MatchCard = () => {
                     />
                     <p>Max Age: {maxAge}</p>
                 </article>
-
                 <div className='mt-[120px] flex justify-center'>
                     <button className='text-white px-4 py-2 rounded bg-red-400' onClick={handleSearchClick}>
                         Search
@@ -414,21 +410,7 @@ const MatchCard = () => {
                 </div>
             </section>
         </div>
-
-
-
     );
-
 }
 
 export default MatchCard;
-
-
-
-
-
-
-
-
-
-

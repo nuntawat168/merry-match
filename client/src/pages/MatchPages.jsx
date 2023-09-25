@@ -7,13 +7,12 @@ const MatchPages = () => {
     return (
         <section className='w-full flex flex-col justify-center'>
             <Navbar />
-            <div className='flex justify-center'>
+            <div className='z-[-10] flex justify-center'>
                 <div className=' w-[1440px] flex flex-row h-full bg-[#ffff]'>
                     <DiscoverSideBar />
                     <MatchCard />
                 </div>
             </div>
-            
         </section>
     )
 }
