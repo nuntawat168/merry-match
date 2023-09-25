@@ -46,7 +46,7 @@ function LoginPage() {
               htmlFor="email"
               className="font-nunito text-[16px] font-normal text-black inline-block"
             >
-              Email
+              Username or Email
             </label>
             <input
               type="text"

@@ -102,7 +102,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import Axios
 import { Link } from "react-router-dom";
-import seach from "../assets/icon/vector.svg";
+import search from "../assets/icon/vector.svg";
 import { Select } from "@chakra-ui/react";
 
 const AdminComplaintList = () => {
@@ -123,10 +123,16 @@ const AdminComplaintList = () => {
     fetchData();
   }, []);
 
-  // Filter complaints based on selected status
-  const filteredComplaints = selectedColor
-    ? complaints.filter((complaint) => complaint.status === selectedColor)
-    : complaints;
+  // Filter complaints based on selected status and search term
+  const filteredComplaints = complaints
+    .filter(
+      (complaint) =>
+        (selectedColor ? complaint.status === selectedColor : true) &&
+        (searchTerm
+          ? complaint.issue.toLowerCase().includes(searchTerm.toLowerCase())
+          : true)
+    )
+    .sort((a, b) => new Date(b.date_submitted) - new Date(a.date_submitted));
 
   const markComplaintAsPending = async (complaintId) => {
     try {
@@ -155,16 +161,19 @@ const AdminComplaintList = () => {
         </div>
         <div className="relative flex gap-1.5 ">
           <input
-            className="flex pl-10 w-[320px] h-[48px] border border-gray-300 rounded-lg  "
+            className="flex pl-10 w-[320px] h-[48px] border border-gray-300 rounded-lg"
             type="text"
             id="FilterTextBox"
             name="FilterTextBox"
             placeholder="Search..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
+
           <button type="submit">
             <img
               className="flex absolute left-2 top-2.5    w-[30px] h-[30px] "
-              src={seach}
+              src={search}
             />
           </button>
           <Select
