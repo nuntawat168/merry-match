@@ -2,7 +2,10 @@ import TextInputField from "./register/TextInputField.jsx";
 
 function UserEditBasicInfomationForm(props) {
   return (
-    <div className="w-[930px] flex flex-col justify-start items-start space-y-6 font-nunito">
+    <div
+      id={"UserEditBasicInfomationForm"}
+      className="w-[930px] flex flex-col justify-start items-start space-y-6 font-nunito"
+    >
       <p className="text-purple-500 text-2xl font-bold">Basic Infomation</p>
       <div className="w-full grid grid-cols-2 gap-x-6 gap-y-10">
         <TextInputField name={"name"} placeholder={"Jon snow"} label={"Name"} />

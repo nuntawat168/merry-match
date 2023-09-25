@@ -8,7 +8,10 @@ function UserEditIdentitiesAndInterestsForm() {
   const racialPreferences = ["Asian", "American", "European"];
   const meetingInterests = ["Friend", "Girlfriend", "Boyfriend"];
   return (
-    <div className="w-[930px] flex flex-col justify-start items-start font-nunito">
+    <div
+      id={"UserEditIdentitiesAndInterestsForm"}
+      className="w-[930px] flex flex-col justify-start items-start font-nunito"
+    >
       <p className="text-purple-500 text-2xl font-bold">
         Identities and Interests
       </p>

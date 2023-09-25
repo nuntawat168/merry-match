@@ -7,6 +7,7 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
 function ProfilePicturesForm() {
   const formik = useFormikContext();
 
@@ -23,7 +24,6 @@ function ProfilePicturesForm() {
   };
 
   const handleDeletePictureProfile = (pictureId) => {
-    console.log("Delete button clicked");
     const tmpProfilePictures = formik.values.profilePictures;
     const pictureIndex = tmpProfilePictures.findIndex(
       (profilePicture) => profilePicture.id === pictureId

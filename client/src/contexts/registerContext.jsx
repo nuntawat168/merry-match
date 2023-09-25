@@ -119,9 +119,6 @@ function RegisterProvider(props) {
 
     data.profilePictures.forEach((profilePicture) => {
       if (profilePicture.picture !== null) {
-        console.log(
-          profilePicture.picture[Object.keys(profilePicture.picture)[0]]
-        );
         formData.append(
           "picturesProfile",
           profilePicture.picture[Object.keys(profilePicture.picture)[0]]

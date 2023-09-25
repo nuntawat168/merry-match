@@ -1,33 +1,79 @@
 import { useFormikContext } from "formik";
 import { useUserProfile } from "../contexts/userProfileContext";
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 function UserEditProfilePicturesForm() {
   const formik = useFormikContext();
   const { deleteOriginalPicturesProfile, setDeleteOriginalPicturesProfile } =
     useUserProfile();
-  const handleFileChange = (event, index) => {
+
+  const handleFileChange = (event, pictureId) => {
     const uniqueId = Date.now();
-    const tmpPicturesProfile = [...formik.values.profilePictures];
-    tmpPicturesProfile.splice(index, 1, { [uniqueId]: event.target.files[0] });
-    formik.setFieldValue("profilePictures", tmpPicturesProfile);
+    const tmpProfilePictures = formik.values.profilePictures;
+    const pictureIndex = tmpProfilePictures.findIndex(
+      (profilePicture) => profilePicture.id === pictureId
+    );
+    tmpProfilePictures[pictureIndex].picture = {
+      [uniqueId]: event.target.files[0],
+    };
+    formik.setFieldValue("profilePictures", tmpProfilePictures);
   };
 
-  const handleDeletePictureProfile = (index) => {
-    const tmpPicturesProfile = [...formik.values.profilePictures];
-    const tmpDeleteOriginalPicturesProfile = [...deleteOriginalPicturesProfile];
-    tmpDeleteOriginalPicturesProfile.push(formik.values.profilePictures[index]);
-    tmpPicturesProfile.splice(index, 1, null);
-    formik.setFieldValue("profilePictures", tmpPicturesProfile);
-    setDeleteOriginalPicturesProfile([...tmpDeleteOriginalPicturesProfile]);
+  const handleDeletePictureProfile = (pictureId) => {
+    const tmpProfilePictures = formik.values.profilePictures;
+    const pictureIndex = tmpProfilePictures.findIndex(
+      (profilePicture) => profilePicture.id === pictureId
+    );
+    const picture = tmpProfilePictures[pictureIndex].picture;
+
+    const isDeleteOriginalPicturesProfile = picture?.url !== undefined;
+    if (isDeleteOriginalPicturesProfile) {
+      const tmpDeleteOriginalPicturesProfile = [
+        ...deleteOriginalPicturesProfile,
+      ];
+      tmpDeleteOriginalPicturesProfile.push(picture);
+      setDeleteOriginalPicturesProfile([...tmpDeleteOriginalPicturesProfile]);
+    }
+
+    tmpProfilePictures[pictureIndex].picture = null;
+    formik.setFieldValue("profilePictures", tmpProfilePictures);
   };
 
-  function renderPicture(picture, index) {
+  function RenderPicture({ profilePicture }) {
+    const picture = profilePicture.picture;
+    const pictureId = profilePicture.id;
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: pictureId });
+    const style = {
+      transition,
+      transform: CSS.Transform.toString(transform),
+    };
     if (picture === null) {
-      const inputId = `upload-${index}`;
+      const inputId = `upload-${pictureId}`;
       return (
         <label
-          key={index}
-          htmlFor={inputId}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 cursor-pointer"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={pictureId}
+          htmlFor={pictureId}
+          className={`w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 cursor-pointer ${
+            isDragging && `z-50`
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,10 +91,10 @@ function UserEditProfilePicturesForm() {
           </svg>
           <p className="text-purple-600 text-sm font-medium">Upload photo</p>
           <input
-            id={inputId}
+            id={pictureId}
             name="avatar"
             type="file"
-            onChange={(event) => handleFileChange(event, index)}
+            onChange={(event) => handleFileChange(event, pictureId)}
             hidden
           />
         </label>
@@ -56,8 +102,14 @@ function UserEditProfilePicturesForm() {
     } else if (picture?.url !== undefined) {
       return (
         <div
-          key={index}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={pictureId}
+          className={`w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative ${
+            isDragging && `z-50`
+          }`}
         >
           <img
             src={picture.url}
@@ -65,7 +117,7 @@ function UserEditProfilePicturesForm() {
           />
           <button
             className="w-6 h-6 flex justify-center items-center bg-red rounded-full z-30 absolute left-[147px] bottom-[147px]"
-            onClick={() => handleDeletePictureProfile(index)}
+            onMouseDown={() => handleDeletePictureProfile(pictureId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,8 +139,14 @@ function UserEditProfilePicturesForm() {
     } else {
       return (
         <div
-          key={index}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={pictureId}
+          className={`w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative ${
+            isDragging && `z-50`
+          }`}
         >
           <img
             src={URL.createObjectURL(picture[Object.keys(picture)[0]])}
@@ -96,7 +154,7 @@ function UserEditProfilePicturesForm() {
           />
           <button
             className="w-6 h-6 flex justify-center items-center bg-red rounded-full z-30 absolute left-[147px] bottom-[147px]"
-            onClick={() => handleDeletePictureProfile(index)}
+            onMouseDown={() => handleDeletePictureProfile(pictureId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -118,8 +176,28 @@ function UserEditProfilePicturesForm() {
     }
   }
 
+  const onDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const tmpProfilePictures = formik.values.profilePictures;
+      const oldIndex = tmpProfilePictures.findIndex(
+        (profilePicture) => profilePicture.id === active.id
+      );
+      const newIndex = tmpProfilePictures.findIndex(
+        (profilePicture) => profilePicture.id === over.id
+      );
+      formik.setFieldValue(
+        "profilePictures",
+        arrayMove(tmpProfilePictures, oldIndex, newIndex)
+      );
+    }
+  };
+
   return (
-    <div className="w-[930px] flex flex-col justify-start items-start font-nunito">
+    <div
+      id={"UserEditProfilePicturesForm"}
+      className="w-[930px] flex flex-col justify-start items-start font-nunito"
+    >
       <p className="text-purple-500 text-2xl font-bold">Profile Pictures</p>
       <p
         className={`${
@@ -137,9 +215,21 @@ function UserEditProfilePicturesForm() {
             : null
         } w-full flex flex-row mt-6 justify-center space-x-6 `}
       >
-        {formik.values.profilePictures.map((picture, index) => {
-          return renderPicture(picture, index);
-        })}
+        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext
+            items={formik.values.profilePictures}
+            strategy={horizontalListSortingStrategy}
+          >
+            {formik.values.profilePictures.map((profilePicture) => {
+              return (
+                <RenderPicture
+                  key={profilePicture.id}
+                  profilePicture={profilePicture}
+                />
+              );
+            })}
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
