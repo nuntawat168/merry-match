@@ -123,6 +123,11 @@ const AdminComplaintList = () => {
     fetchData();
   }, []);
 
+  // Filter complaints based on selected status
+  const filteredComplaints = selectedColor
+    ? complaints.filter((complaint) => complaint.status === selectedColor)
+    : complaints;
+
   const markComplaintAsPending = async (complaintId) => {
     try {
       await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
@@ -164,13 +169,13 @@ const AdminComplaintList = () => {
           </button>
           <Select
             className={`${
-              selectedColor === "option1"
+              selectedColor === "New"
                 ? "text-beige-700"
-                : selectedColor === "option2"
+                : selectedColor === "Pending"
                 ? "text-yellow-500"
-                : selectedColor === "option3"
+                : selectedColor === "Resolved"
                 ? "text-green-500"
-                : selectedColor === "option4"
+                : selectedColor === "Cancel"
                 ? "text-gray-700"
                 : " bg-gray-400 text-gray-400"
             } `}
@@ -180,25 +185,25 @@ const AdminComplaintList = () => {
           >
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-beige-100 text-beige-700  "
-              value="option1"
+              value="New"
             >
               New
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg  bg-yellow-100 text-yellow-500  "
-              value="option2"
+              value="Pending"
             >
               Pending
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-green-100 text-green-500"
-              value="option3"
+              value="Resolved"
             >
               Resolved
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-gray-200 text-gray-700"
-              value="option4"
+              value="Cancel"
             >
               Cancel
             </option>
@@ -215,7 +220,7 @@ const AdminComplaintList = () => {
             <span>Date Submitted</span>
             <span>Status</span>
           </div>
-          {complaints.map((complaint) => (
+          {filteredComplaints.map((complaint) => (
             <Link
               to={`/complaint/detail/${complaint.complaint_id}`}
               key={complaint.complaint_id}
