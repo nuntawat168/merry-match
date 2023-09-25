@@ -106,95 +106,21 @@ authRouter.get("/check-available", async (req, res) => {
   }
 });
 
-// authRouter.post("/login", async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const userQuery = `
-//           SELECT user_id, email, password, name
-//           FROM users
-//           WHERE email = $1;
-//         `;
-
-//     const adminQuery = `
-//           SELECT admin_id, email, password
-//           FROM admins
-//           WHERE email = $1;
-//         `;
-
-//     const { rows: userRows } = await pool.query(userQuery, [email]);
-//     const { rows: adminRows } = await pool.query(adminQuery, [email]);
-
-//     if (userRows.length === 0 && adminRows.length === 0) {
-//       return res.status(404).json({
-//         message: "User not found",
-//       });
-//     }
-
-//     if (userRows.length > 0 && userRows[0].password === password) {
-//       const user = userRows[0];
-//       const token = jwt.sign(
-//         {
-//           id: user.user_id,
-//           email: user.email,
-//           name: user.name,
-//           role: "user",
-//         },
-//         process.env.SECRET_KEY,
-//         {
-//           expiresIn: "900000",
-//         }
-//       );
-//       return res.json({
-//         message: " User Login successfully",
-//         token,
-//       });
-//     } else if (adminRows.length > 0 && adminRows[0].password === password) {
-//       const admin = adminRows[0];
-//       const token = jwt.sign(
-//         {
-//           id: admin.admin_id,
-//           email: admin.email,
-//           name: admin.name,
-//           role: "admin",
-//         },
-//         process.env.SECRET_KEY,
-//         {
-//           expiresIn: "900000",
-//         }
-//       );
-//       return res.json({
-//         message: "Admin Login successfully",
-//         token,
-//       });
-//     } else {
-//       return res.status(401).json({
-//         message: "Password not valid",
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       message: "Internal Server Error",
-//     });
-//   }
-// });
-
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const userQuery = `
-        SELECT user_id, email, password, name
-        FROM users
-        WHERE email = $1;
-      `;
+          SELECT user_id, email, password, name
+          FROM users
+          WHERE email = $1;
+        `;
 
     const adminQuery = `
-        SELECT admin_id, email, password
-        FROM admins
-        WHERE email = $1;
-      `;
+          SELECT admin_id, email, password
+          FROM admins
+          WHERE email = $1;
+        `;
 
     const { rows: userRows } = await pool.query(userQuery, [email]);
     const { rows: adminRows } = await pool.query(adminQuery, [email]);
@@ -205,40 +131,46 @@ authRouter.post("/login", async (req, res) => {
       });
     }
 
-    let isPasswordValid = false;
-    let userData = null;
-    let role = "";
-
-    if (userRows.length > 0) {
+    if (
+      userRows.length > 0 &&
+      (await bcrypt.compare(password, userRows[0].password))
+    ) {
       const user = userRows[0];
-      isPasswordValid = user && (await bcrypt.compare(password, user.password));
-      userData = user;
-      role = "user"; 
-    } else if (adminRows.length > 0) {
-      const admin = adminRows[0];
-      isPasswordValid = admin && (await bcrypt.compare(password, admin.password));
-      userData = admin;
-      role = "admin"; 
-    }
-
-    if (isPasswordValid) {
-      const { id, email, name } = userData;
-
       const token = jwt.sign(
         {
-          id,
-          email,
-          name,
-          role,
+          id: user.user_id,
+          email: user.email,
+          name: user.name,
+          role: "user",
         },
         process.env.SECRET_KEY,
         {
           expiresIn: "900000",
         }
       );
-
       return res.json({
-        message: `${role === "user" ? "User" : "Admin"} Login successfully`,
+        message: " User Login successfully",
+        token,
+      });
+    } else if (
+      adminRows.length > 0 &&
+      (await bcrypt.compare(password, adminRows[0].password))
+    ) {
+      const admin = adminRows[0];
+      const token = jwt.sign(
+        {
+          id: admin.admin_id,
+          email: admin.email,
+          name: admin.name,
+          role: "admin",
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "900000",
+        }
+      );
+      return res.json({
+        message: "Admin Login successfully",
         token,
       });
     } else {
@@ -253,6 +185,5 @@ authRouter.post("/login", async (req, res) => {
     });
   }
 });
-
 
 export default authRouter;
