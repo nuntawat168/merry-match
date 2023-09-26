@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Modal, ModalOverlay, ModalContent } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import { useUserProfile } from "../contexts/userProfileContext";
+import useTextConvert from "../hooks/useTextConvert";
 
 function UserProfilePreviewModal(props) {
   const formik = useFormikContext();
-  const { capitalize, calculateAge } = useUserProfile();
+  const { capitalize, calculateAge } = useTextConvert();
   const [pictureToRender, setPictureToRender] = useState([]);
   const [numberPicturesProfile, setNumberPicturesProfile] = useState(1);
   const [pictureToRenderIndex, setPictureToRenderIndex] = useState(1);
 
   useEffect(() => {
     setPictureToRender(
-      formik.values.profilePictures.filter((picture) => picture !== null)
+      formik.values.profilePictures.filter(
+        (profilePicture) => profilePicture.picture !== null
+      )
     );
 
     setNumberPicturesProfile(
-      formik.values.profilePictures.filter((picture) => picture !== null).length
+      formik.values.profilePictures.filter(
+        (profilePicture) => profilePicture.picture !== null
+      ).length
     );
     setPictureToRenderIndex(1);
-  }, [formik.values.profilePictures]);
+  }, [props.isOpen]);
 
-  function renderPicturesProfile(picture) {
+  function renderPicturesProfile(profilePicture) {
+    const picture = profilePicture?.picture;
     if (!picture) {
       return (
         <img

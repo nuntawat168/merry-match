@@ -1,70 +1,75 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import jwtDecode from "jwt-decode";
+import React from "react";
 import { useFormikContext } from "formik";
-import { useUserProfile } from "../contexts/userProfileContext";
 import { useDisclosure } from "@chakra-ui/react";
-// import UserProfileModal from "./UserProfileModal";
 import UserProfilePreviewModal from "./UserProfilePreviewModal";
+import { useToast } from "@chakra-ui/react";
 
 function UserProfileHeader() {
-  const { setOriginalUserProfile } = useUserProfile();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const toast = useToast();
   const formik = useFormikContext();
-  const [countFormikValuesChange, setCountFormikValuesChange] = useState(0);
 
-  useEffect(() => {
-    if (countFormikValuesChange >= 0 && countFormikValuesChange < 2) {
-      setOriginalUserProfile(formik.values);
-      setCountFormikValuesChange(countFormikValuesChange + 1);
-    }
-  }, [formik.values]);
+  const fields = {
+    basicInfo: [
+      "name",
+      "dateOfBirth",
+      "location",
+      "city",
+      "username",
+      "email",
+      "password",
+      "passwordConfirmation",
+    ],
+    identity: [
+      "sexualIdentites",
+      "sexualPreferences",
+      "racialPreferences",
+      "meetingInterests",
+    ],
+  };
+
+  const scrollAndShowToast = (sectionId, title, description) => {
+    document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
+    toast({
+      title,
+      description,
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   const handleOnClickUpdate = () => {
     formik.handleSubmit();
+    if (
+      fields.basicInfo.some(
+        (field) => formik.values[field] === "" || formik.errors[field]
+      )
+    ) {
+      scrollAndShowToast(
+        "UserEditBasicInfomationForm",
+        "Basic Information is Invalid or Incomplete",
+        "Please review and correct any errors or missing information in the Basic Information section before proceeding."
+      );
+    } else if (
+      fields.identity.some(
+        (field) => formik.values[field] === "" || formik.errors[field]
+      )
+    ) {
+      scrollAndShowToast(
+        "UserEditIdentitiesAndInterestsForm",
+        "Identities and Interests are Invalid or Incomplete",
+        "Please review and correct any errors or missing information in the Identities and Interests section before proceeding."
+      );
+    } else if (formik.errors.profilePictures) {
+      scrollAndShowToast(
+        "UserEditProfilePicturesForm",
+        "Profile Pictures Error",
+        "Profile Pictures must have at least 2 photos. Please upload additional photos to meet this requirement."
+      );
+    }
   };
 
-  async function initialFormik() {
-    const token = localStorage.getItem("token");
-    const user = jwtDecode(token);
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/user-profile/${user.id}`
-      );
-      const userProfile = response.data.data;
-      formik.setFieldValue("name", userProfile.name);
-      formik.setFieldValue(
-        "dateOfBirth",
-        userProfile.date_of_birth.toString().split("T")[0]
-      );
-      formik.setFieldValue("location", userProfile.location);
-      formik.setFieldValue("city", userProfile.city);
-      formik.setFieldValue("username", userProfile.username);
-      formik.setFieldValue("email", userProfile.email);
-      formik.setFieldValue("sexualIdentites", userProfile.sex);
-      formik.setFieldValue("sexualPreferences", userProfile.sexual_preferences);
-      formik.setFieldValue("racialPreferences", userProfile.racial_preferences);
-      formik.setFieldValue("meetingInterests", userProfile.meeting_interests);
-      formik.setFieldValue(
-        "hobbiesInterests",
-        userProfile.hobby_interests.filter((element) => element !== null)
-      );
-      formik.setFieldValue("aboutMe", userProfile.about_me);
-      const tempPicturesProfile = [...formik.values.profilePictures];
-      for (const i in userProfile.image) {
-        tempPicturesProfile[i] = userProfile.image[i];
-      }
-      formik.setFieldValue("profilePictures", [...tempPicturesProfile]);
-      return true;
-    } catch (error) {
-      console.error(error);
-      return true;
-    }
-  }
-  useEffect(() => {
-    initialFormik();
-  }, []);
   return (
     <div className="flex flex-row justify-between items-end ">
       <div className="w-[453px] flex flex-col justify-start space-y-2">

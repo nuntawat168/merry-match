@@ -1,7 +1,5 @@
 import { useFormikContext } from "formik";
 import { useRegister } from "../../contexts/registerContext.jsx";
-import arrowBackGray500 from "../../assets/icon/arrow_back_gray_500.svg";
-import arrowBackRed500 from "../../assets/icon/arrow_back_red_500.svg";
 
 function RegisterFooter() {
   const { currentStepIndex, setCurrentStepIndex } = useRegister();
@@ -40,19 +38,30 @@ function RegisterFooter() {
 
   const renderBackButton = () => (
     <button
-      className="flex flex-row items-center space-x-2 px-2 py-1"
+      className="flex flex-row items-center space-x-2 px-2 py-1 group"
       type="button"
       onClick={handlerOnClickBack}
     >
       <>
-        <img
-          src={isFirstStep ? arrowBackGray500 : arrowBackRed500}
-          alt="arrow back icon"
-        />
+        <svg
+          className={`${
+            isFirstStep
+              ? "fill-gray-500 "
+              : "fill-red-500 group-hover:fill-red-400 group-active:fill-red-600"
+          }`}
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+        >
+          <path d="M12.5275 7.33665H5.08079L8.33412 4.08332C8.59412 3.82332 8.59412 3.39665 8.33412 3.13665C8.07412 2.87665 7.65412 2.87665 7.39412 3.13665L3.00079 7.52998C2.74079 7.78998 2.74079 8.20998 3.00079 8.46998L7.39412 12.8633C7.65412 13.1233 8.07412 13.1233 8.33412 12.8633C8.59412 12.6033 8.59412 12.1833 8.33412 11.9233L5.08079 8.66998H12.5275C12.8941 8.66998 13.1941 8.36998 13.1941 8.00332C13.1941 7.63665 12.8941 7.33665 12.5275 7.33665Z" />
+        </svg>
         <p
-          className={`text-${
-            isFirstStep ? "gray" : "red"
-          }-500 text-base font-bold`}
+          className={`${
+            isFirstStep
+              ? "text-gray-500 text-base font-bold"
+              : "text-red-500 text-base font-bold group-hover:text-red-400 group-active:text-red-600"
+          }`}
         >
           Back
         </p>
@@ -62,7 +71,7 @@ function RegisterFooter() {
 
   const renderNextButton = () => (
     <button
-      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
+      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full hover:bg-red-400 active:bg-red-600"
       onClick={handlerOnClickNext}
       type="button"
     >
@@ -72,7 +81,7 @@ function RegisterFooter() {
 
   const renderConfirmButton = () => (
     <button
-      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full"
+      className="bg-red-500 text-white text-base font-bold space-x-2 px-6 py-3 rounded-full hover:bg-red-400 active:bg-red-600"
       onClick={handlerOnClickConfirm}
       type="submit"
     >

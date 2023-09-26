@@ -24,7 +24,13 @@ function RegisterProvider(props) {
     meetingInterests: "",
     hobbiesInterests: [],
     aboutMe: "",
-    profilePictures: {},
+    profilePictures: [
+      { id: 1, picture: null },
+      { id: 2, picture: null },
+      { id: 3, picture: null },
+      { id: 4, picture: null },
+      { id: 5, picture: null },
+    ],
   };
 
   const formSchema = Yup.object().shape({
@@ -90,11 +96,11 @@ function RegisterProvider(props) {
       .of(Yup.string())
       .max(10, "Maximum of 10 Hobbies/Interests"),
     aboutMe: Yup.string().max(150, "About me must be at most 150 characters"),
-    profilePictures: Yup.object().test(
+    profilePictures: Yup.array().test(
       "has-minimum-keys",
       "Profile Pictures must have at least 2 photos",
       (value) => {
-        return Object.keys(value).length >= 2;
+        return value.filter((element) => element.picture === null).length <= 3;
       }
     ),
   });
@@ -110,9 +116,15 @@ function RegisterProvider(props) {
         }
       }
     }
-    for (let key in data.profilePictures) {
-      formData.append("picturesProfile", data.profilePictures[key]);
-    }
+
+    data.profilePictures.forEach((profilePicture) => {
+      if (profilePicture.picture !== null) {
+        formData.append(
+          "picturesProfile",
+          profilePicture.picture[Object.keys(profilePicture.picture)[0]]
+        );
+      }
+    });
     register(formData);
     // setSubmitting(false);
   }

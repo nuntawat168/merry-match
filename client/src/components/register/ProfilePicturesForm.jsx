@@ -1,55 +1,110 @@
-import { useEffect, useContext } from "react";
 import { useFormikContext } from "formik";
-import { useRegister } from "../../contexts/registerContext";
-import { useUserProfile } from "../../contexts/userProfileContext";
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 function ProfilePicturesForm() {
-  function importModule() {
-    try {
-      const { picturesProfile, setPicturesProfile } = useRegister();
-      return { picturesProfile, setPicturesProfile };
-    } catch {
-      const { picturesProfile, setPicturesProfile } = useUserProfile();
-      return { picturesProfile, setPicturesProfile };
-    }
-  }
-  const { picturesProfile, setPicturesProfile } = importModule();
   const formik = useFormikContext();
 
-  const handleFileChange = (event, index) => {
+  const handleFileChange = (event, pictureId) => {
     const uniqueId = Date.now();
-    const tmpPicturesProfile = [...picturesProfile];
-    tmpPicturesProfile.splice(index, 1, { [uniqueId]: event.target.files[0] });
-
-    setPicturesProfile([...tmpPicturesProfile]);
-  };
-
-  const handleDeletePictureProfile = (index) => {
-    const tmpPicturesProfile = [...picturesProfile];
-    tmpPicturesProfile.splice(index, 1, null);
-    setPicturesProfile([...tmpPicturesProfile]);
-  };
-
-  useEffect(() => {
-    const tmpPicturesProfile = [...picturesProfile].filter(
-      (picture) => picture !== null
+    const tmpProfilePictures = formik.values.profilePictures;
+    const pictureIndex = tmpProfilePictures.findIndex(
+      (profilePicture) => profilePicture.id === pictureId
     );
-    const objProfilePictures = tmpPicturesProfile.reduce((acc, curr) => {
-      return { ...acc, ...curr };
-    }, {});
-    formik.setFieldValue("profilePictures", objProfilePictures);
-  }, [picturesProfile]);
+    tmpProfilePictures[pictureIndex].picture = {
+      [uniqueId]: event.target.files[0],
+    };
+    formik.setFieldValue("profilePictures", tmpProfilePictures);
+  };
 
-  function renderPicture(isPicture, index, url) {
-    if (isPicture) {
+  const handleDeletePictureProfile = (pictureId) => {
+    const tmpProfilePictures = formik.values.profilePictures;
+    const pictureIndex = tmpProfilePictures.findIndex(
+      (profilePicture) => profilePicture.id === pictureId
+    );
+    tmpProfilePictures[pictureIndex].picture = null;
+    formik.setFieldValue("profilePictures", tmpProfilePictures);
+  };
+
+  function RenderPicture({ profilePicture }) {
+    const picture = profilePicture.picture;
+    const pictureId = profilePicture.id;
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: pictureId });
+    const style = {
+      transition,
+      transform: CSS.Transform.toString(transform),
+    };
+    if (picture === null) {
+      return (
+        <label
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={pictureId}
+          htmlFor={pictureId}
+          className={`w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 cursor-pointer ${
+            isDragging && `z-50`
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="24"
+            viewBox="0 0 25 24"
+            fill="none"
+          >
+            <path
+              d="M12.5 4.5V19.5M20 12H5"
+              stroke="#7D2262"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+          <p className="text-purple-600 text-sm font-medium">Upload photo</p>
+          <input
+            id={pictureId}
+            name="avatar"
+            type="file"
+            onChange={(event) => {
+              handleFileChange(event, pictureId);
+            }}
+            hidden
+          />
+        </label>
+      );
+    } else {
       return (
         <div
-          key={index}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={pictureId}
+          className={`w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2  relative ${
+            isDragging && `z-50`
+          }`}
         >
-          <img src={url} className="w-full h-full object-cover rounded-2xl" />
+          <img
+            src={URL.createObjectURL(picture[Object.keys(picture)[0]])}
+            className="w-full h-full object-cover rounded-2xl"
+          />
           <button
             className="w-6 h-6 flex justify-center items-center bg-red rounded-full z-30 absolute left-[147px] bottom-[147px]"
-            onClick={() => handleDeletePictureProfile(index)}
+            onMouseDown={() => handleDeletePictureProfile(pictureId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -68,40 +123,26 @@ function ProfilePicturesForm() {
           </button>
         </div>
       );
-    } else {
-      const inputId = `upload-${index}`;
-      return (
-        <label
-          key={index}
-          htmlFor={inputId}
-          className="w-[167px] h-[167px] bg-gray-200 rounded-2xl flex flex-col justify-center items-center space-y-2 cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-          >
-            <path
-              d="M12.5 4.5V19.5M20 12H5"
-              stroke="#7D2262"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-          <p className="text-purple-600 text-sm font-medium">Upload photo</p>
-          <input
-            id={inputId}
-            name="avatar"
-            type="file"
-            onChange={(event) => handleFileChange(event, index)}
-            hidden
-          />
-        </label>
-      );
     }
   }
+
+  const onDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const tmpProfilePictures = formik.values.profilePictures;
+
+      const oldIndex = tmpProfilePictures.findIndex(
+        (profilePicture) => profilePicture.id === active.id
+      );
+      const newIndex = tmpProfilePictures.findIndex(
+        (profilePicture) => profilePicture.id === over.id
+      );
+      formik.setFieldValue(
+        "profilePictures",
+        arrayMove(tmpProfilePictures, oldIndex, newIndex)
+      );
+    }
+  };
 
   return (
     <div className="w-[930px] flex flex-col justify-start items-start font-nunito">
@@ -122,17 +163,21 @@ function ProfilePicturesForm() {
             : null
         } w-full flex flex-row mt-6 justify-center space-x-6 `}
       >
-        {picturesProfile.map((element, index) => {
-          if (element !== null) {
-            return renderPicture(
-              true,
-              index,
-              URL.createObjectURL(element[Object.keys(element)[0]])
-            );
-          } else {
-            return renderPicture(false, index);
-          }
-        })}
+        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext
+            items={formik.values.profilePictures}
+            strategy={horizontalListSortingStrategy}
+          >
+            {formik.values.profilePictures.map((profilePicture) => {
+              return (
+                <RenderPicture
+                  key={profilePicture.id}
+                  profilePicture={profilePicture}
+                />
+              );
+            })}
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );

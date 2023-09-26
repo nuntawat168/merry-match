@@ -3,35 +3,18 @@ import { Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 const UserProfileContext = React.createContext();
 
 function UserProfileProvider(props) {
+  const toast = useToast();
   const [originalUserProfile, setOriginalUserProfile] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmissionFinished, setIsSubmissionFinished] = useState(false);
   const [deleteOriginalPicturesProfile, setDeleteOriginalPicturesProfile] =
     useState([]);
 
-  function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  function calculateAge(dateOfBirth) {
-    const dob = new Date(dateOfBirth);
-    const currentDate = new Date();
-
-    // Calculate the difference in milliseconds
-    const ageInMilliseconds = currentDate - dob;
-
-    // Convert milliseconds to years
-    const ageInYears = ageInMilliseconds / (365 * 24 * 60 * 60 * 1000);
-
-    // Round down to the nearest whole number to get the age
-    const age = Math.floor(ageInYears);
-
-    return age;
-  }
-  const initDataForm = {
+  const [initValuesForm, setInitValuesForm] = useState({
     name: "",
     dateOfBirth: "",
     location: "",
@@ -44,8 +27,64 @@ function UserProfileProvider(props) {
     meetingInterests: "",
     hobbiesInterests: [],
     aboutMe: "",
-    profilePictures: [null, null, null, null, null],
-  };
+    profilePictures: [
+      { id: 1, picture: null },
+      { id: 2, picture: null },
+      { id: 3, picture: null },
+      { id: 4, picture: null },
+      { id: 5, picture: null },
+    ],
+  });
+
+  async function initialFormik() {
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/user-profile/${user.id}`
+      );
+      const userProfile = response.data.data;
+      const userInitForm = {
+        name: userProfile.name,
+        dateOfBirth: userProfile.date_of_birth.toString().split("T")[0],
+        location: userProfile.location,
+        city: userProfile.city,
+        username: userProfile.username,
+        email: userProfile.email,
+        sexualIdentites: userProfile.sex,
+        sexualPreferences: userProfile.sexual_preferences,
+        racialPreferences: userProfile.racial_preferences,
+        meetingInterests: userProfile.meeting_interests,
+        hobbiesInterests: userProfile.hobby_interests.filter(
+          (element) => element !== null
+        ),
+        aboutMe: userProfile.about_me,
+        profilePictures: [
+          { id: 1, picture: null },
+          { id: 2, picture: null },
+          { id: 3, picture: null },
+          { id: 4, picture: null },
+          { id: 5, picture: null },
+        ].map((profilePiture, index) => {
+          if (userProfile?.image[index] !== undefined) {
+            return { id: profilePiture.id, picture: userProfile.image[index] };
+          } else {
+            return { id: profilePiture.id, picture: null };
+          }
+        }),
+      };
+      setOriginalUserProfile(userInitForm);
+      setInitValuesForm(userInitForm);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+  useEffect(() => {
+    initialFormik();
+  }, []);
+
   const formSchema = Yup.object().shape({
     name: Yup.string().required("Name is a required field").max(25),
     dateOfBirth: Yup.string().required("Date of birth is a required field"),
@@ -105,35 +144,13 @@ function UserProfileProvider(props) {
       .max(10, "Maximum of 10 Hobbies/Interests"),
     aboutMe: Yup.string().max(150, "About me must be at most 150 characters"),
     profilePictures: Yup.array().test(
-      "has-minimum-picture",
+      "has-minimum-keys",
       "Profile Pictures must have at least 2 photos",
       (value) => {
-        return value.filter((element) => element === null).length <= 3;
+        return value.filter((element) => element.picture === null).length <= 3;
       }
     ),
   });
-  async function sendEditProfile(data) {
-    const token = localStorage.getItem("token");
-    const user = jwtDecode(token);
-    try {
-      const response = await axios.put(
-        `http://localhost:4000/user-profile/${user.id}`,
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      setIsSubmitting(false);
-      setIsSubmissionFinished(true);
-      return true;
-    } catch (error) {
-      alert("Update Profile Error");
-      console.log("Update Profile Error");
-      console.log(error);
-      setIsSubmitting(false);
-      return true;
-    }
-  }
 
   function handleOnSubmit(data) {
     setIsSubmitting(true);
@@ -184,7 +201,7 @@ function UserProfileProvider(props) {
       editUserProfile["deleteHobbiesInterests"] = [...deleteHobbiesInterests];
     }
 
-    // Filter edit images
+    // Filter delete picture profile
     if (deleteOriginalPicturesProfile.length > 0) {
       editUserProfile["deleteProfilePictures"] = [
         ...deleteOriginalPicturesProfile,
@@ -203,10 +220,11 @@ function UserProfileProvider(props) {
 
     // Add new profile pictures to FormData
     const newPicturesProfile = data.profilePictures.filter(
-      (picture) => picture !== null
+      (picturesProfile) => picturesProfile.picture !== null
     );
 
-    newPicturesProfile.forEach((picture, i) => {
+    newPicturesProfile.forEach((picturesProfile, i) => {
+      const picture = picturesProfile.picture;
       if (picture?.url !== undefined) {
         formData.append(`newPicturesProfile_${i}`, JSON.stringify(picture));
       } else {
@@ -217,15 +235,38 @@ function UserProfileProvider(props) {
 
     sendEditProfile(formData);
   }
-  useEffect(() => {
-    if (isSubmissionFinished) {
-      window.location.reload();
+
+  async function sendEditProfile(data) {
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/user-profile/${user.id}`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      await initialFormik();
+
+      toast({
+        title: "Updated Profile.",
+        description: "We've updated your profile for you.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+      return setIsSubmitting(false);
+    } catch (error) {
+      alert("Update Profile Error");
+      console.log("Update Profile Error", error);
+      return setIsSubmitting(false);
     }
-  }, [isSubmissionFinished]);
+  }
+
   return (
     <UserProfileContext.Provider
       value={{
-        initDataForm,
         formSchema,
         originalUserProfile,
         setOriginalUserProfile,
@@ -233,12 +274,10 @@ function UserProfileProvider(props) {
         setDeleteOriginalPicturesProfile,
         isSubmitting,
         setIsSubmitting,
-        capitalize,
-        calculateAge,
       }}
     >
       <Formik
-        initialValues={initDataForm}
+        initialValues={initValuesForm}
         validationSchema={formSchema}
         onSubmit={handleOnSubmit}
         enableReinitialize={true}
