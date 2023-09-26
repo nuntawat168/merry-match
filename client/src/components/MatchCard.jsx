@@ -327,7 +327,7 @@ const MatchCard = () => {
 
 
 
-            <section className="bg-white pl-[13px] pr-[16px] h-[936px] w-[220px] absolute top-0 right-0">
+            <section className="bg-white pl-[13px] pr-[16px] h-screen w-[220px] absolute top-0 right-0">
                 <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
                 <div className='mt-[40px]'>
                     <p>Sex you're interested</p>

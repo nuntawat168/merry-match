@@ -1,7 +1,7 @@
 import logo from "../assets/icon/logo.svg";
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useState} from "react";
+import { useState } from "react";
 import notiIcon from "../assets/icon/noti.svg";
 import UserDropdown from "./UserDropdown";
 import Notification from "./Notification";
