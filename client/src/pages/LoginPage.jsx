@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/authentication.jsx";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function LoginPage() {
   const handleLogin = (event) => {
     event.preventDefault();
     login({
-      email,
+      emailOrUsername,
       password,
     });
   };
@@ -46,15 +46,15 @@ function LoginPage() {
               htmlFor="email"
               className="font-nunito text-[16px] font-normal text-black inline-block"
             >
-              Email
+              Username or Email
             </label>
             <input
-              type="email"
-              id="email"
-              placeholder="Enter Email"
-              value={email}
+              type="text"
+              id="emailOrUsername"
+              placeholder="Enter Username or Email"
+              value={emailOrUsername}
               onChange={(event) => {
-                setEmail(event.target.value);
+                setEmailOrUsername(event.target.value);
               }}
               className="w-[453px] h-[48px] border border-[#D6D9E4] rounded-lg mt-2 p-4"
             />

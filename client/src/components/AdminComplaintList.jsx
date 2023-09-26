@@ -102,7 +102,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Import Axios
 import { Link } from "react-router-dom";
-import seach from "../assets/icon/vector.svg";
+import search from "../assets/icon/vector.svg";
 import { Select } from "@chakra-ui/react";
 
 const AdminComplaintList = () => {
@@ -122,6 +122,17 @@ const AdminComplaintList = () => {
 
     fetchData();
   }, []);
+
+  // Filter complaints based on selected status and search term
+  const filteredComplaints = complaints
+    .filter(
+      (complaint) =>
+        (selectedColor ? complaint.status === selectedColor : true) &&
+        (searchTerm
+          ? complaint.issue.toLowerCase().includes(searchTerm.toLowerCase())
+          : true)
+    )
+    .sort((a, b) => new Date(b.date_submitted) - new Date(a.date_submitted));
 
   const markComplaintAsPending = async (complaintId) => {
     try {
@@ -150,27 +161,30 @@ const AdminComplaintList = () => {
         </div>
         <div className="relative flex gap-1.5 ">
           <input
-            className="flex pl-10 w-[320px] h-[48px] border border-gray-300 rounded-lg  "
+            className="flex pl-10 w-[320px] h-[48px] border border-gray-300 rounded-lg"
             type="text"
             id="FilterTextBox"
             name="FilterTextBox"
             placeholder="Search..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
+
           <button type="submit">
             <img
               className="flex absolute left-2 top-2.5    w-[30px] h-[30px] "
-              src={seach}
+              src={search}
             />
           </button>
           <Select
             className={`${
-              selectedColor === "option1"
+              selectedColor === "New"
                 ? "text-beige-700"
-                : selectedColor === "option2"
+                : selectedColor === "Pending"
                 ? "text-yellow-500"
-                : selectedColor === "option3"
+                : selectedColor === "Resolved"
                 ? "text-green-500"
-                : selectedColor === "option4"
+                : selectedColor === "Cancel"
                 ? "text-gray-700"
                 : " bg-gray-400 text-gray-400"
             } `}
@@ -180,25 +194,25 @@ const AdminComplaintList = () => {
           >
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-beige-100 text-beige-700  "
-              value="option1"
+              value="New"
             >
               New
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg  bg-yellow-100 text-yellow-500  "
-              value="option2"
+              value="Pending"
             >
               Pending
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-green-100 text-green-500"
-              value="option3"
+              value="Resolved"
             >
               Resolved
             </option>
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-gray-200 text-gray-700"
-              value="option4"
+              value="Cancel"
             >
               Cancel
             </option>
@@ -215,7 +229,7 @@ const AdminComplaintList = () => {
             <span>Date Submitted</span>
             <span>Status</span>
           </div>
-          {complaints.map((complaint) => (
+          {filteredComplaints.map((complaint) => (
             <Link
               to={`/complaint/detail/${complaint.complaint_id}`}
               key={complaint.complaint_id}

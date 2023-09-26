@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { pool } from "../utils/db.js";
+import { protect } from "../middlewares/protect.js";
 
 const complaintRouter = Router();
+complaintRouter.use(protect);
 
 complaintRouter.post("/", async (req, res) => {
   const { user_id, issue, description, dateSubmitted } = req.body;
