@@ -4,11 +4,37 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
 import merryHeart from "../assets/icon/merry.png";
+import { io } from 'socket.io-client';
+import { Link } from 'react-router-dom';
 
 const DiscoverSideBar = () => {
     const [matchList, setMatchList] = useState([]);
     const [displayedUsers, setDisplayedUsers] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [conversations, setConversations] = useState([]);
+
+    const socket = io("http://localhost:4000");
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const user = jwtDecode(token);
+
+        axios.get(`http://localhost:4000/user/conversationlist/${user.id}`)
+            .then((response) => {
+                setConversations(response.data.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
+    conversations.forEach(conversation => {
+        const { conversation_id, client1_id, client2_id } = conversation;
+        const roomID = `conversation_${conversation_id}`;
+
+        socket.emit("joinRoom", { roomID, users: [client1_id, client2_id] });
+    });
+
 
     useEffect(() => {
         if (matchList.length > 0) {
@@ -29,7 +55,12 @@ const DiscoverSideBar = () => {
         }
     };
 
+    const handleStartChat = (conversation_id, users) => {
+        const roomID = `conversation_${conversation_id}`;
+        socket.emit("joinRoom", { roomID, users });
 
+        return <Link to={`/chat/${roomID}`}></Link>;
+    };
 
     const fetchMatchList = async (user_id) => {
         try {
@@ -42,6 +73,8 @@ const DiscoverSideBar = () => {
             throw error;
         }
     };
+
+
 
     const fetchData = async () => {
         try {
@@ -75,13 +108,15 @@ const DiscoverSideBar = () => {
                 <div className="flex flex-wrap">
                     {displayedUsers.map((user) => (
                         <div key={user.id} className='flex'>
-                            <div className='relative'>
-                                <div className='flex justify-end relative left-[75px] bottom-[-100px] w-[34px] h-[20px]'>
-                                    <img src={merryHeart} alt="heart" className='z-10 absolute right-[10px] w-[20px] h-[20px]' />
-                                    <img src={merryHeart} alt="heart" className='z-30 w-[20px] h-[20px]' />
+                            <button>
+                                <div className='relative'>
+                                    <div className='flex justify-end relative left-[75px] bottom-[-100px] w-[34px] h-[20px]'>
+                                        <img src={merryHeart} alt="heart" className='z-10 absolute right-[10px] w-[20px] h-[20px]' />
+                                        <img src={merryHeart} alt="heart" className='z-30 w-[20px] h-[20px]' />
+                                    </div>
+                                    <img src={user.image[0].url} alt={user.name} className='w-[100px] h-[100px] rounded-xl ml-[10px]' />
                                 </div>
-                                <img src={user.image[0].url} alt={user.name} className='w-[100px] h-[100px] rounded-xl ml-[10px]' />
-                            </div>
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -95,6 +130,18 @@ const DiscoverSideBar = () => {
                 <p className='text-left ml-[20px] font-bold text-[24px]'>
                     Chat with Merry Match
                 </p>
+                <div>
+                    <ul>
+                        {conversations.map((conversation) => (
+                            <li key={conversation.conversation_id}>
+                                <button type="button" onClick={() => handleStartChat(conversation.conversation_id, [conversation.client1_id, conversation.client2_id])}>
+                                    {conversation.name} - {conversation.about_me}
+                                    <img src={conversation.image[0].url} alt={conversation.name} className='w-[100px] h-[100px] rounded-xl ml-[10px]' />
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     )

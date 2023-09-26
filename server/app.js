@@ -41,7 +41,8 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/matchlist", matchListRouter);
   app.use("/packages", packageRouter);
-  app.use("/complaint", complaintRouter)
+  app.use("/complaint", complaintRouter);
+
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
@@ -50,13 +51,21 @@ async function init() {
     res.status(404).send("Not found");
   });
 
-  io.on("connect", (socket) => {
-    console.log("User connected");
-    socket.on("chat message", (msg) => {
-      io.emit("chat message", msg);
+  io.on("connection", (socket) => {
+    console.log("a user connected." + socket.id);
+
+    socket.on("joinRoom", ({ conversationId, users }) => {
+      const roomID = `conversation_${conversationId}`;
+      socket.join(roomID);
+      socket.roomID = roomID;
+      socket.client1_id = users[0];
+      socket.client2_id = users[1];
     });
+
+
+
     socket.on("disconnect", () => {
-      console.log("User disconnected");
+      console.log("a user disconnected!");
     });
   });
 
@@ -64,5 +73,6 @@ async function init() {
     console.log(`server listening on port ${port}`);
   });
 }
+
 
 init();

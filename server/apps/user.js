@@ -121,6 +121,11 @@ userRouter.post('/ismatch/:liked_user_id', async (req, res) => {
                 [user_id, liked_user_id]
             );
 
+            await pool.query(
+                `INSERT INTO conversations (client1_id, client2_id) VALUES ($1, $2)`,
+                [user_id, liked_user_id]
+            );
+
             res.json({ message: "User is matched" }); 
         } else {
             res.json({ message: "User is not matched" });
@@ -161,6 +166,31 @@ userRouter.post('/unmatch/:matched_user_id', async (req, res) => {
     }
 });
 
+userRouter.get("/conversationlist/:user_id", async (req, res) => {
+    try {
+      const { user_id } = req.params;
+  
+      const result = await pool.query(`
+        SELECT users.user_id, users.sex, users.name, profile_images.image, users.about_me, conversations.conversation_id
+        FROM users
+        INNER JOIN profile_images ON users.user_id = profile_images.user_id
+        LEFT JOIN conversations ON
+    (users.user_id = conversations.client1_id AND $1 = conversations.client2_id) OR
+    (users.user_id = conversations.client2_id AND $1 = conversations.client1_id)
+    WHERE (conversations.client1_id IS NOT NULL OR conversations.client2_id IS NOT NULL) AND users.user_id != $1
+      `, [user_id]);
+  
+      res.json({
+        data: result.rows,
+    });
+} catch (error) {
+    console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
+}
+});
+  
+  
+
 userRouter.get("/:user_id", async (req, res) => {
     try {
         const { user_id } = req.params;
@@ -181,6 +211,8 @@ userRouter.get("/:user_id", async (req, res) => {
         res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
     }
 });
+
+
 
 
 
