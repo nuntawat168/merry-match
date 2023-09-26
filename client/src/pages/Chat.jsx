@@ -11,21 +11,10 @@ import { Link } from 'react-router-dom';
 function Chat() {
     const mockData = { username: "Daeny" }
     const socket = io('http://localhost:4000');
-    const { userId } = useParams();
 
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
 
-    useEffect(() => {
-        socket.on('chat message', (message) => {
-            setMessages([...messages, message]);
-        });
-    }, [messages]);
-
-    const sendMessage = () => {
-        socket.emit('chat message', inputMessage);
-        setInputMessage('');
-    };
 
 
 
