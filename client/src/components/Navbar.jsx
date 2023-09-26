@@ -53,7 +53,7 @@ function Navbar() {
 
     // render navbar
     return (
-        <header className="w-full bg-white h-[88px] shadow-nav flex justify-center">
+        <header className="z-20 w-full bg-white h-[88px] shadow-nav flex justify-center">
             <div className="w-[1440px] h-[88px] bg-white px-[160px] flex justify-between items-center">
                 <section>
                     <RouterLink to={ isAuthenticated? "/match" : "/" }><img src={logo} alt="Merry Match Logo" className="h-[56px] hover:cursor-pointer"/></RouterLink>

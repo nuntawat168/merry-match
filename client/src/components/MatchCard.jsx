@@ -4,12 +4,15 @@ import '@react-spring/web';
 import axios from 'axios';
 import { AiFillHeart } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
-import { Link } from 'react-router-dom';
 import jwtDecode from "jwt-decode";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
 import { SlArrowLeft } from "react-icons/sl";
+import viewIcon from "../assets/icon/view-icon.svg";
+import leftArrow from "../assets/icon/left-arrow.svg";
+import rightArrow from "../assets/icon/right-arrow.svg";
 
+// เดี๋ยวมาทำ popup ตอน match
 const MatchPopup = ({ userData, onClose }) => {
     console.log(userData);
     return (
@@ -171,6 +174,10 @@ const MatchCard = () => {
         setMaxAge(newMaxAge);
     };
 
+    const handleClearClick = () => {
+        // ใส่ function
+    }
+
     const handleSearchClick = async () => {
         fetchData();
     };
@@ -216,48 +223,65 @@ const MatchCard = () => {
     };
     console.log(filteredUsers)
 
+    const renderedCard = filteredUsers.map((user, index) => (
+        <TinderCard
+            className='absolute'
+            key={`${user.name}_${index}`}
+            ref={(ref) => (cardRefs.current[index] = ref)}
+            preventSwipe={["up", "down"]}
+        >
+            <div className='relative flex justify-center'>
+                <div
+                    className='h-[620px] w-[620px] rounded-[32px] absolute top-0 right-0' 
+                    style={{ background: 'linear-gradient(180deg, rgba(7, 9, 65, 0.00) 61.94%, #390741 100%)', }}
+                >
+                </div>
+                <img src={user.image[0].url} alt={user.name} className='w-[620px] h-[620px] rounded-[32px] bg-cover' />
+                <div className='flex w-[620px] pl-[40px] pr-[32px] justify-between absolute bottom-[50px]'>
+                    <section className='flex items-center'>
+                        <p className='font-semibold text-[32px] text-[#ffff] mr-[8px]'>{user.name.split(' ')[0]}</p>
+                        <p className='font-semibold text-[32px] text-gray-400 mr-[16px]'>{user.age ? user.age : "N/A"}</p>
+                        <div 
+                            className='w-[32px] h-[32px] rounded-full shadow-nav flex items-center justify-center'
+                            style={{ background: 'rgba(255, 255, 255, 0.20)' }}
+                            onClick={() => openPopup(user)} 
+                        >
+                            <img src={viewIcon} alt="view profile" className='w-[16px] h-[16px] hover:cursor-pointer'/>
+                        </div>
+                    </section>
+                    <section className='flex items-center'>
+                        <img src={leftArrow} alt="go left arrow" className='hover:cursor-pointer' />
+                        <img src={rightArrow} alt="go right arrow" className='hover:cursor-pointer' />
+                    </section>
+                </div>
+                <div className='flex absolute bottom-[-35px]'>
+                    <button
+                        className='mr-[24px] w-[80px] h-[80px] bg-white rounded-3xl flex justify-center items-center text-gray-600 text-3xl'
+                        onClick={() => handleCrossClick(user.user_id, index)}
+                    > 
+                        <ImCross />
+                    </button>
+                    <button
+                        className='w-[80px] h-[80px] bg-white rounded-3xl flex justify-center items-center text-red-500 text-4xl'
+                        onClick={() => handleHeartClick(user.user_id, index)}
+                    >
+                        <AiFillHeart />
+                    </button>
+                </div>
+            </div>
+        </TinderCard>
+    ))
+
     return (
         <div className='w-full bg-[#160404] relative'>
-            <div className='flex justify-center mt-[12vh] mr-[200px] z-10'>
-                {filteredUsers.map((user, index) => (
-                    <TinderCard
-                        className='absolute'
-                        key={`${user.name}_${index}`}
-                        ref={(ref) => (cardRefs.current[index] = ref)}
-                        preventSwipe={["up", "down"]}
-                    >
-                        <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
-                            <button
-                                onClick={() => openPopup(user)}>
-                                <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
-                                <img src={user.image[0].url} alt={user.name} className='w-[85vw] h-[620px] rounded-3xl' />
-                            </button>
-
-                            <div className='flex flex-row absolute top-[550px] left-[220px]'>
-                                <button
-                                    className='mr-[20px] w-[80px] h-[80px] bg-white rounded-3xl'
-                                    onClick={() => handleCrossClick(user.user_id, index)}
-                                >
-                                    <div className='flex flex-row justify-center text-4xl text-gray-600'>
-                                        <ImCross />
-                                    </div>
-                                </button>
-                                <button
-                                    className='w-[80px] h-[80px] bg-white rounded-3xl'
-                                    onClick={() => handleHeartClick(user.user_id, index)}
-                                >
-                                    <div className='flex flex-row justify-center text-4xl text-red-500'>
-                                        <AiFillHeart />
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </TinderCard>
-                ))}
+            <div className='flex justify-center mt-[15vh] z-10 w-[904px]'>{renderedCard}</div>
+            <div className='w-[215px] px-[24px] flex justify-between absolute bottom-[90px] right-[562px]'>
+                <p className='text-gray-700'>Merry limit today</p>
+                <p className='text-red-400'>2/20</p>
             </div>
 
             {isPopupOpen && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-70 flex justify-center items-center">
+                <div className="z-10 fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-60 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-xl flex flex-row">
                         {selectedUser && (
                             <>
@@ -327,13 +351,12 @@ const MatchCard = () => {
 
 
 
-            <section className="bg-white pl-[13px] pr-[16px] h-screen w-[220px] absolute top-0 right-0">
-                <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
-                <div className='mt-[40px]'>
-                    <p>Sex you're interested</p>
-                </div>
+            <section className="bg-white pl-[13px] pr-[16px] h-screen w-[220px] pt-[90px] absolute top-0 right-0 text-purple-800">
+                <h2 className="text-[24px] font-bold mt-[60px]">Filter Profiles</h2>
+                <p className='mt-[16px] text-[18px] font-semibold'>Sex you interest</p>
+
                 <article className='flex flex-col'>
-                    <div className='flex flex-row mt-[30px]'>
+                    <div className='flex flex-row mt-[16px]'>
                         <input
                             type="checkbox"
                             className='text-[#000000] text-[24px] mr-[12px]'
@@ -374,8 +397,8 @@ const MatchCard = () => {
                     </div>
                 </article>
 
-                <article className='mt-[50px] text-center'>
-                    <label htmlFor="minAgeRange">Age Range</label>
+                <article className='mt-[50px]'>
+                    <label htmlFor="minAgeRange" className='font-semibold text-[18px]'>Age Range</label>
                     <input
                         type="range"
                         id="minAgeRange"
@@ -387,7 +410,7 @@ const MatchCard = () => {
                         onChange={handleMinAgeChange}
                         className='w-[188px]'
                     />
-                    <p>Min Age: {minAge}</p>
+                    <p className='text-center'>Min Age: {minAge}</p>
 
                     <label htmlFor="maxAgeRange"></label>
                     <input
@@ -401,13 +424,21 @@ const MatchCard = () => {
                         onChange={handleMaxAgeChange}
                         className='w-[188px]'
                     />
-                    <p>Max Age: {maxAge}</p>
+                    <p className='text-center'>Max Age: {maxAge}</p>
                 </article>
-                <div className='mt-[120px] flex justify-center'>
-                    <button className='text-white px-4 py-2 rounded bg-red-400' onClick={handleSearchClick}>
+
+
+                <div className='mt-[140px] flex justify-center font-bold'>
+                    <button className='text-red-500 px-[24px] py-[12px] rounded-full' onClick={handleClearClick}>
+                        Clear
+                    </button>
+                    <button className='text-white px-[24px] py-[12px] rounded-full bg-red-500' onClick={handleSearchClick}>
                         Search
                     </button>
                 </div>
+
+
+
             </section>
         </div>
     );
