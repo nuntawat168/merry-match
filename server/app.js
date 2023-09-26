@@ -64,6 +64,9 @@ async function init() {
       socket.client2_id = users[1];
     });
 
+    socket.on('chat message', (message) => {
+      io.emit('chat message', message);
+    });
 
 
     socket.on("disconnect", () => {
