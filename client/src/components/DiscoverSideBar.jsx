@@ -5,14 +5,17 @@ import { useState, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
 import merryHeart from "../assets/icon/merry.png";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import { Link } from 'react-router-dom';
 
 const DiscoverSideBar = () => {
     const [matchList, setMatchList] = useState([]);
     const [displayedUsers, setDisplayedUsers] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-
+    const [conversations, setConversations] = useState([]);
     const location = useLocation();
-    const navigate = useNavigate();
+
+    const socket = io("http://localhost:4000");
 
     useEffect(() => {
         if (matchList.length > 0) {
@@ -32,6 +35,13 @@ const DiscoverSideBar = () => {
         }
     };
 
+    const handleStartChat = (conversation_id, users) => {
+        const roomID = `conversation_${conversation_id}`;
+        socket.emit("joinRoom", { roomID, users });
+
+        return <Link to={`/chat/${roomID}`}></Link>;
+    };
+
     const fetchMatchList = async (user_id) => {
         try {
             const token = localStorage.getItem('token');
@@ -43,6 +53,8 @@ const DiscoverSideBar = () => {
             throw error;
         }
     };
+
+
 
     const fetchData = async () => {
         try {
@@ -60,9 +72,9 @@ const DiscoverSideBar = () => {
     }, []);
 
     const mockChat = [
-        {name: "Alex Clerk", img:"", msg: "New Message from Alex"},
-        {name: "Leon Diolopez", img:"", msg: "New Message from Leon"},
-        {name: "Laila Emmagowitz", img:"", msg: "New Message from Laila"},
+        { name: "Alex Clerk", img: "", msg: "New Message from Alex" },
+        { name: "Leon Diolopez", img: "", msg: "New Message from Leon" },
+        { name: "Laila Emmagowitz", img: "", msg: "New Message from Laila" },
     ]
 
     const renderedChat = mockChat.map(chat => {
@@ -79,7 +91,7 @@ const DiscoverSideBar = () => {
 
     return (
         <div className={location.pathname === "/match" ? 'pt-[90px] bg-white w-[316px] flex flex-col' : 'bg-white w-[316px] flex flex-col'}>
-            <section 
+            <section
                 className='bg-gray-100 flex flex-col justify-center items-center w-[282px] h-[187px] p-[24px] border-[1px] rounded-[16px] border-purple-500 my-[24px] mr-[15px] ml-[17px] hover:cursor-pointer'
                 onClick={() => navigate('/match')}
             >
@@ -96,7 +108,7 @@ const DiscoverSideBar = () => {
                         <div key={user.id} className='w-[100px] h-[100px] rounded-3xl mr-[12px] relative'
                             style={{
                                 backgroundImage: `url(${user.image[0].url})`,
-                                backgroundSize: 'cover', 
+                                backgroundSize: 'cover',
                                 backgroundRepeat: 'no-repeat',
                             }}
                         >
