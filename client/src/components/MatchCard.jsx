@@ -33,23 +33,23 @@ const MatchCard = () => {
     const [matchUserData, setMatchUserData] = useState(null);
     const [packageLimit, setPackageLimit] = useState(null);
     const [merryLimit, setMerryLimit] = useState(null);
-    const { calculateAge, capitalize } = useTextConvert();
+    const { calculateAge } = useTextConvert();
     
     // fetch merry limit
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await fetchMerryLimit();
-                setPackageLimit(result);
-                setMerryLimit(result);
+                const { userPackageLimit, userMerryLimit } = await fetchMerryLimit();
+                setPackageLimit(userPackageLimit);
+                setMerryLimit(userMerryLimit);
             } catch(error) {
                 console.log('Error fetching data:', error)
             }};
 
         fetchData();
-    }, []);
+    }, [merryLimit]);
 
-
+    
     const fetchData = async () => {
         setIsSearching(true);
         try {
@@ -123,13 +123,25 @@ const MatchCard = () => {
         }
     };
 
+    const updateMerryLimit = async (newMerryLimit) => {
+        try {
+            const token = localStorage.getItem("token");
+            const user = jwtDecode(token);
+            await axios.put(`http://localhost:4000/user-package/${user.id}`, {
+            merry_limit: newMerryLimit - 1,
+            });
+        } catch (error) {
+            console.error("Error updating merry limit", error);
+        }
+        };
 
     const handleHeartClick = async (user_response, index) => {
-        if(merryLimit) {
+        if(merryLimit > 0) {
         try {   
                 const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
                 const addResponse = await axios.post(`http://localhost:4000/user/like/${user_response}`);
-                setMerryLimit(merryLimit - 1); // decrease merry limit
+                console.log(typeof merryLimit);
+                setMerryLimit(updateMerryLimit(merryLimit));
                 if (response.data.message === "User is matched") {
                     const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
                     const userData = matchUserDataResponse.data.data;
@@ -146,39 +158,10 @@ const MatchCard = () => {
                 console.error('Error liking user:', error);
             }
         } else {
+
             // ถ้า merryLimit หมดทำไงต่อ ??
         }
     };
-
-
-
-
-            // if (cardRefs.current[index]) {
-                // cardRefs.current[index].swipe("right");
-                // const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
-                // console.log(response.data.message);
-                // checkPopup(user_response);
-            // }
-        // } catch (error) {
-            // console.error('Error liking user:', error);
-        // }}
-    // };
-
-    // const checkPopup = async (user_response) => {
-    //     try {
-    //         const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
-    //         console.log(response.data.message);
-
-    //         if (response.data.message === "User is matched") {
-    //             const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
-    //             const userData = matchUserDataResponse.data.data;
-    //             setMatchUserData(userData);
-    //             setmatchPopupOpen(true);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
 
     const handleCrossClick = (user_response, index) => {
         try {

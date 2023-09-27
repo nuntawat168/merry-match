@@ -9,8 +9,12 @@ export const fetchMerryLimit = async () => {
         const response = await axios.get(
         `http://localhost:4000/user-package/${user_id}`
         );
-        const result = response.data.packageResult[0].package_limit
-        return result ? result : 20;
+        const userPackageLimit = response.data.packageResult[0].package_limit
+        const userMerryLimit = response.data.packageResult[0].merry_limit
+        return {
+            userPackageLimit: userPackageLimit ? userPackageLimit : 20,
+            userMerryLimit: userMerryLimit ? userMerryLimit : 10,
+        };
     } catch (error) {
         console.log("Error fetching match list data: ", error);
     }

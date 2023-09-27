@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useMatchLists } from "../contexts/matchListsContext";
 import UnmatchButton from "../components/UnmatchButton";
 import ViewProfileButton from "../components/ViewProfileButton";
@@ -7,10 +7,11 @@ import locationIcon from "../assets/icon/location.svg";
 import chatIcon from "../assets/icon/chat.svg";
 import MerryMatchStatus from "../assets/icon/match.svg";
 import NotMatchStatus from "../assets/icon/not match.png";
+
 function MatchLists() {
   const { matchLists } = useMatchLists();
   const { calculateAge, capitalize } = useTextConvert();
-
+  
   const renderedMatch = matchLists.map((user, index) => {
     return (
       <div
