@@ -13,6 +13,7 @@ import matchListRouter from "./apps/matchList.js";
 import fs from "fs";
 import { Server } from "socket.io";
 import http from "http";
+import userPackageRouter from "./apps/userPackage.js";
 
 async function init() {
   dotenv.config();
@@ -41,7 +42,9 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/matchlist", matchListRouter);
   app.use("/packages", packageRouter);
-  app.use("/complaint", complaintRouter)
+  app.use("/complaint", complaintRouter);
+  app.use("/user-package", userPackageRouter);
+
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });

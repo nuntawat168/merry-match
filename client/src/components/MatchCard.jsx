@@ -6,32 +6,19 @@ import { AiFillHeart } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import jwtDecode from "jwt-decode";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { SlArrowRight } from "react-icons/sl";
-import { SlArrowLeft } from "react-icons/sl";
+import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import viewIcon from "../assets/icon/view-icon.svg";
 import leftArrow from "../assets/icon/left-arrow.svg";
 import rightArrow from "../assets/icon/right-arrow.svg";
-
-// เดี๋ยวมาทำ popup ตอน match
-const MatchPopup = ({ userData, onClose }) => {
-    console.log(userData);
-    return (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black p-6 border border-gray-300 w-[720px] h-[720px] rounded-[50px]">
-            <div className="text-center mt-[48%]">
-                <h2 className="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
-            </div>
-            <div className='relative bottom-[60%] left-[95%]'>
-                <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>x</button>
-            </div>
-        </div>
-    );
-};
+import merryMatch from "../assets/icon/merry-match-frame.png";
+import { fetchMerryLimit } from './FetchMerryLimit';
+import useTextConvert from '../hooks/useTextConvert';
 
 const MatchCard = () => {
     const [originalUsers, setOriginalUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [minAge, setMinAge] = useState(18);
-    const [maxAge, setMaxAge] = useState(60);
+    const [maxAge, setMaxAge] = useState(80);
     const [isMaleSelected, setIsMaleSelected] = useState(false);
     const [isFemaleSelected, setIsFemaleSelected] = useState(false);
     const [isDefaultSelected, setIsDefaultSelected] = useState(true);
@@ -44,12 +31,28 @@ const MatchCard = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [matchPopupOpen, setmatchPopupOpen] = useState(false);
     const [matchUserData, setMatchUserData] = useState(null);
+    const [packageLimit, setPackageLimit] = useState(null);
+    const [merryLimit, setMerryLimit] = useState(null);
+    const { calculateAge, capitalize } = useTextConvert();
+    
+    // fetch merry limit
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await fetchMerryLimit();
+                setPackageLimit(result);
+                setMerryLimit(result);
+            } catch(error) {
+                console.log('Error fetching data:', error)
+            }};
+
+        fetchData();
+    }, []);
 
 
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            // const user_id = '60';
             const token = localStorage.getItem("token");
             const user = jwtDecode(token);
             console.log(user.id);
@@ -122,39 +125,60 @@ const MatchCard = () => {
 
 
     const handleHeartClick = async (user_response, index) => {
-        try {
-            if (cardRefs.current[index]) {
-                cardRefs.current[index].swipe("right");
-                const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
-                console.log(response.data.message);
-
-                checkPopup(user_response);
+        if(merryLimit) {
+        try {   
+                const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
+                const addResponse = await axios.post(`http://localhost:4000/user/like/${user_response}`);
+                setMerryLimit(merryLimit - 1); // decrease merry limit
+                if (response.data.message === "User is matched") {
+                    const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
+                    const userData = matchUserDataResponse.data.data;
+                    setMatchUserData(userData);
+                    setmatchPopupOpen(true);
+                    setTimeout(() => {
+                        setmatchPopupOpen(false); // Close the matchPopup after 5 sec
+                        cardRefs.current[index].swipe("right");
+                      }, 5000);
+                } else {
+                    cardRefs.current[index].swipe("right");
+                }
+            } catch (error) {
+                console.error('Error liking user:', error);
             }
-        } catch (error) {
-            console.error('Error liking user:', error);
+        } else {
+            // ถ้า merryLimit หมดทำไงต่อ ??
         }
     };
 
-    const checkPopup = async (user_response) => {
-        try {
-            const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
-            console.log(response.data.message);
 
-            if (response.data.message === "User is matched") {
-                const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
-                const userData = matchUserDataResponse.data.data;
-                setMatchUserData(userData);
-                setmatchPopupOpen(true);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
-    const closeMatchPopup = () => {
-        setmatchPopupOpen(false);
-    };
 
+            // if (cardRefs.current[index]) {
+                // cardRefs.current[index].swipe("right");
+                // const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
+                // console.log(response.data.message);
+                // checkPopup(user_response);
+            // }
+        // } catch (error) {
+            // console.error('Error liking user:', error);
+        // }}
+    // };
+
+    // const checkPopup = async (user_response) => {
+    //     try {
+    //         const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
+    //         console.log(response.data.message);
+
+    //         if (response.data.message === "User is matched") {
+    //             const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
+    //             const userData = matchUserDataResponse.data.data;
+    //             setMatchUserData(userData);
+    //             setmatchPopupOpen(true);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
 
     const handleCrossClick = (user_response, index) => {
         try {
@@ -175,7 +199,12 @@ const MatchCard = () => {
     };
 
     const handleClearClick = () => {
-        // ใส่ function
+        setMinAge(18);
+        setMaxAge(80);
+        setIsMaleSelected(false);
+        setIsFemaleSelected(false);
+        setIsDefaultSelected(true);
+        fetchData();
     }
 
     const handleSearchClick = async () => {
@@ -217,7 +246,7 @@ const MatchCard = () => {
             (isFemaleSelected && user.sex === 'female') ||
             (isDefaultSelected && !isMaleSelected && !isFemaleSelected)
         ) {
-            return user.age >= minAge && user.age <= maxAge;
+            return calculateAge(user.date_of_birth) >= minAge && calculateAge(user.date_of_birth) <= maxAge;
         }
         return false;
     };
@@ -232,15 +261,15 @@ const MatchCard = () => {
         >
             <div className='relative flex justify-center'>
                 <div
-                    className='h-[620px] w-[620px] rounded-[32px] absolute top-0 right-0' 
+                    className='h-[520px] w-[520px] 2xl:h-[620px] 2xl:w-[620px] rounded-[32px] absolute top-0 right-0' 
                     style={{ background: 'linear-gradient(180deg, rgba(7, 9, 65, 0.00) 61.94%, #390741 100%)', }}
                 >
                 </div>
-                <img src={user.image[0].url} alt={user.name} className='w-[620px] h-[620px] rounded-[32px] bg-cover' />
-                <div className='flex w-[620px] pl-[40px] pr-[32px] justify-between absolute bottom-[50px]'>
+                <img src={user.image[0].url} alt={user.name} className='h-[520px] w-[520px] 2xl:w-[620px] 2xl:h-[620px] rounded-[32px] bg-cover' />
+                {!matchPopupOpen && (<><div className='flex w-[520px] 2xl:w-[620px] pl-[40px] pr-[32px] justify-between absolute bottom-[50px]'>
                     <section className='flex items-center'>
                         <p className='font-semibold text-[32px] text-[#ffff] mr-[8px]'>{user.name.split(' ')[0]}</p>
-                        <p className='font-semibold text-[32px] text-gray-400 mr-[16px]'>{user.age ? user.age : "N/A"}</p>
+                        <p className='font-semibold text-[32px] text-gray-400 mr-[16px]'>{user.date_of_birth? calculateAge(user.date_of_birth) : "N/A"}</p>
                         <div 
                             className='w-[32px] h-[32px] rounded-full shadow-nav flex items-center justify-center'
                             style={{ background: 'rgba(255, 255, 255, 0.20)' }}
@@ -267,19 +296,29 @@ const MatchCard = () => {
                     >
                         <AiFillHeart />
                     </button>
-                </div>
+                </div></>)}
+                {matchPopupOpen && (
+                    <div className="z-10">
+                        <div className='flex flex-col h-[240px] justify-between items-center absolute top-[280px] right-[160px]'>
+                            <img src={merryMatch} alt="merry match"/>
+                            <button className='px-[24px] py-[12px] bg-red-100 text-red-600 font-bold rounded-full'>Start Conversation</button>
+                            {/* เพิ่ม onclick ไปที่แชทของคนที่แมทช์ */}
+                        </div>
+                    </div>
+                )}
             </div>
         </TinderCard>
     ))
 
     return (
-        <div className='w-full bg-[#160404] relative'>
-            <div className='flex justify-center mt-[15vh] z-10 w-[904px]'>{renderedCard}</div>
-            <div className='w-[215px] px-[24px] flex justify-between absolute bottom-[90px] right-[562px]'>
-                <p className='text-gray-700'>Merry limit today</p>
-                <p className='text-red-400'>2/20</p>
+        <div className='w-[1124px] bg-[#160404] relative overflow-hidden'>
+            <div className='flex justify-center mt-[20vh] z-10 w-[904px]'>{renderedCard}</div>
+            <div className='w-[215px] px-[20px] flex justify-between absolute top-[93vh] right-[562px]'>
+                <p className='text-gray-700 '>Merry limit today</p>
+                <p className='text-red-400'>{`${merryLimit}/${packageLimit}`}</p>
             </div>
 
+            {/* เหลือทำ pop up เวลากดดูโปรไฟล์ */}
             {isPopupOpen && (
                 <div className="z-10 fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-60 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-xl flex flex-row">
@@ -344,10 +383,7 @@ const MatchCard = () => {
                 </div>
             )}
 
-            <div>
-                <button onClick={() => checkPopup(user.user_id)}>Like</button>
-                {matchPopupOpen && <MatchPopup userData={matchUserData} onClose={closeMatchPopup} />}
-            </div>
+            
 
 
 

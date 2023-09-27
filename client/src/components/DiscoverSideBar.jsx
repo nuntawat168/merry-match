@@ -80,12 +80,12 @@ const DiscoverSideBar = () => {
     return (
         <div className={location.pathname === "/match" ? 'pt-[90px] bg-white w-[316px] flex flex-col' : 'bg-white w-[316px] flex flex-col'}>
             <section 
-                className='bg-gray-100 flex flex-col justify-center items-center w-[282px] h-[187px] p-[24px] border-[1px] rounded-[16px] border-purple-500 my-[36px] mr-[15px] ml-[17px] hover:cursor-pointer'
+                className='bg-gray-100 flex flex-col justify-center items-center w-[282px] h-[187px] p-[24px] border-[1px] rounded-[16px] border-purple-500 my-[24px] mr-[15px] ml-[17px] hover:cursor-pointer'
                 onClick={() => navigate('/match')}
             >
                 <img className='w-[66.33px] mt-[30px]' src={discoverIcon} alt="Discover Icon" />
                 <p className='text-[24px] font-bold text-red-600'>Discover New Match</p>
-                <p className='text-[14px] mb-[30px] text-gray-700 text-center'>Start find and Merry to get know and connect with new friend!</p>
+                <p className='text-[14px] mb-[24px] text-gray-700 text-center'>Start find and Merry to get know and connect with new friend!</p>
             </section>
             <section>
                 <p className='text-left py-[24px] ml-[16px] mr-[19px] font-bold text-[24px] text-gray-900'>
@@ -110,7 +110,7 @@ const DiscoverSideBar = () => {
                     <button onClick={handleNextClick} disabled={currentIndex + 2 >= matchList.length} className="text-xl">Next</button>
                 </div>
             </section>
-            <section className='px-[16px]'>
+            <section className='px-[16px] overflow-y-auto'>
                 <p className='text-left font-bold text-[24px] text-gray-900 mb-[16px] mt-[18px]'>
                     Chat with Merry Match
                 </p>
