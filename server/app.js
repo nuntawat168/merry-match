@@ -54,20 +54,22 @@ async function init() {
   });
 
   io.on("connection", (socket) => {
-    console.log("a user connected." + socket.id);
-
-    socket.on("joinRoom", ({ conversationId, users }) => {
-      const roomID = `conversation_${conversationId}`;
-      socket.join(roomID);
-      socket.roomID = roomID;
-      socket.client1_id = users[0];
-      socket.client2_id = users[1];
+    socket.on("joinRoom", ({ conversation }) => {
+      socket.join(conversation.conversation_id);
+      socket.roomID = conversation.conversation_id;
+      socket.client1_id = conversation.client1_id;
+      socket.client2_id = conversation.client2_id;
     });
 
-    socket.on('chat message', (message) => {
-      io.emit('chat message', message);
+    socket.on("send-message", (message) => {
+      socket.broadcast
+        .to(message.conversation_id)
+        .emit("receiver-message", message);
     });
 
+    socket.on("chat message", (message) => {
+      io.emit("chat message", message);
+    });
 
     socket.on("disconnect", () => {
       console.log("a user disconnected!");
@@ -78,6 +80,5 @@ async function init() {
     console.log(`server listening on port ${port}`);
   });
 }
-
 
 init();
