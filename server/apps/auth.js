@@ -174,7 +174,7 @@ authRouter.post("/login", async (req, res) => {
         token,
       });
     } else {
-      return res.status(401).json({
+      return res.status(404).json({
         message: "Password not valid",
       });
     }
