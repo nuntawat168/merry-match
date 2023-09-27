@@ -42,9 +42,8 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/matchlist", matchListRouter);
   app.use("/packages", packageRouter);
-  app.use("/complaint", complaintRouter);
+  app.use("/complaint", complaintRouter)
   app.use("/user-package", userPackageRouter);
-
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
