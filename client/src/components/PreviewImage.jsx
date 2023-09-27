@@ -21,15 +21,15 @@ const PreviewImage = ({ file, page }) => {
   }, [file]);
 
   return page === "AddEditPackage" ? (
-    <div className="relative border rounded-md w-[50px]">
+    <div className="relative border rounded-xl w-[100px] bg-gray-100">
       <img
-        className="w-[60px] h-[50px] rounded-md "
+        className="w-[100px] h-[100px] rounded-md "
         src={preview}
         alt="previewImage"
       />
       <button
         onClick={() => formik.setFieldValue("package_icon", null)}
-        className="border rounded-full w-[20px] h-[20px] flex justify-center items-center absolute top-0 left-10 bg-red-600 text-white"
+        className="border rounded-full w-[30px] h-[30px] flex justify-center items-center absolute bottom-20 left-20 bg-red-600 text-white"
       >
         x
       </button>
@@ -37,7 +37,7 @@ const PreviewImage = ({ file, page }) => {
   ) : (
     <div className="relative rounded-md w-[50px]">
       <img
-        className="w-[60px] h-[50px] rounded-md "
+        className="w-[80px] h-[80px] rounded-md "
         src={preview}
         alt="previewImage"
       />
