@@ -11,7 +11,6 @@ function UserComplaintPage() {
   const token = localStorage.getItem("token");
   const user = jwtDecode(token);
   const user_id = user.id;
-  console.log(user);
   const initialValues = {
     issue: "",
     description: "",
@@ -25,8 +24,6 @@ function UserComplaintPage() {
   });
 
   const onSubmit = async (values) => {
-    console.log(values.dateSubmitted);
-
     values.user_id = user_id;
 
     try {

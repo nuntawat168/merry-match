@@ -36,8 +36,7 @@ function AuthProvider(props) {
     } catch (error) {
       console.log("error", error);
       setState({ ...state, error, loading: false });
-      window.alert(`Login Error: ${error.response.data.message}`);
-      // setState({ ...state, error: error.message, loading: false });
+      throw error;
     }
   };
 
