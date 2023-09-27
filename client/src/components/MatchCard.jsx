@@ -4,34 +4,21 @@ import '@react-spring/web';
 import axios from 'axios';
 import { AiFillHeart } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
-import { Link } from 'react-router-dom';
 import jwtDecode from "jwt-decode";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { SlArrowRight } from "react-icons/sl";
-import { SlArrowLeft } from "react-icons/sl";
-
-const MatchPopup = ({ userData, onClose }) => {
-    console.log(userData);
-    return (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black p-6 border border-gray-300 w-[720px] h-[720px] rounded-[50px]">
-            <div className="text-center mt-[48%]">
-                <h2 className="text-[46px] font-bold mb-4 text-red-400">Merry Match!</h2>
-                <p className='text-white'>Name: {userData.name}</p>
-                <p className='text-white'>Sex: {userData.sex}</p>
-                <p className='text-white'>Email: {userData.email}</p>
-            </div>
-            <div className='relative bottom-[60%] left-[95%]'>
-                <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>x</button>
-            </div>
-        </div>
-    );
-};
+import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
+import viewIcon from "../assets/icon/view-icon.svg";
+import leftArrow from "../assets/icon/left-arrow.svg";
+import rightArrow from "../assets/icon/right-arrow.svg";
+import merryMatch from "../assets/icon/merry-match-frame.png";
+import { fetchMerryLimit } from './FetchMerryLimit';
+import useTextConvert from '../hooks/useTextConvert';
 
 const MatchCard = () => {
     const [originalUsers, setOriginalUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [minAge, setMinAge] = useState(18);
-    const [maxAge, setMaxAge] = useState(60);
+    const [maxAge, setMaxAge] = useState(80);
     const [isMaleSelected, setIsMaleSelected] = useState(false);
     const [isFemaleSelected, setIsFemaleSelected] = useState(false);
     const [isDefaultSelected, setIsDefaultSelected] = useState(true);
@@ -44,12 +31,28 @@ const MatchCard = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [matchPopupOpen, setmatchPopupOpen] = useState(false);
     const [matchUserData, setMatchUserData] = useState(null);
+    const [packageLimit, setPackageLimit] = useState(null);
+    const [merryLimit, setMerryLimit] = useState(null);
+    const { calculateAge } = useTextConvert();
+    
+    // fetch merry limit
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { userPackageLimit, userMerryLimit } = await fetchMerryLimit();
+                setPackageLimit(userPackageLimit);
+                setMerryLimit(userMerryLimit);
+            } catch(error) {
+                console.log('Error fetching data:', error)
+            }};
 
+        fetchData();
+    }, [merryLimit]);
 
+    
     const fetchData = async () => {
         setIsSearching(true);
         try {
-            // const user_id = '60';
             const token = localStorage.getItem("token");
             const user = jwtDecode(token);
             console.log(user.id);
@@ -120,41 +123,45 @@ const MatchCard = () => {
         }
     };
 
+    const updateMerryLimit = async (newMerryLimit) => {
+        try {
+            const token = localStorage.getItem("token");
+            const user = jwtDecode(token);
+            await axios.put(`http://localhost:4000/user-package/${user.id}`, {
+            merry_limit: newMerryLimit - 1,
+            });
+        } catch (error) {
+            console.error("Error updating merry limit", error);
+        }
+        };
 
     const handleHeartClick = async (user_response, index) => {
-        try {
-            if (cardRefs.current[index]) {
-                cardRefs.current[index].swipe("right");
-                const response = await axios.post(`http://localhost:4000/user/like/${user_response}`);
-                console.log(response.data.message);
-
-                checkPopup(user_response);
+        if(merryLimit > 0) {
+        try {   
+                const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
+                const addResponse = await axios.post(`http://localhost:4000/user/like/${user_response}`);
+                console.log(typeof merryLimit);
+                setMerryLimit(updateMerryLimit(merryLimit));
+                if (response.data.message === "User is matched") {
+                    const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
+                    const userData = matchUserDataResponse.data.data;
+                    setMatchUserData(userData);
+                    setmatchPopupOpen(true);
+                    setTimeout(() => {
+                        setmatchPopupOpen(false); // Close the matchPopup after 5 sec
+                        cardRefs.current[index].swipe("right");
+                      }, 5000);
+                } else {
+                    cardRefs.current[index].swipe("right");
+                }
+            } catch (error) {
+                console.error('Error liking user:', error);
             }
-        } catch (error) {
-            console.error('Error liking user:', error);
+        } else {
+
+            // ถ้า merryLimit หมดทำไงต่อ ??
         }
     };
-
-    const checkPopup = async (user_response) => {
-        try {
-            const response = await axios.post(`http://localhost:4000/user/ismatch/${user_response}`);
-            console.log(response.data.message);
-
-            if (response.data.message === "User is matched") {
-                const matchUserDataResponse = await axios.get(`http://localhost:4000/user/${user_response}`);
-                const userData = matchUserDataResponse.data.data;
-                setMatchUserData(userData);
-                setmatchPopupOpen(true);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    const closeMatchPopup = () => {
-        setmatchPopupOpen(false);
-    };
-
 
     const handleCrossClick = (user_response, index) => {
         try {
@@ -173,6 +180,15 @@ const MatchCard = () => {
         const newMaxAge = parseInt(event.target.value, 10);
         setMaxAge(newMaxAge);
     };
+
+    const handleClearClick = () => {
+        setMinAge(18);
+        setMaxAge(80);
+        setIsMaleSelected(false);
+        setIsFemaleSelected(false);
+        setIsDefaultSelected(true);
+        fetchData();
+    }
 
     const handleSearchClick = async () => {
         fetchData();
@@ -213,54 +229,81 @@ const MatchCard = () => {
             (isFemaleSelected && user.sex === 'female') ||
             (isDefaultSelected && !isMaleSelected && !isFemaleSelected)
         ) {
-            return user.age >= minAge && user.age <= maxAge;
+            return calculateAge(user.date_of_birth) >= minAge && calculateAge(user.date_of_birth) <= maxAge;
         }
         return false;
     };
     console.log(filteredUsers)
 
-    return (
-        <div className='w-[1088.97px] bg-[#160404] h-[936px]'>
-            <div className='flex justify-center mt-[12vh] mr-[200px] z-10'>
-                {filteredUsers.map((user, index) => (
-                    <TinderCard
-                        className='absolute'
-                        key={`${user.name}_${index}`}
-                        ref={(ref) => (cardRefs.current[index] = ref)}
-                        preventSwipe={["up", "down"]}
-                    >
-                        <div className='relative w-[620px] p-[20px] max-w-[85vw] h-[620px] rounded-4xl bg-cover bg-center'>
-                            <button
-                                onClick={() => openPopup(user)}>
-                                <p className='font-semibold text-[32px] text-[#ffff] mt-[530px] flex-1 absolute'>{user.name}</p>
-                                <img src={user.image[0].url} alt={user.name} className='w-[85vw] h-[620px] rounded-3xl' />
-                            </button>
-
-                            <div className='flex flex-row absolute top-[550px] left-[220px]'>
-                                <button
-                                    className='mr-[20px] w-[80px] h-[80px] bg-white rounded-3xl'
-                                    onClick={() => handleCrossClick(user.user_id, index)}
-                                >
-                                    <div className='flex flex-row justify-center text-4xl text-gray-600'>
-                                        <ImCross />
-                                    </div>
-                                </button>
-                                <button
-                                    className='w-[80px] h-[80px] bg-white rounded-3xl'
-                                    onClick={() => handleHeartClick(user.user_id, index)}
-                                >
-                                    <div className='flex flex-row justify-center text-4xl text-red-500'>
-                                        <AiFillHeart />
-                                    </div>
-                                </button>
-                            </div>
+    const renderedCard = filteredUsers.map((user, index) => (
+        <TinderCard
+            className='absolute'
+            key={`${user.name}_${index}`}
+            ref={(ref) => (cardRefs.current[index] = ref)}
+            preventSwipe={["up", "down"]}
+        >
+            <div className='relative flex justify-center'>
+                <div
+                    className='h-[520px] w-[520px] 2xl:h-[620px] 2xl:w-[620px] rounded-[32px] absolute top-0 right-0' 
+                    style={{ background: 'linear-gradient(180deg, rgba(7, 9, 65, 0.00) 61.94%, #390741 100%)', }}
+                >
+                </div>
+                <img src={user.image[0].url} alt={user.name} className='h-[520px] w-[520px] 2xl:w-[620px] 2xl:h-[620px] rounded-[32px] bg-cover' />
+                {!matchPopupOpen && (<><div className='flex w-[520px] 2xl:w-[620px] pl-[40px] pr-[32px] justify-between absolute bottom-[50px]'>
+                    <section className='flex items-center'>
+                        <p className='font-semibold text-[32px] text-[#ffff] mr-[8px]'>{user.name.split(' ')[0]}</p>
+                        <p className='font-semibold text-[32px] text-gray-400 mr-[16px]'>{user.date_of_birth? calculateAge(user.date_of_birth) : "N/A"}</p>
+                        <div 
+                            className='w-[32px] h-[32px] rounded-full shadow-nav flex items-center justify-center'
+                            style={{ background: 'rgba(255, 255, 255, 0.20)' }}
+                            onClick={() => openPopup(user)} 
+                        >
+                            <img src={viewIcon} alt="view profile" className='w-[16px] h-[16px] hover:cursor-pointer'/>
                         </div>
-                    </TinderCard>
-                ))}
+                    </section>
+                    <section className='flex items-center'>
+                        <img src={leftArrow} alt="go left arrow" className='hover:cursor-pointer' />
+                        <img src={rightArrow} alt="go right arrow" className='hover:cursor-pointer' />
+                    </section>
+                </div>
+                <div className='flex absolute bottom-[-35px]'>
+                    <button
+                        className='mr-[24px] w-[80px] h-[80px] bg-white rounded-3xl flex justify-center items-center text-gray-600 text-3xl'
+                        onClick={() => handleCrossClick(user.user_id, index)}
+                    > 
+                        <ImCross />
+                    </button>
+                    <button
+                        className='w-[80px] h-[80px] bg-white rounded-3xl flex justify-center items-center text-red-500 text-4xl'
+                        onClick={() => handleHeartClick(user.user_id, index)}
+                    >
+                        <AiFillHeart />
+                    </button>
+                </div></>)}
+                {matchPopupOpen && (
+                    <div className="z-10">
+                        <div className='flex flex-col h-[240px] justify-between items-center absolute top-[280px] right-[160px]'>
+                            <img src={merryMatch} alt="merry match"/>
+                            <button className='px-[24px] py-[12px] bg-red-100 text-red-600 font-bold rounded-full'>Start Conversation</button>
+                            {/* เพิ่ม onclick ไปที่แชทของคนที่แมทช์ */}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </TinderCard>
+    ))
+
+    return (
+        <div className='w-[1124px] bg-[#160404] relative overflow-hidden'>
+            <div className='flex justify-center mt-[20vh] z-10 w-[904px]'>{renderedCard}</div>
+            <div className='w-[215px] px-[20px] flex justify-between absolute top-[93vh] right-[562px]'>
+                <p className='text-gray-700 '>Merry limit today</p>
+                <p className='text-red-400'>{`${merryLimit}/${packageLimit}`}</p>
             </div>
 
+            {/* เหลือทำ pop up เวลากดดูโปรไฟล์ */}
             {isPopupOpen && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-70 flex justify-center items-center">
+                <div className="z-10 fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-60 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-xl flex flex-row">
                         {selectedUser && (
                             <>
@@ -323,23 +366,19 @@ const MatchCard = () => {
                 </div>
             )}
 
-            <div>
-                <button onClick={() => checkPopup(user.user_id)}>Like</button>
-                {matchPopupOpen && <MatchPopup userData={matchUserData} onClose={closeMatchPopup} />}
-            </div>
+            
 
 
 
-            <section className="bg-white p-4 shadow ml-[869px] mt-[-103.5px] h-[936px] w-[220px]">
-                <h2 className="text-xl font-semibold mt-[60px]">Filter Profiles</h2>
-                <div className='mt-[40px]'>
-                    <p>Gender you are interested in</p>
-                </div>
+            <section className="bg-white pl-[13px] pr-[16px] h-screen w-[220px] pt-[90px] absolute top-0 right-0 text-purple-800">
+                <h2 className="text-[24px] font-bold mt-[60px]">Filter Profiles</h2>
+                <p className='mt-[16px] text-[18px] font-semibold'>Sex you interest</p>
+
                 <article className='flex flex-col'>
-                    <div className='flex flex-row mt-[30px]'>
+                    <div className='flex flex-row mt-[16px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isMaleSelected}
                             onChange={() => {
                                 setIsMaleSelected(!isMaleSelected);
@@ -352,7 +391,7 @@ const MatchCard = () => {
                     <div className='flex flex-row mt-[12px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isFemaleSelected}
                             onChange={() => {
                                 setIsFemaleSelected(!isFemaleSelected);
@@ -365,7 +404,7 @@ const MatchCard = () => {
                     <div className='flex flex-row mt-[12px]'>
                         <input
                             type="checkbox"
-                            className='text-[#000000] text-[24px]'
+                            className='text-[#000000] text-[24px] mr-[12px]'
                             checked={isDefaultSelected}
                             onChange={() => {
                                 setIsDefaultSelected(!isDefaultSelected);
@@ -377,8 +416,8 @@ const MatchCard = () => {
                     </div>
                 </article>
 
-                <article className='mt-[50px] text-center'>
-                    <label htmlFor="minAgeRange">Age Range</label>
+                <article className='mt-[50px]'>
+                    <label htmlFor="minAgeRange" className='font-semibold text-[18px]'>Age Range</label>
                     <input
                         type="range"
                         id="minAgeRange"
@@ -390,7 +429,7 @@ const MatchCard = () => {
                         onChange={handleMinAgeChange}
                         className='w-[188px]'
                     />
-                    <p>Min Age: {minAge}</p>
+                    <p className='text-center'>Min Age: {minAge}</p>
 
                     <label htmlFor="maxAgeRange"></label>
                     <input
@@ -404,31 +443,24 @@ const MatchCard = () => {
                         onChange={handleMaxAgeChange}
                         className='w-[188px]'
                     />
-                    <p>Max Age: {maxAge}</p>
+                    <p className='text-center'>Max Age: {maxAge}</p>
                 </article>
 
-                <div className='mt-[120px]'>
-                    <button className='text-white px-4 py-2 rounded bg-red-400' onClick={handleSearchClick}>
+
+                <div className='mt-[140px] flex justify-center font-bold'>
+                    <button className='text-red-500 px-[24px] py-[12px] rounded-full' onClick={handleClearClick}>
+                        Clear
+                    </button>
+                    <button className='text-white px-[24px] py-[12px] rounded-full bg-red-500' onClick={handleSearchClick}>
                         Search
                     </button>
                 </div>
+
+
+
             </section>
         </div>
-
-
-
     );
-
 }
 
 export default MatchCard;
-
-
-
-
-
-
-
-
-
-

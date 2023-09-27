@@ -54,19 +54,16 @@ userRouter.get("/unmatchlist/:user_id", async (req, res) => {
         const { user_id } = req.params;
 
         const result = await pool.query(
-            `SELECT users.user_id, users.sex, users.name, users.age, users.email, users.city, users.location, users.sex_identities, 
+            `SELECT users.user_id, users.sex, users.name, users.age, users.date_of_birth, users.email, users.city, users.location, users.sex_identities, 
             users.sexual_preferences,users.racial_preferences, users.meeting_interests, profile_images.image, users.about_me
             FROM users
             INNER JOIN profile_images ON users.user_id = profile_images.user_id
             LEFT JOIN match_users ON
               (users.user_id = match_users.user_id_1 AND $1 = match_users.user_id_2) OR
               (users.user_id = match_users.user_id_2 AND $1 = match_users.user_id_1)
-            WHERE match_users.user_id_1 IS NULL OR match_users.user_id_2 IS NULL AND users.user_id != $1
-
+            WHERE (match_users.user_id_1 IS NULL OR match_users.user_id_2 IS NULL) AND users.user_id != $1
             `,
             [user_id]
-
-
         );
 
         res.json({

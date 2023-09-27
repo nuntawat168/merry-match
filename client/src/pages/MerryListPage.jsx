@@ -2,8 +2,27 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import MatchLists from "../components/MatchLists";
 import { MatchListsProvider } from "../contexts/matchListsContext";
+import { fetchMerryLimit } from "../components/FetchMerryLimit";
+import { useState, useEffect } from "react";
 
 function MerryListPage() {
+  const [ merryLimit, setMerryLimit ] = useState(null);
+  const [ packageLimit, setPackageLimit ] = useState(null);
+
+  // fetch merry limit
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const { userPackageLimit, userMerryLimit } = await fetchMerryLimit();
+            setPackageLimit(userPackageLimit);
+            setMerryLimit(userMerryLimit);
+        } catch(error) {
+            console.log('Error fetching data:', error)
+        }};
+
+    fetchData();
+  }, [merryLimit]);
+
   return (
     <MatchListsProvider>
       <Navbar />
@@ -21,7 +40,7 @@ function MerryListPage() {
               <div className="px-[24px]">
                 <div className="text-[16px] flex">
                   <p className="text-gray-700 mr-[10px]">Merry limit today</p>
-                  <p className="text-red-400">2/20</p>
+                  <p className="text-red-400">{`${merryLimit}/${packageLimit}`}</p>
                 </div>
                 <p className="text-end text-gray-600 text-[12px]">
                   Reset in 12h...
