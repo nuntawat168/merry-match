@@ -6,7 +6,6 @@ import jwtDecode from "jwt-decode";
 import merryHeart from "../assets/icon/merry.png";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSocket } from "../contexts/socketContext";
-import { useNavigate } from "react-router-dom";
 import { useMatch } from "../contexts/matchContext";
 
 const DiscoverSideBar = () => {
@@ -72,6 +71,7 @@ const DiscoverSideBar = () => {
                 `http://localhost:4000/user/matchlist/${user_id}`
             );
             return response.data.data;
+
         } catch (error) {
             console.error("Error fetching data:", error);
             throw error;
@@ -93,8 +93,21 @@ const DiscoverSideBar = () => {
         fetchData();
     }, []);
 
+    const renderedChat = conversations.map(chat => {
+        console.log(chat)
+        return (
+            <div key={chat.name} className='flex py-[16px] px-[12px] hover:cursor-pointer' onClick={() => handleStartChat(chat)}>
+                <img src={chat.image[0].url} alt={`Profile photo of ${chat.name.split(' ')[0]}`} className='bg w-[60px] h-[60px] rounded-full mr-[12px]' />
+                <div className='flex flex-col justify-center'>
+                    <p className='text-[16px] text-gray-900'>{chat.name.split(' ')[0]}</p>
+                    {/* <p className='text-[14px] text-gray-700'>{chat.msg}</p> */}
+                </div>
+            </div>
+        )
+    })
+
     return (
-        <div className="h-[936px] bg-[#ffff] w-[316px] flex flex-col justify-between">
+        <div className={location.pathname === "/match" ? 'pt-[90px] bg-white w-[316px] flex flex-col' : 'bg-white w-[316px] flex flex-col'}>
             <button
                 onClick={() => {
                     setContentToRender("Matching");
@@ -160,7 +173,7 @@ const DiscoverSideBar = () => {
                     </button>
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <p className="text-left ml-[20px] font-bold text-[24px]">
                     Chat with Merry Match
                 </p>
@@ -183,7 +196,13 @@ const DiscoverSideBar = () => {
                         ))}
                     </ul>
                 </div>
-            </div>
+            </div> */}
+            <section className='px-[16px] overflow-y-auto'>
+                <p className='text-left font-bold text-[24px] text-gray-900 mb-[16px] mt-[18px]'>
+                    Chat with Merry Match
+                </p>
+                <div>{renderedChat}</div>
+            </section>
         </div>
     );
 };

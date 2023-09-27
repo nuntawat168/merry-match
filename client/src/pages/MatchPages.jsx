@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 import Chat from "./Chat";
 import { MatchProvider, useMatch } from "../contexts/matchContext";
 import { useSocket } from "../contexts/socketContext";
-// import { SocketProvider } from "./contexts/socketContext";
 import { SocketProvider } from "../contexts/socketContext";
 
 const MatchPages = () => {
