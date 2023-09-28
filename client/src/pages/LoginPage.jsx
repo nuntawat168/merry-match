@@ -32,6 +32,7 @@ function LoginPage() {
         description: errorMessage,
         status: "error",
         isClosable: true,
+        position: "top"
       });
     }
   };

@@ -17,6 +17,7 @@ import {
   AlertDialogOverlay,
   AlertDialogCloseButton,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 
 function UserComplaintPage() {
@@ -26,6 +27,7 @@ function UserComplaintPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const navigate = useNavigate();
+  const toast = useToast();
   const initialValues = {
     issue: "",
     description: "",
@@ -186,10 +188,23 @@ function UserComplaintPage() {
                       type="submit"
                       className="py-[12px] mb-[15px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
                       ref={cancelRef}
-                      onClick={() => navigate("/match")}
+                      onClick={() => {
+                        onClose();
+                        toast({
+                          title: "Complaint created successfully!",
+                          status: "success",
+                          duration: 3000,
+                          position: "top",
+                          isClosable: true,
+                        });
+                        setTimeout(() => {
+                          navigate("/match");
+                        }, 500);
+                      }}
                     >
                       Yes, I do.
                     </button>
+
                     <button
                       className="ml-4 mb-[15px] py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
                       ref={cancelRef}
