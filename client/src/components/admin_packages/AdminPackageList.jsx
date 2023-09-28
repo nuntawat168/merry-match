@@ -10,6 +10,7 @@ import { Button } from "@chakra-ui/react";
 import PreviewImage from "../PreviewImage";
 import { Formik } from "formik";
 import moment from "moment";
+import usePackages from "../../hooks/usePackages";
 
 import { useDisclosure } from "@chakra-ui/react";
 import {
@@ -22,7 +23,7 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 
-const AdminPackageDetail = () => {
+const AdminPackageList = () => {
   const [dataAgain, setDataAgain] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -30,6 +31,7 @@ const AdminPackageDetail = () => {
   const [packageIdToDelete, setPackageIdToDelete] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const { createPackage, updatePackage, deletePackage } = usePackages();
 
   const [dragItem, setDragItem] = useState([{}]);
 
@@ -76,11 +78,16 @@ const AdminPackageDetail = () => {
     e.preventDefault();
   };
 
-  const handleOnDrop = (e, item) => {
+  const handleOnDrop = (e, dropItem) => {
     const newDataAgain = [...dataAgain];
-    newDataAgain.splice(dataAgain.indexOf(dragItem), 1, item);
-    newDataAgain.splice(dataAgain.indexOf(item), 1, dragItem);
+    newDataAgain.splice(dataAgain.indexOf(dragItem), 1);
+    newDataAgain.splice(dataAgain.indexOf(dropItem), 0, dragItem);
     setDataAgain(newDataAgain);
+  };
+
+  const handleClick = (packageId) => {
+    setPackageIdToDelete(packageId);
+    onOpen();
   };
 
   return (
@@ -133,10 +140,6 @@ const AdminPackageDetail = () => {
             </div>
             {/* normal-paragraph 1 */}
             {dataAgain.map((e) => {
-              const handleClick = (packageId) => {
-                setPackageIdToDelete(packageId);
-                onOpen();
-              };
               return (
                 <div
                   key={e.package_id}
@@ -249,4 +252,4 @@ const AdminPackageDetail = () => {
   );
 };
 
-export default AdminPackageDetail;
+export default AdminPackageList;

@@ -36,10 +36,10 @@ const PackageDetails = (props) => {
                   onMouseUp={(e) =>
                     e.target.parentNode.setAttribute("draggable", "false")
                   }
-                  onDrop={(e) => {
-                    arrayHelpers.swap(
-                      field.value.indexOf(item),
-                      field.value.indexOf(dragItem)
+                  onDrop={() => {
+                    arrayHelpers.move(
+                      field.value.indexOf(dragItem),
+                      field.value.indexOf(item)
                     );
                   }}
                   onDragOver={(e) => onDragOver(e)}
