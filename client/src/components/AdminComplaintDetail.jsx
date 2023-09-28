@@ -167,6 +167,66 @@ const AdminComplaintDetail = () => {
                 </div>
               </div>
             ) : null}
+              <AlertDialog
+                motionPreset="slideInBottom"
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+                isOpen={isOpen}
+                isCentered
+              >
+                <AlertDialogOverlay />
+                <AlertDialogContent borderRadius="3xl" maxW="528px">
+                  <AlertDialogHeader fontSize={20}>
+                    Complaint created successfully!
+                  </AlertDialogHeader>
+                  <AlertDialogCloseButton
+                    color="gray.500"
+                    marginX={2}
+                    marginY={2}
+                  />
+                  <Divider marginBottom={5} borderColor="gray.300"></Divider>
+                  <AlertDialogBody
+                    fontSize={16}
+                    color="gray.600"
+                    marginBottom="10px"
+                  >
+                    Do you want to go back to matching page?
+                  </AlertDialogBody>
+                  <AlertDialogFooter justifyContent="flex-start">
+                    <button
+                      type="submit"
+                      className="py-[12px] mb-[15px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
+                      ref={cancelRef}
+                      onClick={() => {
+                        onClose();
+                        toast({
+                          title: "Complaint created successfully!",
+                          status: "success",
+                          duration: 3000,
+                          position: "top",
+                          isClosable: true,
+                        });
+                        setTimeout(() => {
+                          navigate("/match");
+                        }, 500);
+                      }}
+                    >
+                      Yes, I do.
+                    </button>
+
+                    <button
+                      className="ml-4 mb-[15px] py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
+                      ref={cancelRef}
+                      onClick={() => {
+                        onClose();
+                        window.location.reload();
+                      }}
+                    >
+                      No, I want to make more complaint.
+                    </button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
           </div>
         </div>
       </section>
