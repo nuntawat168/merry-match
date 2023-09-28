@@ -104,7 +104,6 @@ import axios from "axios"; // Import Axios
 import { Link } from "react-router-dom";
 import search from "../assets/icon/vector.svg";
 import { Select } from "@chakra-ui/react";
-import { MdArrowDropDown } from "react-icons/md";
 
 const AdminComplaintList = () => {
   const [selectedColor, setSelectedColor] = useState("");
@@ -177,28 +176,7 @@ const AdminComplaintList = () => {
               src={search}
             />
           </button>
-
           <Select
-            color={selectedStatus === "All status" ? "gray.200" : "black"}
-            icon={
-              <MdArrowDropDown
-                className={`${
-                  selectedStatus === "All status"
-                    ? "text-gray-400"
-                    : selectedStatus === "option1"
-                    ? "text-beige-700"
-                    : selectedStatus === "option2"
-                    ? "text-yellow-500"
-                    : selectedStatus === "option3"
-                    ? "text-green-500"
-                    : selectedStatus === "option4"
-                    ? "text-gray-700"
-                    : " bg-gray-400 text-gray-400"
-                }`}
-              />
-            }
-            value={selectedStatus}
-            onChange={handleSelectChange}
             className={`${
               selectedColor === "New"
                 ? "text-beige-700"
@@ -212,6 +190,7 @@ const AdminComplaintList = () => {
             } `}
             size="lg"
             placeholder="All status"
+            onChange={(e) => setSelectedColor(e.target.value)}
           >
             <option
               className="w-[46px] h-[26px] border rounded-lg bg-beige-100 text-beige-700  "

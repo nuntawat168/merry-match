@@ -7,11 +7,12 @@ import locationIcon from "../assets/icon/location.svg";
 import chatIcon from "../assets/icon/chat.svg";
 import MerryMatchStatus from "../assets/icon/match.svg";
 import NotMatchStatus from "../assets/icon/not match.png";
+import { Tooltip } from "@chakra-ui/react";
 
 function MatchLists() {
   const { matchLists } = useMatchLists();
   const { calculateAge, capitalize } = useTextConvert();
-  
+
   const renderedMatch = matchLists.map((user, index) => {
     return (
       <div
@@ -75,17 +76,24 @@ function MatchLists() {
             <img src={NotMatchStatus} alt="Not Match" className="mb-[24px]" />
           )}
           <div className="flex justify-end w-[176px]">
-            <div
-              className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl hover:cursor-pointer ${
-                user.match_status === "match" ? "" : "hidden"
-              }`}
+            <Tooltip
+              bg="gray.400"
+              label="Go to chat"
+              aria-label="A tooltip"
+              borderRadius="md"
             >
-              <img
-                src={chatIcon}
-                alt="message icon"
-                className="w-[24px] h-[24px]"
-              />
-            </div>
+              <div
+                className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl hover:cursor-pointer ${
+                  user.match_status === "match" ? "" : "hidden"
+                }`}
+              >
+                <img
+                  src={chatIcon}
+                  alt="message icon"
+                  className="w-[24px] h-[24px]"
+                />
+              </div>
+            </Tooltip>
             <ViewProfileButton user={user} />
             <UnmatchButton user_response_id={user.user_response} />
           </div>

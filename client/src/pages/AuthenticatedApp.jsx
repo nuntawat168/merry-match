@@ -18,6 +18,7 @@ import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
 
 import PaymentPage1 from "../pages/PaymentPage1";
 import UserMerryCheck from "./UserMerryCheck";
+import SuccessPage from "./SuccessPage";
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();
@@ -42,6 +43,7 @@ function AuthenticatedApp() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/payments" element={<PaymentPage1 />} />
             <Route path="/edit" element={<UserMerryCheck />} />
+            <Route path="/success" element={<SuccessPage />} />
           </>
         )}
 
