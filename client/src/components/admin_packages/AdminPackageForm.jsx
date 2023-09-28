@@ -18,6 +18,7 @@ import {
   AlertDialogOverlay,
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
+import jwtDecode from "jwt-decode";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -25,6 +26,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const AdminPackageForm = ({ button, title, initialValues, remove }) => {
   const { createPackage, updatePackage, deletePackage } = usePackages();
+  const token = localStorage.getItem("token");
+  const admin = jwtDecode(token);
+  const admin_id = admin.id;
 
   const params = useParams();
   const navigate = useNavigate();
@@ -36,17 +40,15 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
     package_price: Yup.number().required("Required"),
     package_limit: Yup.number().required("Required"),
     package_icon: Yup.mixed().required("Required"),
-    package_details: Yup.array()
-      .of(
-        Yup.object().shape({
-          detail: Yup.string().required("Required"),
-        })
-      )
-      .required("Required")
-      .min(1, "At least 1 detail"),
+    package_details: Yup.array().of(
+      Yup.object().shape({
+        detail: Yup.string().required("Required"),
+      })
+    ),
   });
 
   const onSubmit = async (values, { resetForm }) => {
+    values.created_by = admin_id;
     alert(JSON.stringify(values, null, 2));
     console.log("Formik value package icon", formik.values.package_icon);
 
