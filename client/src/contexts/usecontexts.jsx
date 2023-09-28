@@ -9,6 +9,10 @@ const ContextProvider = ({ children }) => {
 
   const [dataAdmin, setDataAdmin] = useState([]);
   const [savePackage, setSavePackage] = useState([]);
+  const [numberCard, setNumberCard] = useState("");
+  const [nameCard, setNameCard] = useState("");
+  const [dateExp, setDateExp] = useState("");
+  const [cvc, setCvc] = useState("");
 
   const fetchData = async () => {
     try {
@@ -31,6 +35,14 @@ const ContextProvider = ({ children }) => {
         setDataAdmin,
         savePackage,
         setSavePackage,
+        numberCard,
+        setNumberCard,
+        nameCard,
+        setNameCard,
+        dateExp,
+        setDateExp,
+        cvc,
+        setCvc,
       }}
     >
       {children}
