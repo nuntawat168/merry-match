@@ -136,18 +136,31 @@ const AdminComplaintList = () => {
 
   const markComplaintAsPending = async (complaintId) => {
     try {
-      await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
-        status: "Pending",
-      });
-
-      // Update the local state to reflect the change in status
-      setComplaints((prevComplaints) =>
-        prevComplaints.map((complaint) =>
-          complaint.complaint_id === complaintId
-            ? { ...complaint, status: "Pending" }
-            : complaint
-        )
+      // Fetch the complaint with the given complaintId
+      const response = await axios.get(
+        `http://localhost:4000/complaint/${complaintId}`
       );
+      const complaint = response.data;
+
+      // Check if the current status is "New"
+      if (complaint.status === "New") {
+        // Update the status to "Pending"
+        await axios.put(
+          `http://localhost:4000/complaint/${complaintId}/status`,
+          {
+            status: "Pending",
+          }
+        );
+
+        // Update the local state to reflect the change in status
+        setComplaints((prevComplaints) =>
+          prevComplaints.map((prevComplaint) =>
+            prevComplaint.complaint_id === complaintId
+              ? { ...prevComplaint, status: "Pending" }
+              : prevComplaint
+          )
+        );
+      }
     } catch (error) {
       console.error("Error updating complaint status:", error);
     }
@@ -250,7 +263,9 @@ const AdminComplaintList = () => {
                     ? complaint.description.substring(0, 50) + "..."
                     : complaint.description}
                 </span>
-                <span>{complaint.date_submitted}</span>
+                <span>
+                  {new Date(complaint.date_submitted).toLocaleString().split(',')[0]}
+                </span>
                 <span
                   className={`${
                     complaint.status === "New"
