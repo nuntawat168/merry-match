@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { PaymentElement, useStripe, useElements, } from '@stripe/react-stripe-js';
-import axios from 'axios';
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -8,21 +7,6 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
-
-  // const sendPaymentDataToServer = async (paymentData) => {
-  //   try{
-  //     const response = await axios.post('http://localhost:4000/payment/160', paymentData);
-  //     console.log("console payment data: ", paymentData)
-
-  //     if (response.status === 201) {
-  //       console.log('ส่งข้อมูลไปหลังบ้านได้แล้วนะ');
-  //     } else {
-  //       console.error('ส่งช้อมูลไปไม่ได้ ทำยังไงต่อกันดี');
-  //     }
-  //   } catch(error) {
-  //     console.error('An error occurred while sending payment data:', error);
-  //   }
-  // }
 
   useEffect(() => {
     if (!stripe) {
@@ -39,11 +23,10 @@ export default function CheckoutForm() {
     }
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      console.log('payment intent', paymentIntent); //ก้อนนี้คือข้อมูล 
+      console.log('payment intent', paymentIntent); 
       switch (paymentIntent.status) {
         case 'succeeded':
           setMessage('Payment succeeded!');
-          // เขียนจากหน้าบ้านเพื่อ post เข้า database
           break;
         case 'processing':
           setMessage('Your payment is processing.');

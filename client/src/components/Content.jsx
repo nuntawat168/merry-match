@@ -109,7 +109,7 @@ const Content = () => {
                     </div>
 
                     <div className="flex justify-center">
-                      <Link to="/payment">
+                      <Link to="/im">
                         <button
                           onClick={() => setSavePackage(index)}
                           className="relative flex justify-center pt-3 overflow-hidden transition duration-300  ease-out group   w-[277px] h-[48px] border font-bold border-red-100 rounded-full p-2 font-nunito text-[16px] active:bg-red-300   bg-red-100 text-red-600 shadow-red-100 shadow-sm-sm-sm-sm hover:text-white hover:bg-white  focus:ring focus:ring-red-300 focus:duration-200"

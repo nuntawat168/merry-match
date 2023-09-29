@@ -5,15 +5,15 @@ import stripe from "stripe";
 const stripePaymentRouter = Router();
 const stripeClient = stripe('sk_test_51NuxGCAr6dsWC1udD56EvBGibKJUOAKNeZS7YUt7xnzri5Na8wwhdghcwzq65xTQfHaC2KKeuiYPr60SI50gUYeS00e06OT16E');
 
-stripePaymentRouter.get("/", async (req, res) => {
-  try {
-    const { user_id } = req.params;
-    return res.send('น้องอ๋องแปดน่ารักที่สุดในโลก')
-    } catch (error) {
-    console.error("ไม่เข้าตั้งแต่ get เลยอิ่ม:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการดำเนินการ" });
-    }
-});
+// stripePaymentRouter.get("/", async (req, res) => {
+//   try {
+//     const { user_id } = req.params;
+//     return res.send('น้องอ๋องแปดน่ารักที่สุดในโลก')
+//     } catch (error) {
+//     console.error("ไม่เข้าตั้งแต่ get เลยอิ่ม:", error);
+//     res.status(500).json({ error: "เกิดข้อผิดพลาดในการดำเนินการ" });
+//     }
+// });
 
 const calculateOrderAmount = (items) => {
   return 50000;
@@ -44,17 +44,19 @@ stripePaymentRouter.post("/:user_id", async (req, res) => {
   console.log('แกะออกมาได้', paymentData);
   const payment_intent = await stripeClient.paymentIntents.retrieve(paymentData);
   console.log("นี่คือ payment intent", payment_intent);
+  const user_id = req.body.state.id;
+  console.log("user id คือ", user_id);
   
-  // Extract data from payment intent
-  // const lastFourDigits = paymentIntent.payment_method_details.card.last4;
-  // const expirationDate = paymentIntent.payment_method_details.card.exp_month + '/' + paymentIntent.payment_method_details.card.exp_year;
   const status = payment_intent.status;
   const payment_id = payment_intent.id;
+  const currentDate = new Date(); 
+  const endDate = new Date(currentDate);
+  endDate.setDate(endDate.getDate() + 30); // calculate end_date
 
     try {
         const userPackagePaid = await pool.query(
-            `INSERT INTO transaction (status, payment_id) VALUES ($1, $2)`,
-            [ status, payment_id]
+            `INSERT INTO transaction (status, payment_id, start_date, end_date, user_id) VALUES ($1, $2, $3, $4, $5)`,
+            [ status, payment_id, currentDate, endDate, user_id]
         );
 
         if (userPackagePaid.rowCount === 1) {
