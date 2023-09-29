@@ -44,7 +44,6 @@ matchListRouter.get("/:user_id", async (req, res) => {
     );
 
     const matchData = [...matchedUsers, ...waitingUsers];
-    console.log(matchData);
 
     res.json({
       matchData,

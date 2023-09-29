@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import Success from "../components/Success";
+// import Success from "../components/Success";
 
 const SuccessPage = () => {
   return (
