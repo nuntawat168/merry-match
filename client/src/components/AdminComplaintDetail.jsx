@@ -20,6 +20,7 @@ const AdminComplaintDetail = () => {
   const [complaint, setComplaint] = useState({});
   const { complaintId } = useParams();
   const [statusUpdated, setStatusUpdated] = useState(false);
+  const [dialogType, setDialogType] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
@@ -74,6 +75,17 @@ const AdminComplaintDetail = () => {
     }
   };
 
+  const handleCancel = async (complaintId) => {
+
+    setDialogType("Cancel");
+    onOpen();
+  };
+
+  const handleResolved = async (complaintId) => {
+    setDialogType("Resolve");
+    onOpen();
+  };
+
   useEffect(() => {
     if (statusUpdated) {
       window.location.reload();
@@ -114,7 +126,7 @@ const AdminComplaintDetail = () => {
             <button
               type="button"
               className="flex flex-col justify-center px-[24px] py-[12px] mr-4 rounded-full bg-red-100 text-red-500 drop-shadow-md hover:bg-red-600 hover:text-white"
-              onClick={() => markComplaintAsCancel(complaint.complaint_id)}
+              onClick={() => handleCancel()}
             >
               Cancel Complaint
             </button>
@@ -124,7 +136,7 @@ const AdminComplaintDetail = () => {
             <button
               type="submit"
               className="flex flex-col justify-center px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
-              onClick={() => markComplaintAsResolved(complaint.complaint_id)}
+              onClick={() => handleResolved()}
             >
               Resolve Complaint
             </button>
@@ -151,8 +163,8 @@ const AdminComplaintDetail = () => {
             <div className="text-[16px] text-black">
               {complaint.date_submitted
                 ? new Date(complaint.date_submitted)
-                    .toLocaleString()
-                    .split(",")[0]
+                .toLocaleDateString("en-GB")
+                .split(",")[0]
                 : ""}
             </div>
             {complaint.status === "Cancel" ||
@@ -162,74 +174,103 @@ const AdminComplaintDetail = () => {
                 <span className="mb-[8px]">{complaint.status} date</span>
                 <div className="text-[16px] text-black">
                   {complaint.updated_at
-                    ? new Date(complaint.updated_at).toLocaleString()
+                    ? new Date(complaint.updated_at).toLocaleString("en-GB", {hour12: true})
                     : ""}
                 </div>
               </div>
             ) : null}
-              <AlertDialog
-                motionPreset="slideInBottom"
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
-                isCentered
-              >
-                <AlertDialogOverlay />
-                <AlertDialogContent borderRadius="3xl" maxW="528px">
-                  <AlertDialogHeader fontSize={20}>
-                    Complaint created successfully!
-                  </AlertDialogHeader>
-                  <AlertDialogCloseButton
-                    color="gray.500"
-                    marginX={2}
-                    marginY={2}
-                  />
-                  <Divider marginBottom={5} borderColor="gray.300"></Divider>
-                  <AlertDialogBody
-                    fontSize={16}
-                    color="gray.600"
-                    marginBottom="10px"
-                  >
-                    Do you want to go back to matching page?
-                  </AlertDialogBody>
-                  <AlertDialogFooter justifyContent="flex-start">
-                    <button
-                      type="submit"
-                      className="py-[12px] mb-[15px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
-                      ref={cancelRef}
-                      onClick={() => {
-                        onClose();
-                        toast({
-                          title: "Complaint created successfully!",
-                          status: "success",
-                          duration: 3000,
-                          position: "top",
-                          isClosable: true,
-                        });
-                        setTimeout(() => {
-                          navigate("/match");
-                        }, 500);
-                      }}
-                    >
-                      Yes, I do.
-                    </button>
-
-                    <button
-                      className="ml-4 mb-[15px] py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
-                      ref={cancelRef}
-                      onClick={() => {
-                        onClose();
-                        window.location.reload();
-                      }}
-                    >
-                      No, I want to make more complaint.
-                    </button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
           </div>
         </div>
       </section>
+      {dialogType === "Cancel" && (
+        <AlertDialog
+          motionPreset="slideInBottom"
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          isOpen={isOpen}
+          isCentered
+        >
+          <AlertDialogOverlay />
+          <AlertDialogContent borderRadius="3xl" maxW="528px">
+            <AlertDialogHeader fontSize={20}>
+              Cancel Complaint
+            </AlertDialogHeader>
+            <AlertDialogCloseButton color="gray.500" marginX={2} marginY={2} />
+            <Divider marginBottom={5} borderColor="gray.300"></Divider>
+            <AlertDialogBody fontSize={16} color="gray.600" marginBottom="10px">
+              Do you sure to cancel this complaint?
+            </AlertDialogBody>
+            <AlertDialogFooter justifyContent="flex-start">
+              <button
+                type="submit"
+                className="py-[12px] mb-[15px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
+                ref={cancelRef}
+                onClick={() => {
+                  markComplaintAsCancel(complaint.complaint_id);
+                  onClose();
+                }}
+              >
+                Yes, cancel this complaint
+              </button>
+
+              <button
+                className="ml-4 mb-[15px] py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
+                ref={cancelRef}
+                onClick={() => {
+                  onClose();
+                }}
+              >
+                No, give me more time
+              </button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {dialogType === "Resolve" && (
+        <AlertDialog
+          motionPreset="slideInBottom"
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          isOpen={isOpen}
+          isCentered
+        >
+          <AlertDialogOverlay />
+          <AlertDialogContent borderRadius="3xl" maxW="528px">
+            <AlertDialogHeader fontSize={20}>
+              Resolve Complaint
+            </AlertDialogHeader>
+            <AlertDialogCloseButton color="gray.500" marginX={2} marginY={2} />
+            <Divider marginBottom={5} borderColor="gray.300"></Divider>
+            <AlertDialogBody fontSize={16} color="gray.600" marginBottom="10px">
+              This complaint is resolved?
+            </AlertDialogBody>
+            <AlertDialogFooter justifyContent="flex-start">
+              <button
+                type="submit"
+                className="py-[12px] mb-[15px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
+                ref={cancelRef}
+                onClick={() => {
+                  markComplaintAsResolved(complaint.complaint_id);
+                  onClose();
+                }}
+              >
+                Yes, it has been resolved
+              </button>
+
+              <button
+                className="ml-4 mb-[15px] py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
+                ref={cancelRef}
+                onClick={() => {
+                  onClose();
+                }}
+              >
+                No, it's not
+              </button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };

@@ -134,29 +134,33 @@ const AdminComplaintList = () => {
     )
     .sort((a, b) => new Date(b.date_submitted) - new Date(a.date_submitted));
 
-    const markComplaintAsPending = async (complaintId) => {
-      try {
-        const response = await axios.get(`http://localhost:4000/complaint/${complaintId}`);
-        const complaint = response.data;
-    
-        if (complaint.status === "New") {
-          await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
+  const markComplaintAsPending = async (complaintId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/complaint/${complaintId}`
+      );
+      const complaint = response.data;
+
+      if (complaint.status === "New") {
+        await axios.put(
+          `http://localhost:4000/complaint/${complaintId}/status`,
+          {
             status: "Pending",
-          });
-    
-          setComplaints((prevComplaints) =>
-            prevComplaints.map((prevComplaint) =>
-              prevComplaint.complaint_id === complaintId
-                ? { ...prevComplaint, status: "Pending" }
-                : prevComplaint
-            )
-          );
-        }
-      } catch (error) {
-        console.error("Error updating complaint status:", error);
+          }
+        );
+
+        setComplaints((prevComplaints) =>
+          prevComplaints.map((prevComplaint) =>
+            prevComplaint.complaint_id === complaintId
+              ? { ...prevComplaint, status: "Pending" }
+              : prevComplaint
+          )
+        );
       }
-    };
-    
+    } catch (error) {
+      console.error("Error updating complaint status:", error);
+    }
+  };
 
   return (
     <div>
@@ -255,7 +259,13 @@ const AdminComplaintList = () => {
                     ? complaint.description.substring(0, 50) + "..."
                     : complaint.description}
                 </span>
-                <span>{complaint.date_submitted}</span>
+                <span>
+                  {
+                    new Date(complaint.date_submitted)
+                      .toLocaleDateString("en-GB")
+                      .split(",")[0]
+                  }
+                </span>
                 <span
                   className={`${
                     complaint.status === "New"

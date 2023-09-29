@@ -19,7 +19,6 @@ complaintRouter.post("/", async (req, res) => {
     const query =
       "INSERT INTO complaint (user_id, issue, description, date_submitted) VALUES ($1, $2, $3, $4) RETURNING *";
     const values = [user_id, issue, description, dateSubmitted];
-
     const result = await pool.query(query, values);
 
     if (result.rowCount === 1) {
