@@ -16,11 +16,12 @@ import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
 import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
 import StripePayment from "../components/StripePayment";
-import Restpage from "../components/Restpage";
+import PaymentSuccess from "../components/PaymentSuccess";
 
-import PaymentPage1 from "../pages/PaymentPage1";
-import UserMerryCheck from "./UserMerryCheck";
-import SuccessPage from "./SuccessPage";
+// ยังเอาไหมแบมลองเลือกอีกที
+// import PaymentPage1 from "../pages/PaymentPage1";
+// import UserMerryCheck from "./UserMerryCheck";
+// import SuccessPage from "./SuccessPage";
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();
@@ -38,16 +39,16 @@ function AuthenticatedApp() {
             <Route path="/packages" element={<PackagePage />} />
             <Route path="/match" element={<MatchPages />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="*" element={<MatchPages />} />
+            <Route path="/merry-list" element={<MerryListPage />} />
             <Route path="/logout" element={<LogoutTestPage />} />
             <Route path="/complaint" element={<UserComplaintPage />} />
+            <Route path="/payment" element={<StripePayment />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/" element={<LandingPage />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/im" element={<StripePayment />} />
-            <Route path="/rest" element={<Restpage />} />
-            <Route path="/payments" element={<PaymentPage1 />} />
+            <Route path="/chat" element={<Chat />} /> 
+            {/* <Route path="/payments" element={<PaymentPage1 />} />
             <Route path="/edit" element={<UserMerryCheck />} />
-            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/success" element={<SuccessPage />} /> */}
           </>
         )}
 

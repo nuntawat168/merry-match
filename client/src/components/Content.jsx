@@ -111,7 +111,7 @@ const Content = () => {
                           onClick={() => setSavePackage(index)}
                           
                         >
-                        <Link to="/payments">
+                        <Link to="/payment">
                           <span className="absolute bottom-1 flex items-center   justify-center duration-500 -translate-x-full group-hover:translate-x-0 ease">
                             <img
                               className=" left-0   transition-all duration-1000  -bottom-2 -translate-x-32 transform  group-hover:translate-x-10 ease  "

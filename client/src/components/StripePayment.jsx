@@ -7,9 +7,7 @@ import Navbar from "./Navbar";
 import packIcon from '../assets/icon/package.svg';
 import { UseGlobalContext } from '../contexts/usecontexts';
 
-const stripePromise = loadStripe(
-  'pk_test_51NuxGCAr6dsWC1udch1DGbzxKP9PdyRsE6FwRecNnPEDWMGtS99sD2T1dMqxf79UnDz92VvX4LJl88dS3gf4hr2E00GVcHSPBY'
-);
+const stripePromise = loadStripe('pk_test_51NuxGCAr6dsWC1udch1DGbzxKP9PdyRsE6FwRecNnPEDWMGtS99sD2T1dMqxf79UnDz92VvX4LJl88dS3gf4hr2E00GVcHSPBY');
 
 export default function StripePayment() {
   const [clientSecret, setClientSecret] = useState('');

@@ -1,9 +1,11 @@
 import { Router, query } from "express";
 import { pool } from "../utils/db.js";
 import stripe from "stripe";
+import dotenv from "dotenv";
 
 const stripePaymentRouter = Router();
-const stripeClient = stripe('sk_test_51NuxGCAr6dsWC1udD56EvBGibKJUOAKNeZS7YUt7xnzri5Na8wwhdghcwzq65xTQfHaC2KKeuiYPr60SI50gUYeS00e06OT16E');
+dotenv.config();
+const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 
 stripePaymentRouter.post("/create-payment-intent", async (req, res) => {
   const { price } = req.body
