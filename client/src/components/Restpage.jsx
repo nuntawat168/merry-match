@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { PaymentElement, useStripe, useElements, } from '@stripe/react-stripe-js';
+import { useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../contexts/authentication';
 
 function Restpage() {
-    // const stripe = useStripe();
+    const { state } = useAuth()
 
     const sendPaymentDataToServer = async (paymentData) => {
         try{   
-          const response = await axios.post('http://localhost:4000/payment/160', { paymentData });
-          console.log("console payment data: ", paymentData)
+          const response = await axios.post('http://localhost:4000/payment/160', { paymentData, state });
+          console.log("console payment data: ", paymentData)          
     
           if (response.status === 201) {
             console.log('ส่งข้อมูลไปหลังบ้านได้แล้วนะ');
@@ -20,12 +20,7 @@ function Restpage() {
         }
       }
     
-      useEffect(() => {
-        
-        // if (!stripe) {
-        //   return;
-        // }
-    
+      useEffect(() => {   
         const clientSecret = new URLSearchParams(window.location.search).get(
           'payment_intent'
         );
@@ -34,30 +29,10 @@ function Restpage() {
           return;
         }
         sendPaymentDataToServer(clientSecret);
-    
-        // stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-        //   console.log('payment intent', paymentIntent); //ก้อนนี้คือข้อมูล 
-        // //   switch (paymentIntent.status) {
-        // //     case 'succeeded':
-        // //       setMessage('Payment succeeded!');
-        // //       sendPaymentDataToServer(paymentIntent);
-        // //       // เขียนจากหน้าบ้านเพื่อ post เข้า database
-        // //       break;
-        // //     case 'processing':
-        // //       setMessage('Your payment is processing.');
-        // //       break;
-        // //     case 'requires_payment_method':
-        // //       setMessage('Your payment was not successful, please try again.');
-        // //       break;
-        // //     default:
-        // //       setMessage('Something went wrong.');
-        // //       break;
-        // //   }
-        // });
       }, []);
 
     return (
-        <div>Hiiiiiii</div>
+        <div>Hiiiiiii เดี๋ยวย้ายของแบมแบมมาใส่</div>
     )
 }
 

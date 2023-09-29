@@ -5,6 +5,7 @@ import axios from 'axios';
 import CheckoutForm from './CheckoutForm';
 import Navbar from "./Navbar";
 import packIcon from '../assets/icon/package.svg';
+import { UseGlobalContext } from '../contexts/usecontexts';
 
 const stripePromise = loadStripe(
   'pk_test_51NuxGCAr6dsWC1udch1DGbzxKP9PdyRsE6FwRecNnPEDWMGtS99sD2T1dMqxf79UnDz92VvX4LJl88dS3gf4hr2E00GVcHSPBY'
@@ -12,13 +13,11 @@ const stripePromise = loadStripe(
 
 export default function StripePayment() {
   const [clientSecret, setClientSecret] = useState('');
+  const {dataPackage, savePackage} = UseGlobalContext();
+
   const createPaymentIntent = async () => {
     const data = await axios.post(
-      'http://localhost:4000/payment/create-payment-intent',
-      {
-        code: 'rtx-4090',
-      }
-    );
+      'http://localhost:4000/payment/create-payment-intent', {price: dataPackage[savePackage].package_price});
     console.log(data.data);
     setClientSecret(data.data.clientSecret);
   };
@@ -59,8 +58,8 @@ export default function StripePayment() {
                         <p>Price (Monthly)</p>
                       </section>
                       <section className='py-[24px] border-t-[1px] border-gray-400 flex justify-between text-[20px] font-bold'>
-                        <p className='text-gray-900'>Premium</p>
-                        <p className='text-red-900'>THB 59.00</p>
+                        <p className='text-gray-900'>{dataPackage[savePackage].package_name}</p>
+                        <p className='text-red-900'>{`THB ${dataPackage[savePackage].package_price}.00`}</p>
                       </section>
                     </div>
                   </div>

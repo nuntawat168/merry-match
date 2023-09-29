@@ -107,11 +107,12 @@ const Content = () => {
 
                     <div className="flex justify-center">
                       <button
-                        className="group relative flex justify-center pt-3 overflow-hidden transition duration-600  ease-out  w-[277px] h-[48px] border font-bold border-red-100 rounded-full p-2 font-nunito text-[16px] active:bg-red-300   bg-red-100 text-red-600 hover:shadow-purple-200 shadow-red-100  hover:text-white hover:bg-red-200  focus:ring focus:ring-red-300 focus:duration-600"
-                        onClick={() => setSavePackage(index)}
-                      >
+                          className="group relative flex justify-center pt-3 overflow-hidden transition duration-600  ease-out  w-[277px] h-[48px] border font-bold border-red-100 rounded-full p-2 font-nunito text-[16px] active:bg-red-300   bg-red-100 text-red-600 hover:shadow-purple-200 shadow-red-100  hover:text-white hover:bg-red-200  focus:ring focus:ring-red-300 focus:duration-600"
+                          onClick={() => setSavePackage(index)}
+                          
+                        >
                         <Link to="/payments">
-                          <span className="absolute bottom-1 flex items-center justify-center duration-600 -translate-x-full group-hover:translate-x-0 ease">
+                          <span className="absolute bottom-1 flex items-center   justify-center duration-500 -translate-x-full group-hover:translate-x-0 ease">
                             <img
                               className=" left-0   transition-all duration-1000  -bottom-2 -translate-x-32 transform  group-hover:translate-x-10 ease  "
                               src={hearticon}
