@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../socket";
+import jwtDecode from "jwt-decode";
 
 const SocketContext = React.createContext();
 
 function SocketProvider(props) {
-  const [room, setRoom] = useState(0);
+  const [room, setRoom] = useState({});
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    socket.on("receiver-message", (newMessage) => {
-      console.log("From receiver-message", newMessage);
-      setMessages((messages) => [...messages, newMessage]);
-    });
-
-    return () => {
-      socket.off("receiver-message");
-    };
+    const token = localStorage.getItem("token");
+    const user = jwtDecode(token);
+    socket.emit("setup", user);
   }, []);
 
   return (

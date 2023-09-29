@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "../contexts/socketContext";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
+var compareRoom;
 
 function Chat(props) {
   const token = localStorage.getItem("token");
@@ -50,6 +51,27 @@ function Chat(props) {
       setReceiverId(room.client2_id);
     }
   }, [props.room]);
+
+  useEffect(() => {
+    socket.on("receiver-message", (newMessage) => {
+      // console.log("From receiver-message:", newMessage);
+      // console.log("Current Room:", compareRoom);
+      // console.log("messages ->", messages);
+
+      if (newMessage.sender_id == compareRoom.receiver_id) {
+        setMessages((messages) => [...messages, newMessage]);
+      }
+      // setMessages((messages) => [...messages, newMessage]);
+    });
+
+    return () => {
+      socket.off("receiver-message");
+    };
+  }, []);
+
+  useEffect(() => {
+    compareRoom = room;
+  }, [room]);
 
   function StartMatchingMsg() {
     {

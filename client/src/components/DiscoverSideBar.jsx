@@ -52,24 +52,23 @@ const DiscoverSideBar = () => {
   };
 
   const handleStartChat = async (conversationAndUserInfo) => {
-    const conversation = {
-      client1_id: conversationAndUserInfo.client1_id,
-      client2_id: conversationAndUserInfo.client2_id,
-      conversation_id: conversationAndUserInfo.conversation_id,
-      receiver_image: conversationAndUserInfo.image,
-      receiver_name: conversationAndUserInfo.name,
-      receiver_id: conversationAndUserInfo.user_id,
-    };
-
-    socket.emit("joinRoom", { conversation });
-    setRoom(conversation);
-    setContentToRender(`Chat-${conversation.conversation_id}`);
-
     try {
+      const conversation = {
+        client1_id: conversationAndUserInfo.client1_id,
+        client2_id: conversationAndUserInfo.client2_id,
+        conversation_id: conversationAndUserInfo.conversation_id,
+        receiver_image: conversationAndUserInfo.image,
+        receiver_name: conversationAndUserInfo.name,
+        receiver_id: conversationAndUserInfo.user_id,
+      };
+
+      // socket.emit("joinRoom", { conversation });
+      // console.log("User has been join to room ID:", conversation);
+      setRoom({ ...conversation });
+      setContentToRender(`Chat-${conversation.conversation_id}`);
       const response = await axios.get(
         `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
       );
-      console.log(response.data.data);
 
       setMessages(response.data.data);
     } catch (error) {

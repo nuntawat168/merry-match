@@ -56,8 +56,13 @@ async function init() {
   });
 
   io.on("connection", (socket) => {
+    socket.on("setup", (user) => {
+      socket.join(user.id);
+      console.log("User has been join to room ID:", socket.rooms);
+    });
+
     socket.on("joinRoom", ({ conversation }) => {
-      socket.leaveAll();
+      // socket.leaveAll();
       socket.join(conversation.conversation_id);
       console.log("Join Room ID:", conversation.conversation_id);
       console.log("All Room:", socket.rooms);
@@ -67,11 +72,10 @@ async function init() {
     });
 
     socket.on("send-message", (message) => {
-      console.log("send-message", message);
-      console.log("conversation_id:", message.conversation_id);
-      socket.broadcast
-        .to(message.conversation_id)
-        .emit("receiver-message", message);
+      // console.log("send-message", message);
+      // console.log("conversation_id:", message.conversation_id);
+
+      socket.to(message.receiver_id).emit("receiver-message", message);
     });
 
     socket.on("chat message", (message) => {
