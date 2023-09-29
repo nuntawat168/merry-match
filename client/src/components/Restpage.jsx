@@ -7,13 +7,11 @@ function Restpage() {
 
     const sendPaymentDataToServer = async (paymentData) => {
         try{   
-          const response = await axios.post('http://localhost:4000/payment/160', { paymentData, state });
-          console.log("console payment data: ", paymentData)          
-    
+          const response = await axios.post('http://localhost:4000/payment', { paymentData, state });   
           if (response.status === 201) {
-            console.log('ส่งข้อมูลไปหลังบ้านได้แล้วนะ');
+            console.log('Successfully send data');
           } else {
-            console.error('ส่งช้อมูลไปไม่ได้ ทำยังไงต่อกันดี');
+            console.error('Cannot send data');
           }
         } catch(error) {
           console.error('An error occurred while sending payment data:', error);
