@@ -15,6 +15,8 @@ import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
 import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
+import StripePayment from "../components/StripePayment";
+import Restpage from "../components/Restpage";
 
 function AuthenticatedApp() {
   const { userRole } = useAuth();
@@ -37,6 +39,8 @@ function AuthenticatedApp() {
             <Route path="/complaint" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/im" element={<StripePayment />} />
+            <Route path="/rest" element={<Restpage />} />
           </>
         )}
 
