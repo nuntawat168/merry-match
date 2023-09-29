@@ -15,6 +15,8 @@ import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
 import Chat from "./Chat";
 import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
+import StripePayment from "../components/StripePayment";
+import Restpage from "../components/Restpage";
 
 import PaymentPage1 from "../pages/PaymentPage1";
 import UserMerryCheck from "./UserMerryCheck";
@@ -41,6 +43,8 @@ function AuthenticatedApp() {
             <Route path="/complaint" element={<UserComplaintPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/im" element={<StripePayment />} />
+            <Route path="/rest" element={<Restpage />} />
             <Route path="/payments" element={<PaymentPage1 />} />
             <Route path="/edit" element={<UserMerryCheck />} />
             <Route path="/success" element={<SuccessPage />} />

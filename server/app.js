@@ -14,6 +14,7 @@ import fs from "fs";
 import { Server } from "socket.io";
 import http from "http";
 import userPackageRouter from "./apps/userPackage.js";
+import stripePaymentRouter from "./apps/stripePaymeny.js";
 
 async function init() {
   dotenv.config();
@@ -44,6 +45,8 @@ async function init() {
   app.use("/packages", packageRouter);
   app.use("/complaint", complaintRouter)
   app.use("/user-package", userPackageRouter);
+  app.use("/payment", stripePaymentRouter);
+  
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
