@@ -11,7 +11,7 @@ const MatchPages = () => {
     // const { contentToRender } = useMatch();
     const { room, contentToRender } = useSocket();
     if (contentToRender === "Matching") {
-      // return <MatchCard />;
+      return <MatchCard />;
     } else if (contentToRender.includes("Chat")) {
       return <Chat room={room} />;
     }
