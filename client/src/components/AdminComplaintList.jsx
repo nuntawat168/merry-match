@@ -136,18 +136,27 @@ const AdminComplaintList = () => {
 
   const markComplaintAsPending = async (complaintId) => {
     try {
-      await axios.put(`http://localhost:4000/complaint/${complaintId}/status`, {
-        status: "Pending",
-      });
-
-      // Update the local state to reflect the change in status
-      setComplaints((prevComplaints) =>
-        prevComplaints.map((complaint) =>
-          complaint.complaint_id === complaintId
-            ? { ...complaint, status: "Pending" }
-            : complaint
-        )
+      const response = await axios.get(
+        `http://localhost:4000/complaint/${complaintId}`
       );
+      const complaint = response.data;
+
+      if (complaint.status === "New") {
+        await axios.put(
+          `http://localhost:4000/complaint/${complaintId}/status`,
+          {
+            status: "Pending",
+          }
+        );
+
+        setComplaints((prevComplaints) =>
+          prevComplaints.map((prevComplaint) =>
+            prevComplaint.complaint_id === complaintId
+              ? { ...prevComplaint, status: "Pending" }
+              : prevComplaint
+          )
+        );
+      }
     } catch (error) {
       console.error("Error updating complaint status:", error);
     }
@@ -220,7 +229,7 @@ const AdminComplaintList = () => {
         </div>
       </section>
       <section>
-        <div className="font-nunito grid grid-flow-row bg-gray-100 ">
+        <div className="font-nunito grid grid-flow-row bg-gray-100">
           {/* Table headers */}
           <div className="text-[14px] items-center bg-gray-400 text-gray-800 mt-10 pl-2 grid grid-cols-[15%_20%_38%_15%_12%] bg-gray400 w-[85%] h-[42px] mx-auto text-gray800 font-bold rounded-t-xl">
             <span className="flex ml-5">User</span>
@@ -250,7 +259,13 @@ const AdminComplaintList = () => {
                     ? complaint.description.substring(0, 50) + "..."
                     : complaint.description}
                 </span>
-                <span>{complaint.date_submitted}</span>
+                <span>
+                  {
+                    new Date(complaint.date_submitted)
+                      .toLocaleDateString("en-GB")
+                      .split(",")[0]
+                  }
+                </span>
                 <span
                   className={`${
                     complaint.status === "New"

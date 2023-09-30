@@ -145,7 +145,7 @@ authRouter.post("/login", async (req, res) => {
         },
         process.env.SECRET_KEY,
         {
-          expiresIn: "900000",
+          expiresIn: "90000000",
         }
       );
       return res.json({
@@ -166,7 +166,7 @@ authRouter.post("/login", async (req, res) => {
         },
         process.env.SECRET_KEY,
         {
-          expiresIn: "900000",
+          expiresIn: "900000000",
         }
       );
       return res.json({
@@ -174,7 +174,7 @@ authRouter.post("/login", async (req, res) => {
         token,
       });
     } else {
-      return res.status(401).json({
+      return res.status(404).json({
         message: "Password not valid",
       });
     }

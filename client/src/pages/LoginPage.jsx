@@ -4,19 +4,37 @@ import dotImage from "../../src/assets/image/dotOnLoginPage.svg";
 import Navbar from "../components/Navbar.jsx";
 import { useAuth } from "../contexts/authentication.jsx";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 function LoginPage() {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    login({
-      emailOrUsername,
-      password,
-    });
+
+    try {
+      await login({
+        emailOrUsername,
+        password,
+      });
+      console.log("Login success");
+    } catch (error) {
+      event.preventDefault();
+      const errorMessage =
+        error.response?.data?.message || "An error occurred.";
+      console.error("Login error:", errorMessage);
+      toast({
+        title: "Login Error",
+        description: errorMessage,
+        status: "error",
+        isClosable: true,
+        position: "top"
+      });
+    }
   };
 
   return (
