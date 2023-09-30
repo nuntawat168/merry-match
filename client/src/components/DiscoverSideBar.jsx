@@ -9,9 +9,10 @@ import { useSocket } from "../contexts/socketContext";
 import { useMatch } from "../contexts/matchContext";
 
 const DiscoverSideBar = () => {
-  const { socket, room, setRoom, messages, setMessages } = useSocket();
+  const { socket, room, setRoom, messages, setMessages, setContentToRender } =
+    useSocket();
   const navigate = useNavigate();
-  const { setContentToRender } = useMatch();
+  // const { setContentToRender } = useMatch();
 
   const [matchList, setMatchList] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);

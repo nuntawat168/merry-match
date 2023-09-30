@@ -1,20 +1,29 @@
 import sendIcon from "../assets/icon/send button.png";
 import uploadPhotoIcon from "../assets/icon/upload image.png";
 import merryHeart from "../assets/icon/merry.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSocket } from "../contexts/socketContext";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
-var compareRoom;
 
 function Chat(props) {
   const token = localStorage.getItem("token");
   const user = jwtDecode(token);
-  const { socket, messages, setMessages, room } = useSocket();
+  const { socket, messages, setMessages, room, setRoom, setContentToRender } =
+    useSocket();
 
   const [inputMessage, setInputMessage] = useState("");
   const [senderId, setSenderId] = useState();
   const [receiverId, setReceiverId] = useState();
+  const [loadingChat, setLoadingChat] = useState(false);
+  const chatContainerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
 
   async function sendMessage() {
     if (inputMessage !== "") {
@@ -53,25 +62,24 @@ function Chat(props) {
   }, [props.room]);
 
   useEffect(() => {
-    socket.on("receiver-message", (newMessage) => {
-      // console.log("From receiver-message:", newMessage);
-      // console.log("Current Room:", compareRoom);
-      // console.log("messages ->", messages);
-
-      if (newMessage.sender_id == compareRoom.receiver_id) {
-        setMessages((messages) => [...messages, newMessage]);
-      }
-      // setMessages((messages) => [...messages, newMessage]);
-    });
-
+    console.log("chat is mount");
     return () => {
-      socket.off("receiver-message");
+      setRoom({});
+      setContentToRender("Matching");
+      console.log("chat is unmount");
     };
   }, []);
 
   useEffect(() => {
-    compareRoom = room;
-  }, [room]);
+    // ... (other useEffect code)
+
+    // Scroll to the bottom when messages change
+    scrollToBottom();
+
+    return () => {
+      // ... (other cleanup code)
+    };
+  }, [messages]); // Add messages as a dependency
 
   function StartMatchingMsg() {
     {
@@ -104,11 +112,13 @@ function Chat(props) {
 
   function renderMsg(conversation, index) {
     if (conversation.sender_id !== user.id) {
+      const receiverImage =
+        room?.receiver_image && room?.receiver_image[0]?.url;
       return (
-        <div className="text-[16px] text-black flex items-center" key={index}>
+        <div className=" text-[16px] text-black flex  items-center" key={index}>
           <img
-            src={room.receiver_image[0].url}
-            alt={room.receiver_name}
+            src={receiverImage || ""}
+            alt={room?.receiver_name}
             className="w-[40px] h-[40px] rounded-full mr-[12px]"
           />
           <p className="py-[16px] px-[24px] bg-purple-200 rounded-tl-[24px] rounded-tr-[24px] rounded-br-[24px] rounded-bl-[0px] border-[1px] border-gray-300 ">
@@ -128,8 +138,11 @@ function Chat(props) {
   }
 
   return (
-    <div className=" bg text-white w-full flex flex-col justify-end ">
-      <section className=" flex flex-col justify-end px-[60px] space-y-4 pt-[98px] pb-10 ">
+    <div className="h-full bg text-white w-full flex flex-col justify-end ">
+      <section
+        ref={chatContainerRef}
+        className="flex-grow  flex-col justify-end px-[60px] space-y-4 pt-[98px] pb-10 overflow-y-auto "
+      >
         {messages.map((conversation, index) => {
           return renderMsg(conversation, index);
         })}

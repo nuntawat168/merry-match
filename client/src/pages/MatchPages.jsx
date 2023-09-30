@@ -8,8 +8,8 @@ import { useSocket } from "../contexts/socketContext";
 
 const MatchPages = () => {
   function RenderContent() {
-    const { contentToRender } = useMatch();
-    const { room } = useSocket();
+    // const { contentToRender } = useMatch();
+    const { room, contentToRender } = useSocket();
     if (contentToRender === "Matching") {
       // return <MatchCard />;
     } else if (contentToRender.includes("Chat")) {
