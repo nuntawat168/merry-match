@@ -6,10 +6,10 @@ import { SocketProvider } from "./contexts/socketContext";
 function App() {
   const auth = useAuth();
   return auth.isAuthenticated ? (
-    // <SocketProvider>
-    <AuthenticatedApp />
+    <SocketProvider>
+      <AuthenticatedApp />
+    </SocketProvider>
   ) : (
-    // </SocketProvider>
     <UnauthenticatedApp />
   );
 }

@@ -127,6 +127,8 @@ matchListRouter.delete("/unmatch", async (req, res) => {
     SELECT count(match_id) FROM match_users mu
     WHERE (mu.user_id_1 = $1 AND mu.user_id_2 = $2) OR (mu.user_id_1 = $2 AND mu.user_id_2 = $1)`;
 
+    const queryDeleteConversation = `delete from conversations where (client1_id = $1 and client2_id = $2) or (client1_id = $2 and client2_id = $1)`;
+
     const checkMatchStatus = await pool.query(queryCheckMatchstatus, [
       user_interest,
       user_response,
@@ -145,6 +147,10 @@ matchListRouter.delete("/unmatch", async (req, res) => {
         user_response,
       ]);
       const deleteMerryLists = await pool.query(queryDeleteMerryLists, [
+        user_interest,
+        user_response,
+      ]);
+      const deleteConversations = await pool.query(queryDeleteConversation, [
         user_interest,
         user_response,
       ]);

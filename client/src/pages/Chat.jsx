@@ -1,34 +1,54 @@
 import sendIcon from "../assets/icon/send button.png";
 import uploadPhotoIcon from "../assets/icon/upload image.png";
 import merryHeart from "../assets/icon/merry.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSocket } from "../contexts/socketContext";
 import jwtDecode from "jwt-decode";
+import axios from "axios";
 
 function Chat(props) {
   const token = localStorage.getItem("token");
   const user = jwtDecode(token);
-  const { socket, messages, setMessages, room } = useSocket();
+  const { socket, messages, setMessages, room, setRoom, setContentToRender } =
+    useSocket();
 
   const [inputMessage, setInputMessage] = useState("");
   const [senderId, setSenderId] = useState();
   const [receiverId, setReceiverId] = useState();
+  const [loadingChat, setLoadingChat] = useState(false);
+  const chatContainerRef = useRef(null);
 
-  function sendMessage() {
-    const token = localStorage.getItem("token");
-    const user = jwtDecode(token);
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
 
-    const newMessage = {
-      sender_id: senderId,
-      receiver_id: receiverId,
-      text: inputMessage,
-      conversation_id: room.conversation_id,
-    };
-    socket.emit("send-message", newMessage);
+  async function sendMessage() {
+    if (inputMessage !== "") {
+      const token = localStorage.getItem("token");
+      const user = jwtDecode(token);
+      const newMessage = {
+        sender_id: senderId,
+        receiver_id: receiverId,
+        text: inputMessage,
+        conversation_id: room.conversation_id,
+      };
+      socket.emit("send-message", newMessage);
 
-    setMessages((message) => [...message, newMessage]);
-    setInputMessage("");
-
+      setMessages((message) => [...message, newMessage]);
+      setInputMessage("");
+      try {
+        const respones = await axios.post(
+          "http://localhost:4000/user/messages",
+          newMessage
+        );
+      } catch (error) {
+        alert("Store Message Faild");
+        console.log("Store Message Faild", error);
+      }
+    }
     return true;
   }
 
@@ -40,6 +60,26 @@ function Chat(props) {
       setReceiverId(room.client2_id);
     }
   }, [props.room]);
+
+  useEffect(() => {
+    console.log("chat is mount");
+    return () => {
+      setRoom({});
+      setContentToRender("Matching");
+      console.log("chat is unmount");
+    };
+  }, []);
+
+  useEffect(() => {
+    // ... (other useEffect code)
+
+    // Scroll to the bottom when messages change
+    scrollToBottom();
+
+    return () => {
+      // ... (other cleanup code)
+    };
+  }, [messages]); // Add messages as a dependency
 
   function StartMatchingMsg() {
     {
@@ -72,9 +112,15 @@ function Chat(props) {
 
   function renderMsg(conversation, index) {
     if (conversation.sender_id !== user.id) {
+      const receiverImage =
+        room?.receiver_image && room?.receiver_image[0]?.url;
       return (
-        <div className="text-[16px] text-black flex items-center" key={index}>
-          <div className="w-[40px] h-[40px] rounded-full bg-red-500 mr-[12px]"></div>
+        <div className=" text-[16px] text-black flex  items-center" key={index}>
+          <img
+            src={receiverImage || ""}
+            alt={room?.receiver_name}
+            className="w-[40px] h-[40px] rounded-full mr-[12px]"
+          />
           <p className="py-[16px] px-[24px] bg-purple-200 rounded-tl-[24px] rounded-tr-[24px] rounded-br-[24px] rounded-bl-[0px] border-[1px] border-gray-300 ">
             {conversation.text}
           </p>
@@ -92,26 +138,34 @@ function Chat(props) {
   }
 
   return (
-    <div className="text-white w-full border border-red flex flex-col justify-end ">
-      <section className="h-full flex flex-col justify-end px-[60px] space-y-4 pt-[98px] pb-10">
+    <div className="h-full bg text-white w-full flex flex-col justify-end ">
+      <section
+        ref={chatContainerRef}
+        className="flex-grow  flex-col justify-end px-[60px] space-y-4 pt-[98px] pb-10 overflow-y-auto "
+      >
         {messages.map((conversation, index) => {
           return renderMsg(conversation, index);
         })}
       </section>
 
       {/* text input field */}
-      <section className="bg border-t-[1px] border-gray-800 h-[100px] px-[60px] w-full flex justify-between items-center">
-        <div className="flex items-center">
+      <section className="bg border-t-[1px] border-gray-800 h-[100px] px-[60px] w-full flex justify-between items-center flex-shrink-0">
+        <div className="flex items-center w-full h-full">
           <img
             src={uploadPhotoIcon}
             alt="upload photo icon"
             className="w-[48px] h-[48px]"
           />
           <input
-            className="text-gray-500 text-[16px] pl-[24px]"
+            className="bg h-full w-full grow text-gray-500 text-[16px] pl-[24px] focus:outline-0"
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                return sendMessage();
+              }
+            }}
             placeholder="Message here..."
           />
         </div>
