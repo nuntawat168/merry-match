@@ -12,9 +12,9 @@ function PaymentSuccess() {
         try{   
           const response = await axios.post('http://localhost:4000/payment', { paymentData, state });   
           if (response.status === 201) {
-            console.log('Successfully send data');
+            console.log('Successfully send payment data');
           } else {
-            console.error('Cannot send data');
+            console.error('Cannot send payment data to server');
           }
         } catch(error) {
           console.error('An error occurred while sending payment data:', error);
@@ -54,7 +54,9 @@ function PaymentSuccess() {
                 >
                   Back to home
                 </button>
-                <button className="flex items-center justify-center w-[190px] h-[48px] border bg-red-500 rounded-3xl text-white relative duration-1000 after:content-[''] after:bg-red-300 after:h-[3px] after:w-[0%] after:absolute after:bottom-[10px] after:rounded-xl after:duration-500 hover:scale-110   hover:after:w-[70%]">
+                <button 
+                  // เติม onclick ไปหน้า check membership ตรงนี้
+                  className="flex items-center justify-center w-[190px] h-[48px] border bg-red-500 rounded-3xl text-white relative duration-1000 after:content-[''] after:bg-red-300 after:h-[3px] after:w-[0%] after:absolute after:bottom-[10px] after:rounded-xl after:duration-500 hover:scale-110   hover:after:w-[70%]">
                   Check Membership
                 </button>
               </div>
@@ -64,22 +66,21 @@ function PaymentSuccess() {
                 1
               </div>
               <div className="ml-10  text-[32px]">
-                Premium
-                <div className="text-[20px]">
-                  THB 149.00<span className="text-[16px]">/Month</span>
+                {/* เติมข้อมูลชื่อแพคเกจที่ซื้อ */}
+              <div className="text-[20px]"> {/* เติมราคาของแพคเกจที่ซื้อ */} <span className="text-[16px]">/Month</span>
                 </div>
               </div>
               <div className="ml-10 ">‘Merry’ more than a daily limited</div>
-              <div className="ml-10 -mt-14 ">Up to 50 Merry per day</div>
+              <div className="ml-10 -mt-14 ">Up to ... Merry per day</div> {/* เติมจากการ fetch package limit จากตาราง package */}
               <hr className=" border-gray-300 ml-10 mr-10 -mt-10 " />
               <div className="ml-10 mt-10 grid-cols-2">
                 <div className="flex justify-between -mt-10 ">
                   <div className="flex  ">Start Membership</div>
-                  <div className="flex mr-10 ">01/04/2022</div>
+                  <div className="flex mr-10 ">01/04/2022</div> {/* เติมจากตาราง transaction ตรง start_date */}
                 </div>
                 <div className="flex justify-between mt-2  ">
                   <div className="flex">Next billing</div>
-                  <div className="flex mr-10">01/05/2022</div>
+                  <div className="flex mr-10">01/05/2022</div> {/* เติมจากตาราง transaction ตรง end_date */}
                 </div>
               </div>
             </div>
