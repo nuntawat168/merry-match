@@ -61,6 +61,7 @@ matchListRouter.get("/v2/:user_id", async (req, res) => {
     SELECT DISTINCT ON (ml.user_response)
       ml.merry_list_id,
       ml.user_response,
+      u.user_id,
       u.username,
       u.email,
       u.name,
@@ -96,6 +97,7 @@ matchListRouter.get("/v2/:user_id", async (req, res) => {
     GROUP BY
       ml.merry_list_id,
       ml.user_response,
+      u.user_id,
       u.username,
       u.email,
       u.name,

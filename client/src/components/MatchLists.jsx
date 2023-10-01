@@ -8,10 +8,41 @@ import chatIcon from "../assets/icon/chat.svg";
 import MerryMatchStatus from "../assets/icon/match.svg";
 import NotMatchStatus from "../assets/icon/not match.png";
 import { Tooltip } from "@chakra-ui/react";
+import { useSocket } from "../contexts/socketContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function MatchLists() {
   const { matchLists } = useMatchLists();
   const { calculateAge, capitalize } = useTextConvert();
+  const navigate = useNavigate();
+  const {
+    notifications,
+    setNotifications,
+    setRoom,
+    setContentToRender,
+    setMessages,
+  } = useSocket();
+
+  async function gotoChatByReceiverId(receiver_id) {
+    const getConversation = await axios.get(
+      `http://localhost:4000/user/conversationByReceiverId/${receiver_id}`
+    );
+    const conversation = getConversation.data.data;
+    console.log("conversation:", conversation);
+    setRoom({ ...conversation });
+    setContentToRender(`Chat-${conversation.conversation_id}`);
+    console.log("location", location.pathname);
+    if (location.pathname !== "/match") {
+      navigate("/match");
+    }
+
+    const response = await axios.get(
+      `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+    );
+
+    setMessages(response.data.data);
+  }
 
   const renderedMatch = matchLists.map((user, index) => {
     return (
@@ -82,8 +113,9 @@ function MatchLists() {
               aria-label="A tooltip"
               borderRadius="md"
             >
-              <div
-                className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl hover:cursor-pointer ${
+              <button
+                onClick={() => gotoChatByReceiverId(user.user_id)}
+                className={`w-[48px] h-[48px] bg-white shadow-nav flex justify-center items-center rounded-2xl  ${
                   user.match_status === "match" ? "" : "hidden"
                 }`}
               >
@@ -92,7 +124,7 @@ function MatchLists() {
                   alt="message icon"
                   className="w-[24px] h-[24px]"
                 />
-              </div>
+              </button>
             </Tooltip>
             <ViewProfileButton user={user} />
             <UnmatchButton user_response_id={user.user_response} />
