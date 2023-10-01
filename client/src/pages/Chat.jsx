@@ -138,24 +138,21 @@ function Chat(props) {
   }
 
   return (
-    <div className="h-full bg text-white w-full flex flex-col justify-end ">
-      <section
-        ref={chatContainerRef}
-        className="flex-grow  flex-col justify-end px-[60px] space-y-4 pt-[98px] pb-10 overflow-y-auto "
-      >
-        {messages.map((conversation, index) => {
-          return renderMsg(conversation, index);
-        })}
-      </section>
+    <div className="h-full bg text-white w-full flex flex-col justify-end pt-28">
+      <div className="max-h-full flex flex-col justify-center pt-2">
+        <section
+          ref={chatContainerRef}
+          className="flex-grow px-[60px] space-y-4 pt-[98px] pb-10 overflow-y-auto "
+        >
+          {messages.map((conversation, index) => {
+            return renderMsg(conversation, index);
+          })}
+        </section>
+      </div>
 
       {/* text input field */}
       <section className="bg border-t-[1px] border-gray-800 h-[100px] px-[60px] w-full flex justify-between items-center flex-shrink-0">
         <div className="flex items-center w-full h-full">
-          <img
-            src={uploadPhotoIcon}
-            alt="upload photo icon"
-            className="w-[48px] h-[48px]"
-          />
           <input
             className="bg h-full w-full grow text-gray-500 text-[16px] pl-[24px] focus:outline-0"
             type="text"

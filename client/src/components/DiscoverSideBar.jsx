@@ -32,11 +32,11 @@ const DiscoverSideBar = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     if (matchList.length > 0) {
-      setDisplayedUsers(matchList.slice(currentIndex, currentIndex + 2));
+      setDisplayedUsers(matchList);
     }
   }, [matchList, currentIndex]);
 
@@ -105,7 +105,7 @@ const DiscoverSideBar = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [room]);
 
   const renderedChat = conversations.map((chat, index) => {
     return (
@@ -122,7 +122,7 @@ const DiscoverSideBar = () => {
           src={chat.image[0].url}
           alt={`Profile photo of ${chat.name.split(" ")[0]}`}
           className="bg w-[60px] h-[60px] rounded-full mr-[12px]"
-          style={{ objectFit: 'cover' }} 
+          style={{ objectFit: "cover" }}
         />
         <div className="flex flex-col justify-center">
           <p className="text-[16px] text-gray-900">{chat.name.split(" ")[0]}</p>
@@ -160,9 +160,12 @@ const DiscoverSideBar = () => {
         <p className="text-left ml-[20px] font-bold text-[24px]">
           Merry Match!
         </p>
-        <div className="flex flex-wrap">
+        <div className="flex overflow-x-auto ml-[16px]">
           {displayedUsers.map((user, index) => (
-            <div key={index} className={`flex ${index === 0 ? "pl-[16px]" : ""}`}>
+            <div
+              key={index}
+              className={`flex ${index === 0 ? "" : ""} shrink-0 mb-3`}
+            >
               <button>
                 <div className="relative">
                   <div className="flex justify-end relative left-[75px] bottom-[-100px] w-[34px] h-[20px]">
@@ -181,35 +184,18 @@ const DiscoverSideBar = () => {
                     src={user.image[0].url}
                     alt={user.name}
                     className="w-[100px] h-[100px] rounded-3xl ml-[10px]"
-                    style={{ objectFit: 'cover' }} 
+                    style={{ objectFit: "cover" }}
                   />
                 </div>
               </button>
             </div>
           ))}
         </div>
-
-        <div className="flex justify-between items-center p-4">
-          <button
-            onClick={handlePrevClick}
-            disabled={currentIndex === 0}
-            className="text-xl"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNextClick}
-            disabled={currentIndex + 2 >= matchList.length}
-            className="text-xl"
-          >
-            Next
-          </button>
-        </div>
       </div>
+      <p className="px-[16px] text-left font-bold text-[24px] text-gray-900 mb-[16px] mt-[18px]">
+        Chat with Merry Match
+      </p>
       <section className="px-[16px] overflow-y-auto">
-        <p className="text-left font-bold text-[24px] text-gray-900 mb-[16px] mt-[18px]">
-          Chat with Merry Match
-        </p>
         <div>{renderedChat}</div>
       </section>
     </div>
