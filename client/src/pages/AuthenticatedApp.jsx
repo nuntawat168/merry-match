@@ -17,10 +17,11 @@ import Chat from "./Chat";
 import AdminComplaintSeeDetailPage from "./AdminComplaintSeeDetailPage";
 import StripePayment from "../components/StripePayment";
 import PaymentSuccess from "../components/PaymentSuccess";
+import UserMerryCheck from "./UserMerryCheck";
 
 // ยังเอาไหมแบมลองเลือกอีกที
 // import PaymentPage1 from "../pages/PaymentPage1";
-// import UserMerryCheck from "./UserMerryCheck";
+
 // import SuccessPage from "./SuccessPage";
 
 function AuthenticatedApp() {
@@ -46,8 +47,9 @@ function AuthenticatedApp() {
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/chat" element={<Chat />} /> 
+            <Route path="/membership" element={<UserMerryCheck />} />
             {/* <Route path="/payments" element={<PaymentPage1 />} />
-            <Route path="/edit" element={<UserMerryCheck />} />
+            
             <Route path="/success" element={<SuccessPage />} /> */}
           </>
         )}

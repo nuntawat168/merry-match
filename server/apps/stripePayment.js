@@ -8,11 +8,13 @@ dotenv.config();
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 
 stripePaymentRouter.post("/create-payment-intent", async (req, res) => {
-  const { price } = req.body
+  const { price, limit } = req.body
+  console.log("ตัว limit ที่ได้มา", typeof limit)
   try {
     const paymentIntent = await stripeClient.paymentIntents.create({
         amount: price * 100, // ต้องหาร 100 หน่วยเป็นสตางค์
         currency: 'thb',
+        description: limit,
         automatic_payment_methods: {
             enabled: true,
         },
@@ -35,11 +37,12 @@ stripePaymentRouter.post("/", async (req, res) => {
   const currentDate = new Date(); 
   const endDate = new Date(currentDate);
   endDate.setDate(endDate.getDate() + 30); // calculate end_date
+  const merry_limit = payment_intent.description;
 
     try {
         const userPackagePaid = await pool.query(
-            `INSERT INTO transaction (status, payment_id, start_date, end_date, user_id) VALUES ($1, $2, $3, $4, $5)`,
-            [ status, payment_id, currentDate, endDate, user_id]
+            `INSERT INTO transaction (status, payment_id, start_date, end_date, user_id, merry_limit) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [ status, payment_id, currentDate, endDate, user_id, merry_limit]
         );
 
         if (userPackagePaid.rowCount === 1) {
