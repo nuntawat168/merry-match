@@ -239,6 +239,59 @@ userRouter.get("/conversation/:conversation_id", async (req, res) => {
   }
 });
 
+userRouter.get("/conversationByReceiverId/:receiver_id", async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    const userInfo = jwt.decode(token.replace("Bearer ", ""));
+    const user_id = userInfo.id;
+    // user_id -> sender_id
+    //
+    const { receiver_id } = req.params;
+
+    const result = await pool.query(
+      `
+      select
+        users.user_id as receiver_id,
+        users.name as receiver_name,
+        profile_images.image as receiver_image,
+        conversations.conversation_id,
+        conversations.client1_id,
+        conversations.client2_id
+      from
+        users
+        inner join profile_images on users.user_id = profile_images.user_id
+        left join conversations on 
+        (
+          users.user_id = conversations.client1_id
+          and $1 = conversations.client2_id
+        )
+        or 
+        (
+          users.user_id = conversations.client2_id
+          and $1 = conversations.client1_id
+        )
+      where
+        (
+          conversations.client1_id is not null
+          or conversations.client2_id is not null
+        )
+        and users.user_id != $1
+        and (
+          users.user_id = $2
+          or users.user_id = $2
+        )
+      `,
+      [user_id, receiver_id]
+    );
+    res.json({
+      data: result.rows[0],
+    });
+  } catch (error) {
+    console.error("เกิดข้อผิดพลาดในการร้องขอข้อมูล:", error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการร้องขอข้อมูล" });
+  }
+});
+
 userRouter.get("/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
