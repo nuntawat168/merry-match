@@ -32,7 +32,7 @@ const DiscoverSideBar = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     if (matchList.length > 0) {
@@ -105,7 +105,7 @@ const DiscoverSideBar = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [room]);
 
   const renderedChat = conversations.map((chat, index) => {
     return (
