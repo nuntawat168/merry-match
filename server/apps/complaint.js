@@ -45,7 +45,7 @@ complaintRouter.get("/", async (req, res) => {
         issue: complaint.issue,
         description: complaint.description,
         status: complaint.status,
-        date_submitted: complaint.date_submitted.toISOString().split("T")[0], // Format date as YYYY-MM-DD
+        date_submitted: complaint.date_submitted,
       }));
 
       res.status(200).json(complaints);
