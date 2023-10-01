@@ -14,7 +14,7 @@ import fs from "fs";
 import { Server } from "socket.io";
 import http from "http";
 import userPackageRouter from "./apps/userPackage.js";
-import stripePaymentRouter from "./apps/stripePaymeny.js";
+import stripePaymentRouter from "./apps/stripePayment.js";
 
 async function init() {
   dotenv.config();

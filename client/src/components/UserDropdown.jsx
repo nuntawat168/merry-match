@@ -6,12 +6,31 @@ import complaintIcon from "../assets/icon/complaint.svg";
 import logoutIcon from "../assets/icon/logout.svg";
 import { useAuth } from "../contexts/authentication";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchMerryLimit } from "./FetchMerryLimit";
 
 function UserDropdown() {
   const { logout } = useAuth();
   const { userRole } = useAuth();
   const [isMember, setIsMember] = useState(false);
+
+
+  // check package status
+    const getPackageDetail = async () => {
+      const { userPackageDetail } = await fetchMerryLimit();    
+      let end_date_string = userPackageDetail[0].end_date.split('T')[0]
+      const end_date = new Date(end_date_string);
+      console.log("วันหมดอายุคือ ", end_date)
+      const today = new Date();
+      console.log('วันนี้คือวันที่', today)
+      today <= end_date ? setIsMember(true) : setIsMember(false);  
+      console.log("subscribe status", isMember);
+  }
+  
+  useEffect(() => {   
+    getPackageDetail()
+  }, []);
+
   // const sectionHeight = userRole === "admin" ? "h-[2px]" : "h-[258px]";
 
   // เหลือเพิ่ม link ไปแต่ละหน้า
@@ -50,7 +69,7 @@ function UserDropdown() {
         icon: packageIcon,
         alt: "package icon",
         title: "Merry Membership",
-        link: isMember ? "" : "/packages",
+        link: isMember ? "/merry-list" : "/packages",
       },
       {
         icon: complaintIcon,
