@@ -63,7 +63,7 @@ function UserDropdown() {
 
   const renderedLists = lists.map((list, index) => (
     <Link to={list.link} key={index}>
-      <div className="flex py-[8px] mr-4 items-center hover:cursor-pointer">
+      <div className="flex py-[8px] mr-4 items-center hover:cursor-pointer hover:text-purple-500 hover:font-extrabold">
         <img
           src={list.icon}
           alt={list.alt}
@@ -86,17 +86,17 @@ function UserDropdown() {
           <p className="text-white">More limit Merry!</p>
         </div>
       </div> */}
-      <div>{renderedLists}</div>
+      <div className="overflow-hidden">{renderedLists}</div>
       <div
         onClick={logout}
-        className="flex items-center border-t-[1px] border-gray-300 mt-[7px] py-[8px] cursor-pointer"
+        className="flex items-center border-t-[1px] border-gray-300 mt-[7px] py-[8px] cursor-pointer hover:text-purple-500 hover:font-extrabold"
       >
         <img
           src={logoutIcon}
           alt="logout icon"
           className="ml-[16px] w-[16px] h-[16px] mr-[12px]"
         />
-        <p>Log out</p>
+        <p className="">Log out</p>
       </div>
     </section>
   );

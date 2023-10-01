@@ -38,7 +38,7 @@ function Notification() {
       return (
         <button
           key={index}
-          className="flex justify-between py-[12px] px-[14px] text-start "
+          className="flex justify-between py-[12px] px-[14px] text-start hover:text-purple-500 hover:font-extrabold"
           onClick={() => {
             gotoChat(noti.content.conversation);
             setNotifications(notifications.toSpliced(index, 1));
@@ -49,7 +49,7 @@ function Notification() {
             src={noti.content.conversation.receiver_image[0].url}
             alt=""
           />
-          <p className="w-[179px]">
+          <p className="w-[179px] ">
             '{noti.content.conversation.receiver_name}' send new message to you
           </p>
         </button>
