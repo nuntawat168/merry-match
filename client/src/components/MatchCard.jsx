@@ -24,6 +24,7 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../contexts/socketContext";
 
 const MatchCard = () => {
   const [originalUsers, setOriginalUsers] = useState([]);
@@ -47,7 +48,28 @@ const MatchCard = () => {
   const { calculateAge } = useTextConvert();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const { setRoom, setContentToRender, setMessages } = useSocket();
   const navigate = useNavigate();
+
+  async function gotoChatByReceiverId(receiver_id) {
+    const getConversation = await axios.get(
+      `http://localhost:4000/user/conversationByReceiverId/${receiver_id}`
+    );
+    const conversation = getConversation.data.data;
+    console.log("conversation:", conversation);
+    setRoom({ ...conversation });
+    setContentToRender(`Chat-${conversation.conversation_id}`);
+    console.log("location", location.pathname);
+    if (location.pathname !== "/match") {
+      navigate("/match");
+    }
+
+    const response = await axios.get(
+      `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+    );
+
+    setMessages(response.data.data);
+  }
 
   // fetch merry limit
   useEffect(() => {
