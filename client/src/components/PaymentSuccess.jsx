@@ -1,12 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/authentication';
 import successIcon from "../assets/icon/success.png";
 import { useNavigate } from "react-router-dom";
+import { fetchMerryLimit } from './FetchMerryLimit';
 
 function PaymentSuccess() {
     const { state } = useAuth()
     const navigate = useNavigate();
+    const [packageIcon, setPackageIcon] = useState(null);
+    const [packageName, setPackageName] = useState(null);
+    const [packagePrice, setPackagePrice] = useState(null);
+    const [packageStart, setPackageStart] = useState(null);
+    const [packageEnd, setPackageEnd] = useState(null);
+    const [packageLimit, setPackageLimit] = useState(null);
 
     const sendPaymentDataToServer = async (paymentData) => {
         try{   
@@ -20,6 +27,21 @@ function PaymentSuccess() {
           console.error('An error occurred while sending payment data:', error);
         }
       }
+
+    const getPackageDetail = async () => {
+      const { userPackageDetail } = await fetchMerryLimit();    
+      setPackageIcon(userPackageDetail[0].package_icon);
+      setPackageName(userPackageDetail[0].package_name);
+      setPackagePrice(userPackageDetail[0].package_price);
+      let start_date = userPackageDetail[0].start_date.split('T')[0].split('-')
+      start_date = start_date[2] + '/' + start_date[1] + '/' + start_date[0]
+      setPackageStart(start_date);
+      let end_date = userPackageDetail[0].end_date.split('T')[0].split('-')
+      end_date = end_date[2] + '/' + end_date[1] + '/' + end_date[0]
+      setPackageEnd(end_date);    
+      setPackageLimit(userPackageDetail[0].package_limit);
+    }
+    
     
       useEffect(() => {   
         const clientSecret = new URLSearchParams(window.location.search).get(
@@ -30,6 +52,7 @@ function PaymentSuccess() {
           return;
         }
         sendPaymentDataToServer(clientSecret);
+        getPackageDetail()
       }, []);
 
       return (
@@ -62,25 +85,23 @@ function PaymentSuccess() {
               </div>
             </div>
             <div className="text-white w-[357px] h-[454px] border rounded-3xl bg-linear ml-28  border-gray-200 grid grid-rows-[25%_20%_20%_10%_1%_24%]">
-              <div className="ml-10 mt-10 w-[60px] h-[60px] border rounded-2xl border-gray-100">
-                1
-              </div>
+              <img src={packageIcon} alt="package icon" className="ml-10 mt-10 w-[60px] h-[60px] border rounded-2xl border-gray-100" />
               <div className="ml-10  text-[32px]">
-                {/* เติมข้อมูลชื่อแพคเกจที่ซื้อ */}
-              <div className="text-[20px]"> {/* เติมราคาของแพคเกจที่ซื้อ */} <span className="text-[16px]">/Month</span>
+                {packageName}
+              <div className="text-[20px]">{`THB ${packagePrice}.00 `}<span className="text-[16px]">/Month</span>
                 </div>
               </div>
               <div className="ml-10 ">‘Merry’ more than a daily limited</div>
-              <div className="ml-10 -mt-14 ">Up to ... Merry per day</div> {/* เติมจากการ fetch package limit จากตาราง package */}
+              <div className="ml-10 -mt-14 ">{`Up to ${packageLimit} Merry per day`}</div> 
               <hr className=" border-gray-300 ml-10 mr-10 -mt-10 " />
               <div className="ml-10 mt-10 grid-cols-2">
                 <div className="flex justify-between -mt-10 ">
                   <div className="flex  ">Start Membership</div>
-                  <div className="flex mr-10 ">01/04/2022</div> {/* เติมจากตาราง transaction ตรง start_date */}
+                  <div className="flex mr-10 ">{packageStart}</div>
                 </div>
                 <div className="flex justify-between mt-2  ">
                   <div className="flex">Next billing</div>
-                  <div className="flex mr-10">01/05/2022</div> {/* เติมจากตาราง transaction ตรง end_date */}
+                  <div className="flex mr-10">{packageEnd}</div> 
                 </div>
               </div>
             </div>

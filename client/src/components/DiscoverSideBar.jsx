@@ -122,6 +122,7 @@ const DiscoverSideBar = () => {
           src={chat.image[0].url}
           alt={`Profile photo of ${chat.name.split(" ")[0]}`}
           className="bg w-[60px] h-[60px] rounded-full mr-[12px]"
+          style={{ objectFit: 'cover' }} 
         />
         <div className="flex flex-col justify-center">
           <p className="text-[16px] text-gray-900">{chat.name.split(" ")[0]}</p>
@@ -161,7 +162,7 @@ const DiscoverSideBar = () => {
         </p>
         <div className="flex flex-wrap">
           {displayedUsers.map((user, index) => (
-            <div key={index} className="flex">
+            <div key={index} className={`flex ${index === 0 ? "pl-[16px]" : ""}`}>
               <button>
                 <div className="relative">
                   <div className="flex justify-end relative left-[75px] bottom-[-100px] w-[34px] h-[20px]">
@@ -179,7 +180,8 @@ const DiscoverSideBar = () => {
                   <img
                     src={user.image[0].url}
                     alt={user.name}
-                    className="w-[100px] h-[100px] rounded-xl ml-[10px]"
+                    className="w-[100px] h-[100px] rounded-3xl ml-[10px]"
+                    style={{ objectFit: 'cover' }} 
                   />
                 </div>
               </button>
