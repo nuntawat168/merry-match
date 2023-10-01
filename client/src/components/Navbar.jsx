@@ -1,7 +1,7 @@
 import logo from "../assets/icon/logo.svg";
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import notiIcon from "../assets/icon/noti.svg";
 import UserDropdown from "./UserDropdown";
 import Notification from "./Notification";
@@ -10,6 +10,7 @@ import { HashLink } from "react-router-hash-link";
 import { fetchUserData } from "../contexts/fetchUserData";
 import NotificationBadge from "./NotificationBadge";
 import { useSocket } from "../contexts/socketContext";
+import { fetchMerryLimit } from "./FetchMerryLimit";
 
 function Navbar() {
   const { isAuthenticated } = useAuth(); // get authen value
@@ -17,6 +18,7 @@ function Navbar() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
   // const { notifications } = useSocket();
+
   if (isAuthenticated) {
     var { notifications } = useSocket();
   }
@@ -32,6 +34,20 @@ function Navbar() {
     setUserDropdown(false);
     setNotificationDropdown(!notificationDropdown);
   };
+
+  // check package status
+  const getPackageDetail = async () => {
+    const { userPackageDetail } = await fetchMerryLimit();    
+    let end_date_string = userPackageDetail[0].end_date.split('T')[0]
+    const end_date = new Date(end_date_string);
+    const today = new Date();
+    today <= end_date ? setSubscribed(true) : setSubscribed(false);  
+    console.log("subscribe status", subscribed)
+  }
+
+  useEffect(() => {   
+    getPackageDetail()
+  }, []);
 
   // create a rendering condition for each list
   const anchors = [
