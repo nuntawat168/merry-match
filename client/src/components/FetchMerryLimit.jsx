@@ -11,9 +11,11 @@ export const fetchMerryLimit = async () => {
     );
     const userPackageLimit = response.data.packageResult[0].package_limit;
     const userMerryLimit = response.data.packageResult[0].merry_limit;
+    const userPackageDetail = response.data.packageResult;
     return {
       userPackageLimit: userPackageLimit !== null ? userPackageLimit : 20,
       userMerryLimit: userMerryLimit !== null ? userMerryLimit : 10,
+      userPackageDetail,
     };
   } catch (error) {
     console.log("Error fetching match list data: ", error);
