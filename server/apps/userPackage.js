@@ -7,10 +7,10 @@ userPackageRouter.get("/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const packageResult = await pool.query(
-      `SELECT users.user_id, users.package_id, packages.package_name, packages.package_price, packages.package_limit, packages.package_icon, transaction.transaction_id, transaction.status, transaction.start_date, transaction.end_date, transaction.payment_id, transaction.merry_limit
+      `SELECT users.user_id, packages.package_name, packages.package_price, packages.package_limit, packages.package_icon, transaction.transaction_id, transaction.status, transaction.start_date, transaction.end_date, transaction.payment_id, transaction.merry_limit, transaction.package_id
          FROM users
-         LEFT JOIN packages ON users.package_id = packages.package_id
          LEFT JOIN transaction ON users.user_id = transaction.user_id
+         LEFT JOIN packages ON transaction.package_id = packages.package_id
          WHERE users.user_id = $1`,
       [user_id]
     );
@@ -19,7 +19,9 @@ userPackageRouter.get("/:user_id", async (req, res) => {
     });
   } catch (error) {
     console.error("An error occurred while retrieving merry limit :", error);
-    res.status(500).json({ error: "An error occurred while processing your request" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing your request" });
   }
 });
 
