@@ -32,7 +32,16 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
 
   const params = useParams();
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onClose: onCreateClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
   const cancelRef = React.useRef();
 
   const validationSchema = Yup.object({
@@ -49,7 +58,6 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
 
   const onSubmit = async (values, { resetForm }) => {
     values.created_by = admin_id;
-    alert(JSON.stringify(values, null, 2));
     console.log("Formik value package icon", formik.values.package_icon);
 
     // if (formik.values.package_icon.name) {
@@ -102,11 +110,49 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
               className="flex flex-col justify-center px-[24px] py-[12px] rounded-full bg-red-500 text-white drop-shadow-md hover:bg-red-600 hover:text-white"
+              onClick={onCreateOpen}
             >
               {button}
             </button>
+
+            <AlertDialog
+              motionPreset="slideInBottom"
+              leastDestructiveRef={cancelRef}
+              onClose={onCreateClose}
+              isOpen={isCreateOpen}
+              isCentered
+            >
+              <AlertDialogOverlay />
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  {button} Package
+                  <hr />
+                </AlertDialogHeader>
+                <AlertDialogCloseButton />
+                <AlertDialogBody>
+                  Do you sure to {button} this Package?
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                  <button
+                    className="py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
+                    ref={cancelRef}
+                    onClick={() => formik.handleSubmit()}
+                  >
+                    Yes, I want to {button}
+                  </button>
+                  <button
+                    className=" ml-3 py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
+                    ref={cancelRef}
+                    onClick={onCreateClose}
+                  >
+                    No, I don’t want
+                  </button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </section>
 
@@ -160,14 +206,14 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
             <button
               type="button"
               className=" w-[90%] ml-[60px] text-right text-gray-700 px-[8x] py-[4px] mt-[10px]"
-              onClick={onOpen}
+              onClick={onDeleteOpen}
             >
               {remove}
               <AlertDialog
                 motionPreset="slideInBottom"
                 leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
+                onClose={onDeleteClose}
+                isOpen={isDeleteOpen}
                 isCentered
               >
                 <AlertDialogOverlay />
@@ -187,7 +233,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
                       ref={cancelRef}
                       onClick={() => {
                         deletePackage(params.id);
-                        onClose();
+                        onDeleteClose();
                       }}
                     >
                       Yes, I want to delete
@@ -195,7 +241,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
                     <button
                       className=" ml-3 py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-500 text-white shadow-login"
                       ref={cancelRef}
-                      onClick={onClose}
+                      onClick={onDeleteClose}
                     >
                       No, I don’t want
                     </button>
