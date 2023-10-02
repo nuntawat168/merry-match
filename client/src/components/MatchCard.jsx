@@ -53,7 +53,9 @@ const MatchCard = () => {
 
   async function gotoChatByReceiverId(receiver_id) {
     const getConversation = await axios.get(
-      `https://merry-match.onrender.com/user/conversationByReceiverId/${receiver_id}`
+      `${
+        import.meta.env.VITE_API_ENDPOINT
+      }/user/conversationByReceiverId/${receiver_id}`
     );
     const conversation = getConversation.data.data;
     console.log("conversation:", conversation);
@@ -65,7 +67,9 @@ const MatchCard = () => {
     }
 
     const response = await axios.get(
-      `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
+      `${import.meta.env.VITE_API_ENDPOINT}/user/fetchMessages/${
+        conversation.conversation_id
+      }`
     );
 
     setMessages(response.data.data);
@@ -92,7 +96,9 @@ const MatchCard = () => {
       const token = localStorage.getItem("token");
       const user = jwtDecode(token);
       console.log(user.id);
-      const apiUrl = `https://merry-match.onrender.com/user/unmatchlist/${user.id}`;
+      const apiUrl = `${import.meta.env.VITE_API_ENDPOINT}/user/unmatchlist/${
+        user.id
+      }`;
       const queryParams = new URLSearchParams();
 
       if (minAge) {
@@ -167,7 +173,7 @@ const MatchCard = () => {
       const token = localStorage.getItem("token");
       const user = jwtDecode(token);
       await axios.put(
-        `https://merry-match.onrender.com/user-package/${user.id}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/user-package/${user.id}`,
         {
           merry_limit: newMerryLimit - 1,
         }
@@ -181,16 +187,16 @@ const MatchCard = () => {
     if (merryLimit > 0) {
       try {
         const response = await axios.post(
-          `https://merry-match.onrender.com/user/ismatch/${user_response}`
+          `${import.meta.env.VITE_API_ENDPOINT}/user/ismatch/${user_response}`
         );
         const addResponse = await axios.post(
-          `https://merry-match.onrender.com/user/like/${user_response}`
+          `${import.meta.env.VITE_API_ENDPOINT}/user/like/${user_response}`
         );
         console.log(typeof merryLimit);
         setMerryLimit(updateMerryLimit(merryLimit));
         if (response.data.message === "User is matched") {
           const matchUserDataResponse = await axios.get(
-            `https://merry-match.onrender.com/user/${user_response}`
+            `${import.meta.env.VITE_API_ENDPOINT}/user/${user_response}`
           );
           const userData = matchUserDataResponse.data.data;
           setMatchUserData(userData);

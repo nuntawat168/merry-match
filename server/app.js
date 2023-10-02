@@ -23,19 +23,36 @@ async function init() {
   const port = 4000;
 
   const server = http.createServer(app);
-  const io = new Server(server, {
-    cors: {
-      origin: "https://merry-match-client.onrender.com",
-      methods: ["GET", "POST"],
-    },
-  });
-  const corsOptions = {
-    origin: "https://merry-match-client.onrender.com",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  };
-
   app.use(express());
+
+  let io;
+  let corsOptions;
+  if (process.env.NODE_ENV === "production") {
+    io = new Server(server, {
+      cors: {
+        origin: "https://merry-match-client.onrender.com",
+        methods: ["GET", "POST"],
+      },
+    });
+    corsOptions = {
+      origin: "https://merry-match-client.onrender.com",
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true,
+    };
+    app.use(cors(corsOptions));
+  } else {
+    io = new Server(server, {
+      cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+      },
+    });
+    corsOptions = {
+      origin: "http://localhost:5173",
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true,
+    };
+  }
   app.use(cors(corsOptions));
   app.use(bodyParser.json());
   app.use("/user-profile", userProfileRouter);

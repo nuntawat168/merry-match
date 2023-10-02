@@ -48,7 +48,9 @@ function RegisterProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `https://merry-match.onrender.com/auth/check-available?checkColumn=username&checkValue=${value}`
+              `${
+                import.meta.env.VITE_API_ENDPOINT
+              }/auth/check-available?checkColumn=username&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -66,7 +68,9 @@ function RegisterProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `https://merry-match.onrender.com/auth/check-available?checkColumn=email&checkValue=${value}`
+              `${
+                import.meta.env.VITE_API_ENDPOINT
+              }/auth/check-available?checkColumn=email&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {

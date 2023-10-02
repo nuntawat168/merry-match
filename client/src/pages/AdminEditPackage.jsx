@@ -34,7 +34,7 @@ function AdminEditPackage() {
       setIsError(false);
       setIsLoading(true);
       const result = await axios.get(
-        `https://merry-match.onrender.com/packages/${id}`
+        `${import.meta.env.VITE_API_ENDPOINT}/packages/${id}`
       );
       setEditPackage(result.data.data);
       setIsLoading(false);

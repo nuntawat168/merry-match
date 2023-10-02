@@ -17,7 +17,7 @@ const ContextProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://merry-match.onrender.com/packages"
+        `${import.meta.env.VITE_API_ENDPOINT}/packages`
       );
       setDataPackage(response.data.data);
     } catch (error) {

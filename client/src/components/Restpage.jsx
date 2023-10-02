@@ -8,7 +8,7 @@ function Restpage() {
   const sendPaymentDataToServer = async (paymentData) => {
     try {
       const response = await axios.post(
-        "https://merry-match.onrender.com/payment",
+        `${import.meta.env.VITE_API_ENDPOINT}/payment`,
         { paymentData, state }
       );
       if (response.status === 201) {

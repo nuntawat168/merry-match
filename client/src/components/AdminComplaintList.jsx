@@ -14,7 +14,7 @@ const AdminComplaintList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://merry-match.onrender.com/complaint"
+          `${import.meta.env.VITE_API_ENDPOINT}/complaint`
         );
         setComplaints(response.data);
       } catch (error) {
@@ -39,13 +39,15 @@ const AdminComplaintList = () => {
   const markComplaintAsPending = async (complaintId) => {
     try {
       const response = await axios.get(
-        `https://merry-match.onrender.com/complaint/${complaintId}`
+        `${import.meta.env.VITE_API_ENDPOINT}/complaint/${complaintId}`
       );
       const complaint = response.data;
 
       if (complaint.status === "New") {
         await axios.put(
-          `https://merry-match.onrender.com/complaint/${complaintId}/status`,
+          `${
+            import.meta.env.VITE_API_ENDPOINT
+          }/complaint/${complaintId}/status`,
           {
             status: "Pending",
           }

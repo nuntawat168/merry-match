@@ -26,7 +26,7 @@ const AdminComplaintDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`https://merry-match.onrender.com/complaint/${complaintId}`)
+      .get(`${import.meta.env.VITE_API_ENDPOINT}/complaint/${complaintId}`)
       .then((response) => {
         const data = response.data;
         setComplaint(data);
@@ -46,7 +46,7 @@ const AdminComplaintDetail = () => {
       };
 
       await axios.put(
-        `https://merry-match.onrender.com/complaint/${complaintId}/status`,
+        `${import.meta.env.VITE_API_ENDPOINT}/complaint/${complaintId}/status`,
         requestData
       );
 
@@ -65,7 +65,7 @@ const AdminComplaintDetail = () => {
       };
 
       await axios.put(
-        `https://merry-match.onrender.com/complaint/${complaintId}/status`,
+        `${import.meta.env.VITE_API_ENDPOINT}/complaint/${complaintId}/status`,
         requestData
       );
 

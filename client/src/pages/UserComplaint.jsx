@@ -46,17 +46,17 @@ function UserComplaintPage() {
 
     try {
       const response = await axios.post(
-        "https://merry-match.onrender.com/complaint",
+        `${import.meta.env.VITE_API_ENDPOINT}/complaint`,
         values
       );
       // window.alert(`${response.data.message}`);
       console.log(
-        "Data posted to https://merry-match.onrender.com/complaint:",
+        `Data posted to ${import.meta.env.VITE_API_ENDPOINT}/complaint:`,
         response.data
       );
     } catch (error) {
       console.error(
-        "Error posting data to https://merry-match.onrender.com/complaint:",
+        `Error posting data to ${import.meta.env.VITE_API_ENDPOINT}/complaint:`,
         error
       );
       window.alert(`${error.response.data.error}`);
