@@ -29,7 +29,27 @@ userPackageRouter.put("/:user_id", async (req, res) => {
   const { merry_limit } = req.body;
   const userId = parseInt(req.params.user_id);
 
+  const queryCheckUserTransaction = `
+  select count(transaction_id) from transaction
+  where transaction.user_id = $1
+  `;
+  const queryCreactUserTransaction = `
+  insert into transaction (user_id, merry_limit)
+  values ($1, 10)
+  `;
+
   try {
+    const checkUserTransaction = await pool.query(queryCheckUserTransaction, [
+      userId,
+    ]);
+    const countUserTransaction = parseInt(checkUserTransaction.rows[0].count);
+    if (countUserTransaction === 0) {
+      const creactUserTransaction = await pool.query(
+        queryCreactUserTransaction,
+        [userId]
+      );
+    }
+
     await pool.query(
       `UPDATE transaction 
         SET merry_limit =$1

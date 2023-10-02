@@ -15,11 +15,6 @@ const getState = () => {
 };
 
 function AuthProvider(props) {
-  // const [state, setState] = useState({
-  //   loading: null,
-  //   error: null,
-  //   user: null,
-  // });
   const [state, setState] = useState(getState());
 
   const navigate = useNavigate();
@@ -30,7 +25,6 @@ function AuthProvider(props) {
 
       const token = result.data.token;
       localStorage.setItem("token", token);
-      // localStorage.setItem("state", JSON.stringify(userDataFromToken));
       setState(getState());
       navigate("/match");
     } catch (error) {
