@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, ModalOverlay, ModalContent } from "@chakra-ui/react";
 import useTextConvert from "../../hooks/useTextConvert";
 
@@ -57,6 +57,10 @@ function ProfilePopup(props) {
       setPictureToRenderIndex((prev) => prev - 1);
     }
   }
+
+  useEffect(() => {
+    console.log("user data", props.user);
+  }, []);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered={true}>
       <ModalOverlay />
@@ -187,7 +191,7 @@ function ProfilePopup(props) {
                 </p>
               </div>
               <div className="flex flex-col space-y-6">
-                <p className="text-gray-900 text-2xl font-bold">
+                {/* <p className="text-gray-900 text-2xl font-bold">
                   Hobbies and Interests
                 </p>
                 <div className="w-full flex flex-wrap flex-row gap-3">
@@ -201,7 +205,7 @@ function ProfilePopup(props) {
                       </div>
                     );
                   })}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

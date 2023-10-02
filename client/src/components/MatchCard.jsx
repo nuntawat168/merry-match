@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../contexts/socketContext";
+import MatchCardViewProfileButton from "./MatchCardViewProfileButton";
 
 const MatchCard = () => {
   const [originalUsers, setOriginalUsers] = useState([]);
@@ -50,6 +51,8 @@ const MatchCard = () => {
   const cancelRef = React.useRef();
   const { setRoom, setContentToRender, setMessages } = useSocket();
   const navigate = useNavigate();
+  const [usersForLike, setUsersForLike] = useState([]);
+  const [userginationIndex, setUserginationIndex] = useState(0);
 
   async function gotoChatByReceiverId(receiver_id) {
     const getConversation = await axios.get(
@@ -293,10 +296,39 @@ const MatchCard = () => {
     }
     return false;
   };
-  console.log(filteredUsers);
+  // console.log(filteredUsers);
 
-  const renderedCard = filteredUsers.map((user, index) => (
+  function usergination() {
+    // console.log(filteredUsers);
+    setUsersForLike(
+      [...filteredUsers]
+        .slice(userginationIndex, userginationIndex + 1)
+        .toReversed()
+    );
+    console.log(
+      "user for like",
+      [...filteredUsers]
+        .slice(userginationIndex, userginationIndex + 1)
+        .toReversed()
+    );
+  }
+
+  useEffect(() => {
+    usergination();
+    // console.log("user for like:", usersForLike);
+  }, [userginationIndex, filteredUsers]);
+
+  const onSwipe = (direction) => {
+    // console.log(`You swiped ${direction}`);
+    // Handle the swipe event as needed
+    setTimeout(() => {
+      setUserginationIndex((prev) => prev + 1);
+    }, 500);
+  };
+
+  const renderedCard = usersForLike.map((user, index) => (
     <TinderCard
+      onSwipe={onSwipe}
       className="absolute"
       key={`${user.name}_${index}`}
       ref={(ref) => (cardRefs.current[index] = ref)}
@@ -327,7 +359,7 @@ const MatchCard = () => {
                     ? calculateAge(user.date_of_birth)
                     : "N/A"}
                 </p>
-                <div
+                {/* <div
                   className="w-[32px] h-[32px] rounded-full shadow-nav flex items-center justify-center"
                   style={{ background: "rgba(255, 255, 255, 0.20)" }}
                   onClick={() => openPopup(user)}
@@ -337,10 +369,11 @@ const MatchCard = () => {
                     alt="view profile"
                     className="w-[16px] h-[16px] hover:cursor-pointer"
                   />
-                </div>
+                </div> */}
+                <MatchCardViewProfileButton user={user} />
               </section>
               <section className="flex items-center">
-                <img
+                {/* <img
                   src={leftArrow}
                   alt="go left arrow"
                   className="hover:cursor-pointer"
@@ -349,7 +382,7 @@ const MatchCard = () => {
                   src={rightArrow}
                   alt="go right arrow"
                   className="hover:cursor-pointer"
-                />
+                /> */}
               </section>
             </div>
             <div className="flex absolute bottom-[-35px]">
@@ -364,7 +397,9 @@ const MatchCard = () => {
                 onClick={
                   merryLimit === 0
                     ? onOpen
-                    : () => handleHeartClick(user.user_id, index)
+                    : () => {
+                        handleHeartClick(user.user_id, index);
+                      }
                 }
               >
                 <AlertDialog

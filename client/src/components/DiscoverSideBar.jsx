@@ -181,7 +181,7 @@ const DiscoverSideBar = () => {
                     <img
                       src={merryHeart}
                       alt="heart"
-                      className="z-30 w-[20px] h-[20px]"
+                      className="z-20 w-[20px] h-[20px]"
                     />
                   </div>
                   <img
