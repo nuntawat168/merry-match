@@ -25,7 +25,7 @@ const DiscoverSideBar = () => {
     const user = jwtDecode(token);
 
     axios
-      .get(`http://localhost:4000/user/conversationlist/${user.id}`)
+      .get(`https://merry-match.onrender.com/user/conversationlist/${user.id}`)
       .then((response) => {
         setConversations(response.data.data);
       })
@@ -68,7 +68,7 @@ const DiscoverSideBar = () => {
       setRoom({ ...conversation });
       setContentToRender(`Chat-${conversation.conversation_id}`);
       const response = await axios.get(
-        `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+        `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
       );
 
       setMessages(response.data.data);
@@ -83,7 +83,7 @@ const DiscoverSideBar = () => {
       const token = localStorage.getItem("token");
       const user = jwtDecode(token);
       const response = await axios.get(
-        `http://localhost:4000/user/matchlist/${user_id}`
+        `https://merry-match.onrender.com/user/matchlist/${user_id}`
       );
       return response.data.data;
     } catch (error) {

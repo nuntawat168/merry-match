@@ -52,7 +52,7 @@ function SocketProvider(props) {
   const getConversation = async (conversation_id) => {
     try {
       const fetchConversation = await axios.get(
-        `http://localhost:4000/user/conversation/${conversation_id}`
+        `https://merry-match.onrender.com/user/conversation/${conversation_id}`
       );
 
       const conversation = fetchConversation.data.data;
@@ -71,7 +71,7 @@ function SocketProvider(props) {
       // setRoom({ ...conversation });
       // setContentToRender(`Chat-${conversation.conversation_id}`);
       // const response = await axios.get(
-      //   `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+      //   `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
       // );
 
       // setMessages(response.data.data);

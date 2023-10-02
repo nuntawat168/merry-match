@@ -21,10 +21,13 @@ function PaymentSuccess() {
 
   const sendPaymentDataToServer = async (paymentData) => {
     try {
-      const response = await axios.post("http://localhost:4000/payment", {
-        paymentData,
-        state,
-      });
+      const response = await axios.post(
+        "https://merry-match.onrender.com/payment",
+        {
+          paymentData,
+          state,
+        }
+      );
       if (response.status === 201) {
         getPackageDetail();
         console.log("Successfully send payment data");

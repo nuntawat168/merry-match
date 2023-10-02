@@ -15,7 +15,7 @@ function fetchMatchListData() {
           const user = jwtDecode(token);
           const user_id = user.id;
           const response = await axios.get(
-            `http://localhost:4000/matchlist/v2/${user_id}`
+            `https://merry-match.onrender.com/matchlist/v2/${user_id}`
           );
           setMatchList(response.data.matchData);
         }

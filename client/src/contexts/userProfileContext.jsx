@@ -41,7 +41,7 @@ function UserProfileProvider(props) {
     const user = jwtDecode(token);
     try {
       const response = await axios.get(
-        `http://localhost:4000/user-profile/${user.id}`
+        `https://merry-match.onrender.com/user-profile/${user.id}`
       );
       const userProfile = response.data.data;
       const userInitForm = {
@@ -100,7 +100,7 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `http://localhost:4000/user-profile/check-available?checkColumn=username&checkValue=${value}`
+              `https://merry-match.onrender.com/user-profile/check-available?checkColumn=username&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -118,7 +118,7 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `http://localhost:4000/user-profile/check-available?checkColumn=email&checkValue=${value}`
+              `https://merry-match.onrender.com/user-profile/check-available?checkColumn=email&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -241,7 +241,7 @@ function UserProfileProvider(props) {
     const user = jwtDecode(token);
     try {
       const response = await axios.put(
-        `http://localhost:4000/user-profile/${user.id}`,
+        `https://merry-match.onrender.com/user-profile/${user.id}`,
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },

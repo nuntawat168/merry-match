@@ -33,7 +33,9 @@ function AdminEditPackage() {
     try {
       setIsError(false);
       setIsLoading(true);
-      const result = await axios.get(`http://localhost:4000/packages/${id}`);
+      const result = await axios.get(
+        `https://merry-match.onrender.com/packages/${id}`
+      );
       setEditPackage(result.data.data);
       setIsLoading(false);
     } catch (error) {

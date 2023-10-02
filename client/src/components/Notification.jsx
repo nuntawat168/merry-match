@@ -25,7 +25,7 @@ function Notification() {
     }
 
     const response = await axios.get(
-      `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+      `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
     );
 
     setMessages(response.data.data);

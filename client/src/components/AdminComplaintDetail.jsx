@@ -26,7 +26,7 @@ const AdminComplaintDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/complaint/${complaintId}`)
+      .get(`https://merry-match.onrender.com/complaint/${complaintId}`)
       .then((response) => {
         const data = response.data;
         setComplaint(data);
@@ -46,7 +46,7 @@ const AdminComplaintDetail = () => {
       };
 
       await axios.put(
-        `http://localhost:4000/complaint/${complaintId}/status`,
+        `https://merry-match.onrender.com/complaint/${complaintId}/status`,
         requestData
       );
 
@@ -65,7 +65,7 @@ const AdminComplaintDetail = () => {
       };
 
       await axios.put(
-        `http://localhost:4000/complaint/${complaintId}/status`,
+        `https://merry-match.onrender.com/complaint/${complaintId}/status`,
         requestData
       );
 
@@ -76,7 +76,6 @@ const AdminComplaintDetail = () => {
   };
 
   const handleCancel = async (complaintId) => {
-
     setDialogType("Cancel");
     onOpen();
   };
@@ -163,8 +162,8 @@ const AdminComplaintDetail = () => {
             <div className="text-[16px] text-black">
               {complaint.date_submitted
                 ? new Date(complaint.date_submitted)
-                .toLocaleDateString("en-GB")
-                .split(",")[0]
+                    .toLocaleDateString("en-GB")
+                    .split(",")[0]
                 : ""}
             </div>
             {complaint.status === "Cancel" ||
@@ -174,7 +173,9 @@ const AdminComplaintDetail = () => {
                 <span className="mb-[8px]">{complaint.status} date</span>
                 <div className="text-[16px] text-black">
                   {complaint.updated_at
-                    ? new Date(complaint.updated_at).toLocaleString("en-GB", {hour12: true})
+                    ? new Date(complaint.updated_at).toLocaleString("en-GB", {
+                        hour12: true,
+                      })
                     : ""}
                 </div>
               </div>

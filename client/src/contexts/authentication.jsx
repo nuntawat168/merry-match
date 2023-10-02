@@ -21,7 +21,10 @@ function AuthProvider(props) {
 
   const login = async (data) => {
     try {
-      const result = await axios.post("http://localhost:4000/auth/login", data);
+      const result = await axios.post(
+        "https://merry-match.onrender.com/auth/login",
+        data
+      );
 
       const token = result.data.token;
       localStorage.setItem("token", token);
@@ -38,7 +41,7 @@ function AuthProvider(props) {
   const register = async (data) => {
     try {
       const respone = await axios.post(
-        "http://localhost:4000/auth/register",
+        "https://merry-match.onrender.com/auth/register",
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -28,7 +28,7 @@ function UnmatchButton(props) {
       const user = jwtDecode(token);
       const user_id = user.id;
       const unmatchResult = await axios.delete(
-        `http://localhost:4000/matchlist/unmatch?user_interest=${user_id}&user_response_id=${props.user_response_id}`
+        `https://merry-match.onrender.com/matchlist/unmatch?user_interest=${user_id}&user_response_id=${props.user_response_id}`
       );
 
       setMatchLists((prev) =>
