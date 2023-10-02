@@ -25,12 +25,12 @@ async function init() {
   const server = http.createServer(app);
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: "https://merry-match-client.onrender.com",
       methods: ["GET", "POST"],
     },
   });
   const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: "https://merry-match-client.onrender.com",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   };
