@@ -1,4 +1,4 @@
-import StepperForm from "../../components/register/stepperForm";
+import StepperForm from "../../components/register/StepperForm";
 
 function RegisterHeader() {
   return (
