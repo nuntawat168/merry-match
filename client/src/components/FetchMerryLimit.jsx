@@ -13,7 +13,7 @@ export const fetchMerryLimit = async () => {
     const userMerryLimit = response.data.packageResult[0].merry_limit;
     const userPackageDetail = response.data.packageResult;
     return {
-      userPackageLimit: userPackageLimit !== null ? userPackageLimit : 20,
+      userPackageLimit: userPackageLimit !== null ? userPackageLimit : 10,
       userMerryLimit: userMerryLimit !== null ? userMerryLimit : 10,
       userPackageDetail,
     };
