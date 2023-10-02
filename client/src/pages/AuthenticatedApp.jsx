@@ -9,7 +9,7 @@ import AdminEditPackage from "./AdminEditPackage";
 import PackagePage from "./packagepage";
 import AdminPackage from "./Adminpackage";
 import LogoutTestPage from "./logoutTest";
-import UserComplaintPage from "./userComplaint";
+import UserComplaintPage from "./UserComplaint";
 import { useAuth } from "../contexts/authentication";
 import UserProfilePage from "./UserProfilePage";
 import AdminComplaintListPage from "./AdminComplaintListPage";
@@ -46,7 +46,7 @@ function AuthenticatedApp() {
             <Route path="/payment" element={<StripePayment />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/" element={<LandingPage />} />
-            <Route path="/chat" element={<Chat />} /> 
+            <Route path="/chat" element={<Chat />} />
             <Route path="/membership" element={<UserMerryCheck />} />
             {/* <Route path="/payments" element={<PaymentPage1 />} />
             
@@ -60,7 +60,7 @@ function AuthenticatedApp() {
             <Route path="/package/add" element={<AdminAddPackage />} />
             <Route path="/package/edit/:id" element={<AdminEditPackage />} />
             <Route path="/package" element={<AdminPackage />} />
-            <Route path="/match" element={<LandingPage />} />
+            <Route path="/match" element={<AdminComplaintListPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutTestPage />} />
             <Route path="/complaint" element={<AdminComplaintListPage />} />
