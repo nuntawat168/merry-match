@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../contexts/socketContext";
+import MatchCardViewProfileButton from "./MatchCardViewProfileButton";
 
 const MatchCard = () => {
   const [originalUsers, setOriginalUsers] = useState([]);
@@ -358,7 +359,7 @@ const MatchCard = () => {
                     ? calculateAge(user.date_of_birth)
                     : "N/A"}
                 </p>
-                <div
+                {/* <div
                   className="w-[32px] h-[32px] rounded-full shadow-nav flex items-center justify-center"
                   style={{ background: "rgba(255, 255, 255, 0.20)" }}
                   onClick={() => openPopup(user)}
@@ -368,10 +369,11 @@ const MatchCard = () => {
                     alt="view profile"
                     className="w-[16px] h-[16px] hover:cursor-pointer"
                   />
-                </div>
+                </div> */}
+                <MatchCardViewProfileButton user={user} />
               </section>
               <section className="flex items-center">
-                <img
+                {/* <img
                   src={leftArrow}
                   alt="go left arrow"
                   className="hover:cursor-pointer"
@@ -380,7 +382,7 @@ const MatchCard = () => {
                   src={rightArrow}
                   alt="go right arrow"
                   className="hover:cursor-pointer"
-                />
+                /> */}
               </section>
             </div>
             <div className="flex absolute bottom-[-35px]">
