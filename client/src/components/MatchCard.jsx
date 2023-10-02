@@ -406,7 +406,10 @@ const MatchCard = () => {
           <div className="z-10">
             <div className="flex flex-col h-[240px] justify-between items-center absolute top-[280px] right-[160px]">
               <img src={merryMatch} alt="merry match" />
-              <button className="px-[24px] py-[12px] bg-red-100 text-red-600 font-bold rounded-full">
+              <button
+                onClick={() => gotoChatByReceiverId(user.user_id)}
+                className="px-[24px] py-[12px] bg-red-100 text-red-600 font-bold rounded-full"
+              >
                 Start Conversation
               </button>
               {/* เพิ่ม onclick ไปที่แชทของคนที่แมทช์ */}
