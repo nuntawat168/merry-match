@@ -39,7 +39,9 @@ const AdminPackageList = () => {
     try {
       setIsError(false);
       setIsLoading(true);
-      await axios.delete(`http://localhost:4000/packages/${packageId}`);
+      await axios.delete(
+        `https://merry-match.onrender.com/packages/${packageId}`
+      );
       await fetchData(searchTerm);
     } catch (error) {
       setIsError(true);
@@ -50,7 +52,7 @@ const AdminPackageList = () => {
   const fetchData = async (keywords) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/packages?keywords=${keywords}`
+        `https://merry-match.onrender.com/packages?keywords=${keywords}`
       );
       setDataAgain(response.data.data);
     } catch (error) {

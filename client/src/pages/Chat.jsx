@@ -41,7 +41,7 @@ function Chat(props) {
       setInputMessage("");
       try {
         const respones = await axios.post(
-          "http://localhost:4000/user/messages",
+          "https://merry-match.onrender.com/user/messages",
           newMessage
         );
       } catch (error) {

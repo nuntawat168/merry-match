@@ -13,7 +13,9 @@ const AdminComplaintList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/complaint");
+        const response = await axios.get(
+          "https://merry-match.onrender.com/complaint"
+        );
         setComplaints(response.data);
       } catch (error) {
         console.error("Error fetching complaints:", error);
@@ -37,13 +39,13 @@ const AdminComplaintList = () => {
   const markComplaintAsPending = async (complaintId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/complaint/${complaintId}`
+        `https://merry-match.onrender.com/complaint/${complaintId}`
       );
       const complaint = response.data;
 
       if (complaint.status === "New") {
         await axios.put(
-          `http://localhost:4000/complaint/${complaintId}/status`,
+          `https://merry-match.onrender.com/complaint/${complaintId}/status`,
           {
             status: "Pending",
           }

@@ -26,7 +26,7 @@ function MatchLists() {
 
   async function gotoChatByReceiverId(receiver_id) {
     const getConversation = await axios.get(
-      `http://localhost:4000/user/conversationByReceiverId/${receiver_id}`
+      `https://merry-match.onrender.com/user/conversationByReceiverId/${receiver_id}`
     );
     const conversation = getConversation.data.data;
     console.log("conversation:", conversation);
@@ -38,7 +38,7 @@ function MatchLists() {
     }
 
     const response = await axios.get(
-      `http://localhost:4000/user/fetchMessages/${conversation.conversation_id}`
+      `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
     );
 
     setMessages(response.data.data);

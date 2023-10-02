@@ -9,7 +9,7 @@ const usePackages = () => {
   const createPackage = async (values) => {
     console.log("createPackage", values);
     try {
-      await axios.post("http://localhost:4000/packages", values);
+      await axios.post("https://merry-match.onrender.com/packages", values);
       navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
@@ -18,7 +18,10 @@ const usePackages = () => {
 
   const updatePackage = async (values) => {
     try {
-      await axios.put(`http://localhost:4000/packages/${params.id}`, values);
+      await axios.put(
+        `https://merry-match.onrender.com/packages/${params.id}`,
+        values
+      );
       navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
@@ -27,7 +30,7 @@ const usePackages = () => {
 
   const deletePackage = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/packages/${id}`);
+      await axios.delete(`https://merry-match.onrender.com/packages/${id}`);
       navigate("/package");
     } catch (error) {
       console.log("Request error:", error);

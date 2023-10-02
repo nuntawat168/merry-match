@@ -17,7 +17,7 @@ export default function StripePayment() {
 
   const createPaymentIntent = async () => {
     const data = await axios.post(
-      "http://localhost:4000/payment/create-payment-intent",
+      "https://merry-match.onrender.com/payment/create-payment-intent",
       {
         price: dataPackage[savePackage].package_price,
         limit: dataPackage[savePackage].package_limit,
