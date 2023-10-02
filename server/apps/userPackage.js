@@ -36,14 +36,13 @@ userPackageRouter.put("/:user_id", async (req, res) => {
   where transaction.user_id = $1
   `;
   const queryCreactUserTransaction = `
-  insert into transaction (user_id, merry_limit, start_date)
-  values ($1, 10, $2)
+  insert into transaction (user_id, merry_limit)
+  values ($1, 10)
   `;
 
   try {
     const checkUserTransaction = await pool.query(queryCheckUserTransaction, [
       userId,
-      new Date(),
     ]);
     const countUserTransaction = parseInt(checkUserTransaction.rows[0].count);
     if (countUserTransaction === 0) {
