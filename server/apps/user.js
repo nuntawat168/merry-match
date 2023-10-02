@@ -7,7 +7,7 @@ const userRouter = Router();
 userRouter.get("/", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.package_id, users.name, profile_images.image " + // ใส่ช่องว่างหลัง 'image '
+      "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.name, profile_images.image " + // ใส่ช่องว่างหลัง 'image '
         "FROM users " +
         "INNER JOIN profile_images ON users.user_id = profile_images.user_id"
     );
@@ -297,7 +297,7 @@ userRouter.get("/:user_id", async (req, res) => {
     const { user_id } = req.params;
 
     const result = await pool.query(
-      "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.package_id, users.name, profile_images.image " +
+      "SELECT users.user_id, users.sex, users.username, users.age, users.email, users.name, profile_images.image " +
         "FROM users " +
         "INNER JOIN profile_images ON users.user_id = profile_images.user_id " +
         "WHERE users.user_id = $1",
