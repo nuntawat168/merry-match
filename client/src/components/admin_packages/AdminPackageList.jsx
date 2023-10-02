@@ -40,7 +40,7 @@ const AdminPackageList = () => {
       setIsError(false);
       setIsLoading(true);
       await axios.delete(
-        `https://merry-match.onrender.com/packages/${packageId}`
+        `${import.meta.env.VITE_API_ENDPOINT}/packages/${packageId}`
       );
       await fetchData(searchTerm);
     } catch (error) {
@@ -52,7 +52,7 @@ const AdminPackageList = () => {
   const fetchData = async (keywords) => {
     try {
       const response = await axios.get(
-        `https://merry-match.onrender.com/packages?keywords=${keywords}`
+        `${import.meta.env.VITE_API_ENDPOINT}/packages?keywords=${keywords}`
       );
       setDataAgain(response.data.data);
     } catch (error) {

@@ -15,7 +15,7 @@ export function fetchUserData() {
           const user = jwtDecode(token);
           const user_id = user.id;
           const response = await axios.get(
-            `https://merry-match.onrender.com/user-profile/${user_id}`
+            `${import.meta.env.VITE_API_ENDPOINT}/user-profile/${user_id}`
           );
           setUserData(response.data.data);
           // console.log("ค่าที่ได้คือ ", userData);

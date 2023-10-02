@@ -9,7 +9,7 @@ const usePackages = () => {
   const createPackage = async (values) => {
     console.log("createPackage", values);
     try {
-      await axios.post("https://merry-match.onrender.com/packages", values);
+      await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/packages`, values);
       navigate("/package");
     } catch (error) {
       console.log("Request error:", error);
@@ -19,7 +19,7 @@ const usePackages = () => {
   const updatePackage = async (values) => {
     try {
       await axios.put(
-        `https://merry-match.onrender.com/packages/${params.id}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/packages/${params.id}`,
         values
       );
       navigate("/package");
@@ -30,7 +30,7 @@ const usePackages = () => {
 
   const deletePackage = async (id) => {
     try {
-      await axios.delete(`https://merry-match.onrender.com/packages/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_ENDPOINT}/packages/${id}`);
       navigate("/package");
     } catch (error) {
       console.log("Request error:", error);

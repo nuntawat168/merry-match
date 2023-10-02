@@ -7,7 +7,7 @@ export const fetchMerryLimit = async () => {
     const user = jwtDecode(token);
     const user_id = user.id;
     const response = await axios.get(
-      `https://merry-match.onrender.com/user-package/${user_id}`
+      `${import.meta.env.VITE_API_ENDPOINT}/user-package/${user_id}`
     );
     const userPackageLimit = response.data.packageResult[0].package_limit;
     const userMerryLimit = response.data.packageResult[0].merry_limit;

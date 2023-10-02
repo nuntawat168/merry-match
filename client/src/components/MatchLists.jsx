@@ -26,7 +26,9 @@ function MatchLists() {
 
   async function gotoChatByReceiverId(receiver_id) {
     const getConversation = await axios.get(
-      `https://merry-match.onrender.com/user/conversationByReceiverId/${receiver_id}`
+      `${
+        import.meta.env.VITE_API_ENDPOINT
+      }/user/conversationByReceiverId/${receiver_id}`
     );
     const conversation = getConversation.data.data;
     console.log("conversation:", conversation);
@@ -38,7 +40,9 @@ function MatchLists() {
     }
 
     const response = await axios.get(
-      `https://merry-match.onrender.com/user/fetchMessages/${conversation.conversation_id}`
+      `${import.meta.env.VITE_API_ENDPOINT}/user/fetchMessages/${
+        conversation.conversation_id
+      }`
     );
 
     setMessages(response.data.data);

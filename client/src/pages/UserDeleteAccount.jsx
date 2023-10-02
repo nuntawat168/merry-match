@@ -19,7 +19,7 @@ function UserDeleteAccount() {
       const token = localStorage.getItem("token");
       const user = jwtDecode(token);
       const result = axios.delete(
-        `https://merry-match.onrender.com/user-profile/${user.id}`
+        `${import.meta.env.VITE_API_ENDPOINT}/user-profile/${user.id}`
       );
       console.log("handleDeleteAccount");
       onClose();

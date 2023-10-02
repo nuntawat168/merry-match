@@ -41,7 +41,7 @@ function UserProfileProvider(props) {
     const user = jwtDecode(token);
     try {
       const response = await axios.get(
-        `https://merry-match.onrender.com/user-profile/${user.id}`
+        `${import.meta.env.VITE_API_ENDPOINT}/user-profile/${user.id}`
       );
       const userProfile = response.data.data;
       const userInitForm = {
@@ -100,7 +100,9 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `https://merry-match.onrender.com/user-profile/check-available?checkColumn=username&checkValue=${value}`
+              `${
+                import.meta.env.VITE_API_ENDPOINT
+              }/user-profile/check-available?checkColumn=username&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -118,7 +120,9 @@ function UserProfileProvider(props) {
         async function (value) {
           try {
             const response = await axios.get(
-              `https://merry-match.onrender.com/user-profile/check-available?checkColumn=email&checkValue=${value}`
+              `${
+                import.meta.env.VITE_API_ENDPOINT
+              }/user-profile/check-available?checkColumn=email&checkValue=${value}`
             );
             return response.data.data;
           } catch (error) {
@@ -241,7 +245,7 @@ function UserProfileProvider(props) {
     const user = jwtDecode(token);
     try {
       const response = await axios.put(
-        `https://merry-match.onrender.com/user-profile/${user.id}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/user-profile/${user.id}`,
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },

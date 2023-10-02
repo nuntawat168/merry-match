@@ -41,7 +41,7 @@ function Chat(props) {
       setInputMessage("");
       try {
         const respones = await axios.post(
-          "https://merry-match.onrender.com/user/messages",
+          `${import.meta.env.VITE_API_ENDPOINT}/user/messages`,
           newMessage
         );
       } catch (error) {

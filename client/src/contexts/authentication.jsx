@@ -22,7 +22,7 @@ function AuthProvider(props) {
   const login = async (data) => {
     try {
       const result = await axios.post(
-        "https://merry-match.onrender.com/auth/login",
+        `${import.meta.env.VITE_API_ENDPOINT}/auth/login`,
         data
       );
 
@@ -41,7 +41,7 @@ function AuthProvider(props) {
   const register = async (data) => {
     try {
       const respone = await axios.post(
-        "https://merry-match.onrender.com/auth/register",
+        `${import.meta.env.VITE_API_ENDPOINT}/auth/register`,
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },
