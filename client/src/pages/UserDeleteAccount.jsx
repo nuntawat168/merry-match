@@ -4,6 +4,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -13,6 +14,7 @@ function UserDeleteAccount() {
   const { logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const toast = useToast();
 
   async function handleDeleteAccount() {
     try {
@@ -24,6 +26,14 @@ function UserDeleteAccount() {
       console.log("handleDeleteAccount");
       onClose();
       logout();
+      toast({
+        title: "Deleted Profile.",
+        description: "We've deleted your profile for you.",
+        status: "success",
+        duration: 2000,
+        position: "top",
+        isClosable: true,
+      });
     } catch (error) {
       console.log("Delete user profile failed");
       console.log(error);

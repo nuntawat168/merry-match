@@ -258,6 +258,7 @@ function UserProfileProvider(props) {
         description: "We've updated your profile for you.",
         status: "success",
         duration: 2000,
+        position: "top",
         isClosable: true,
       });
       return setIsSubmitting(false);
