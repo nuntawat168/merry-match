@@ -54,7 +54,7 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `https://merry-match-client.onrender.com/payment-success?`,
+        return_url: `${import.meta.env.VITE_CLIENT_ADDRESS}/payment-success?`,
       },
     });
 
