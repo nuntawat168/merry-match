@@ -358,7 +358,8 @@ const MatchCard = () => {
         <img
           src={user.image[0].url}
           alt={user.name}
-          className="h-[520px] w-[520px] 2xl:w-[620px] 2xl:h-[620px] rounded-[32px] bg-cover"
+          className="h-[520px] w-[520px] 2xl:w-[620px] 2xl:h-[620px] rounded-[32px]"
+          style={{ objectFit: "cover" }}
         />
         {!matchPopupOpen && (
           <>
