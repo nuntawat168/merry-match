@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 const AuthContext = React.createContext();
 const getState = () => {
@@ -15,6 +16,7 @@ const getState = () => {
 };
 
 function AuthProvider(props) {
+  const toast = useToast();
   const [state, setState] = useState(getState());
 
   const navigate = useNavigate();
@@ -48,6 +50,14 @@ function AuthProvider(props) {
         }
       );
       navigate("/login");
+      toast({
+        title: "Created Profile.",
+        description: "We've created your profile for you.",
+        status: "success",
+        duration: 2000,
+        position: "top",
+        isClosable: true,
+      });
     } catch (error) {
       console.log(`Register Error: ${error}`);
       alert(`Register Error: ${error}`);
