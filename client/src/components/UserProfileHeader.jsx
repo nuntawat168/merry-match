@@ -35,11 +35,13 @@ function UserProfileHeader() {
       description,
       status: "error",
       duration: 9000,
+      position: "top",
       isClosable: true,
     });
   };
 
   const handleOnClickUpdate = () => {
+    toast.closeAll();
     formik.handleSubmit();
     if (
       fields.basicInfo.some(
@@ -48,8 +50,8 @@ function UserProfileHeader() {
     ) {
       scrollAndShowToast(
         "UserEditBasicInfomationForm",
-        "Basic Information is Invalid or Incomplete",
-        "Please review and correct any errors or missing information in the Basic Information section before proceeding."
+        "Basic Information",
+        "Check for errors before proceeding."
       );
     } else if (
       fields.identity.some(
@@ -58,14 +60,14 @@ function UserProfileHeader() {
     ) {
       scrollAndShowToast(
         "UserEditIdentitiesAndInterestsForm",
-        "Identities and Interests are Invalid or Incomplete",
-        "Please review and correct any errors or missing information in the Identities and Interests section before proceeding."
+        "Identities and Interests",
+        "Check for errors before proceeding."
       );
     } else if (formik.errors.profilePictures) {
       scrollAndShowToast(
         "UserEditProfilePicturesForm",
-        "Profile Pictures Error",
-        "Profile Pictures must have at least 2 photos. Please upload additional photos to meet this requirement."
+        "Profile Pictures",
+        "Profile Pictures must have at least 2 photos."
       );
     }
   };
@@ -80,7 +82,10 @@ function UserProfileHeader() {
       </div>
       <div className="flex space-x-4 font-nunito">
         <button
-          onClick={onOpen}
+          onClick={() => {
+            toast.closeAll();
+            onOpen();
+          }}
           className="bg-red-100 text-red-600 text-base font-bold shadow-btn space-x-2 px-6 py-3 rounded-full hover:bg-red-200  active:bg-red-300"
           type="button"
         >
