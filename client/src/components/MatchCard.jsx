@@ -44,8 +44,8 @@ const MatchCard = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [matchPopupOpen, setmatchPopupOpen] = useState(false);
   const [matchUserData, setMatchUserData] = useState(null);
-  const [packageLimit, setPackageLimit] = useState(null);
-  const [merryLimit, setMerryLimit] = useState(null);
+  const [packageLimit, setPackageLimit] = useState("");
+  const [merryLimit, setMerryLimit] = useState("");
   const { calculateAge } = useTextConvert();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
@@ -91,6 +91,15 @@ const MatchCard = () => {
     };
 
     fetchData();
+
+    fetchMerryLimit()
+      .then(({ userPackageLimit, userMerryLimit }) => {
+        setPackageLimit(userPackageLimit);
+        setMerryLimit(userMerryLimit);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
   }, [merryLimit]);
 
   const fetchData = async () => {
@@ -195,8 +204,12 @@ const MatchCard = () => {
         const addResponse = await axios.post(
           `${import.meta.env.VITE_API_ENDPOINT}/user/like/${user_response}`
         );
-        console.log(typeof merryLimit);
-        setMerryLimit(updateMerryLimit(merryLimit));
+        // console.log(typeof merryLimit);
+        // setMerryLimit(await updateMerryLimit(merryLimit));
+        // await updateMerryLimit(merryLimit);
+        await updateMerryLimit(merryLimit);
+        setMerryLimit(merryLimit - 1);
+
         if (response.data.message === "User is matched") {
           const matchUserDataResponse = await axios.get(
             `${import.meta.env.VITE_API_ENDPOINT}/user/${user_response}`
