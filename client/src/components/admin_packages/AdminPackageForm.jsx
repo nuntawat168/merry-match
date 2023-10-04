@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { createClient } from "@supabase/supabase-js";
@@ -19,6 +19,7 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import jwtDecode from "jwt-decode";
+import AdminPackageLoading from "./AdminPackageLoading";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -29,6 +30,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
   const token = localStorage.getItem("token");
   const admin = jwtDecode(token);
   const admin_id = admin.id;
+  const [isLoading, setIsLoading] = useState(false);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -57,6 +59,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
   });
 
   const onSubmit = async (values, { resetForm }) => {
+    setIsLoading(true);
     values.created_by = admin_id;
     console.log("Formik value package icon", formik.values.package_icon);
 
@@ -79,6 +82,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
     }
     console.log("values", values);
     button === "Create" ? createPackage(values) : updatePackage(values);
+    setIsLoading(false);
     resetForm();
   };
 
@@ -139,7 +143,10 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
                   <button
                     className="py-[12px] px-[24px] text-[16px] font-semibold rounded-[99px] bg-red-100 text-red-600 shadow-btn"
                     ref={cancelRef}
-                    onClick={() => formik.handleSubmit()}
+                    onClick={() => {
+                      onCreateClose();
+                      formik.handleSubmit();
+                    }}
                   >
                     Yes, I want to {button}
                   </button>
@@ -153,6 +160,7 @@ const AdminPackageForm = ({ button, title, initialValues, remove }) => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            <AdminPackageLoading openStatus={isLoading} />
           </div>
         </section>
 
