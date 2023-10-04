@@ -9,7 +9,24 @@ function BasicInfomationForm(props) {
         <TextInputField
           type="date"
           name={"dateOfBirth"}
-          max={new Date().toISOString().split("T")[0]}
+          max={
+            new Date(
+              new Date().getFullYear() - 18,
+              new Date().getMonth(),
+              new Date().getDate()
+            )
+              .toISOString()
+              .split("T")[0]
+          }
+          min={
+            new Date(
+              new Date().getFullYear() - 80,
+              new Date().getMonth(),
+              new Date().getDate()
+            )
+              .toISOString()
+              .split("T")[0]
+          }
           placeholder={"01/01/2022"}
           label={"Date of birth"}
         />
