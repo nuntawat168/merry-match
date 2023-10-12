@@ -51,6 +51,7 @@ To use Merry Match, visit our website at [Merry Match](https://merry-match-clien
 3. [@Panpaphop](https://github.com/Panpaphop)
 4. [@Winteriscoming5976](https://github.com/Winteriscoming5976)
 5. [@salmonnz](https://github.com/salmonnz)
+6. [@apiwatz-lee](https://github.com/apiwatz-lee)
 
 ## Issues and Support
 
