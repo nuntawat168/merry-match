@@ -1,7 +1,5 @@
 # Merry Match App
 
-## Introduction
-
 Welcome to Merry Match, your go-to online dating platform designed for people looking to connect, make friends, or find that special someone. This README.md provides an overview of the features and functionalities of the Merry Match app.
 
 ## Getting Started
