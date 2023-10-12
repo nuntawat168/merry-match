@@ -24,7 +24,7 @@ To use Merry Match, visit our website at [Merry Match](https://merry-match-clien
 
 - **View Other Profiles:** Users can browse through other users' profiles to discover interesting people.
 
-- **Search Filters:** Users can search for profiles based on age range, meeting interests, and optional keywords.
+- **Search Filters:** Users can search for profiles based on age range and sex user interest.
 
 - **Merry List:** Users can 'merry' their favorite profiles, adding them to a Merry List with a daily limit of 20 likes.
 
@@ -36,7 +36,7 @@ To use Merry Match, visit our website at [Merry Match](https://merry-match-clien
 
 - **Account Deletion:** Users have the option to delete their dating profile and account.
 
-- **Subscription Packages:** Users can subscribe/unsubscribe to Merry Packages, allowing them to 'merry' more profiles than the daily limit.
+- **Subscription Packages:** Users can subscribe to Merry Packages, allowing them to 'merry' more profiles than the daily limit.
 
 - **Payment:** Users can pay for Merry Packages using a credit card for enhanced features.
 
