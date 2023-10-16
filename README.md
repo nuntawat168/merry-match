@@ -2,6 +2,8 @@
 
 Welcome to Merry Match, your go-to online dating platform designed for people looking to connect, make friends, or find that special someone. This README.md provides an overview of the features and functionalities of the Merry Match app.
 
+![Merry Match Logo](https://res.cloudinary.com/dexswyfdl/image/upload/v1697459352/Screenshot_2023-10-16_191632_ghmck3.png)
+
 ## Getting Started
 
 To use Merry Match, visit our website at [Merry Match](https://merry-match-client.onrender.com/) and sign up for an account. Once registered, you can create your dating profile and start exploring the diverse community of Merry Match users.
